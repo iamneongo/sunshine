@@ -132,6 +132,9 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #F2F7FF; }
         ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 10px; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* Layout Container */
         .app-container {
@@ -142,22 +145,140 @@
             padding-right: 1.5rem;
         }
 
-        /* Chatbot Popup */
-        #chatbot-popup {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: scale(0.8) translateY(20px);
+        /* AI Chatbot Styles */
+        .chatbot-panel {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 27, 53, 0.1);
+            bottom: 4.5rem;
+            box-shadow: 0 28px 70px rgba(0, 27, 53, 0.2);
+            max-height: min(78vh, 650px);
             opacity: 0;
             pointer-events: none;
+            position: fixed;
+            right: 1.5rem;
+            transform: translateY(24px) scale(0.96);
+            transition: opacity 0.3s cubic-bezier(0.19, 1, 0.22, 1), transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            width: min(400px, calc(100vw - 3rem));
+            z-index: 250;
+            display: flex;
+            flex-direction: column;
+            border-radius: 2rem;
+            overflow: hidden;
         }
-        #chatbot-popup.active {
-            transform: scale(1) translateY(0);
+
+        .chatbot-panel.open {
             opacity: 1;
             pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        .chat-scroll {
+            overscroll-behavior: contain;
+            scrollbar-color: rgba(197, 160, 89, 0.4) transparent;
+            scrollbar-width: thin;
+        }
+
+        .chat-scroll::-webkit-scrollbar {
+            width: 4px; height: 4px;
+        }
+
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: rgba(197, 160, 89, 0.2);
+            border-radius: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .chat-message--user {
+            justify-content: flex-end;
+        }
+
+        .chat-message--bot {
+            justify-content: flex-start;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 0.85rem 1rem;
+            border-radius: 1.25rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .chat-message--bot .chat-bubble {
+            background: #ffffff;
+            border: 1px solid rgba(0, 27, 53, 0.05);
+            color: #001B35;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .chat-message--user .chat-bubble {
+            background: #001B35;
+            color: #ffffff;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .chat-suggestion {
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid rgba(0, 27, 53, 0.1);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.5rem 0.85rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .chat-suggestion:hover {
+            background: #001B35;
+            color: #ffffff;
+            border-color: #001B35;
+        }
+
+        .chat-status-dot {
+            animation: pulse-dot 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
     </style>
 </head>
 
 <body class="bg-surface text-on-surface">
+
+    <script>
+        // Sunshine AI Config
+        window.AI_CONFIG = {
+            phoneNumber: "0929 732 929",
+            zaloNumber: "0929 732 929",
+            gemini: {
+                model: "gemini-2.0-flash", // Using standard accessible model
+                apiKey: "", // Add API key here to enable Gemini AI
+            },
+           project: {
+                name: "Sunshine Bay Retreat Vũng Tàu",
+                price: "6x triệu/m²",
+                location: "Nam Vũng Tàu - Ngay bãi biển Vũng Tàu",
+                highlights: [
+                    "Bàn giao Full nội thất chuẩn 5 sao",
+                    "Công nghệ SmartHome AI 40 cấp",
+                    "Hồ bơi vô cực ngắm trọn đại dương",
+                    "Đón đầu hạ tầng: Cao tốc Biên Hòa - Vũng Tàu, Cầu Cần Giờ",
+                    "Balcony 100% hướng biển"
+                ]
+            }
+        };
+    </script>
 
     <!-- Mobile Sidebar -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-primary/80 backdrop-blur-sm z-[200] opacity-0 pointer-events-none" onclick="toggleSidebar()"></div>
@@ -409,7 +530,7 @@
                         <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i class="fa-solid fa-spa text-3xl"></i>
                         </div>
-                        <h4 class="text-xl font-black uppercase tracking-wider mb-4">Wellness Center</h4>
+                        <h4 class="text-xl font-black uppercase tracking-wider mb-4">wellness Center</h4>
                         <p class="text-white/40 text-sm font-body px-4">Bầu không khí trong lành với hệ thống cây xanh đa tầng, đa lớp.</p>
                     </div>
                 </div>
@@ -540,57 +661,71 @@
 
     <!-- Floating Tools Hub -->
     <div class="fixed bottom-8 right-8 z-[200] flex flex-col gap-4 items-end">
-        <!-- Chatbot Popup Window -->
-        <div id="chatbot-popup" class="w-[320px] md:w-[380px] h-[450px] bg-white rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden mb-4 border border-surface">
+        <!-- AI Chatbot Panel -->
+        <aside id="chatbot-panel" class="chatbot-panel">
             <!-- Header -->
-            <div class="bg-primary p-6 flex justify-between items-center text-white">
+            <div class="bg-primary p-5 flex justify-between items-center text-white">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-white">
                         <i class="fa-solid fa-robot"></i>
                     </div>
                     <div>
-                        <div class="text-sm font-black uppercase tracking-widest">Sunshine AI</div>
-                        <div class="text-[10px] text-primary-container font-bold flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Đang trực tuyến
-                        </div>
+                        <div class="text-[11px] font-black uppercase tracking-[0.2em] text-primary-container">Sunshine AI Assistant</div>
+                        <h3 class="text-lg font-black uppercase tracking-tighter">Tư vấn dự án 24/7</h3>
                     </div>
                 </div>
-                <button onclick="toggleChatbot()" class="text-white/50 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <!-- Messages Area -->
-            <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-surface/30">
-                <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm text-xs font-body leading-relaxed text-primary max-w-[85%]">
-                    Xin chào! Tôi là Sunshine AI. Tôi có thể giúp gì cho bạn về dự án **Sunshine Bay Retreat**?
-                </div>
-            </div>
-            <!-- Input Area -->
-            <div class="p-4 bg-white border-t border-surface flex gap-3">
-                <input id="chat-input" type="text" placeholder="Nhập tin nhắn..." class="flex-1 bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary-container" onkeypress="handleChatEnter(event)">
-                <button onclick="sendChatMessage()" class="w-12 h-12 gold-button text-white rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fa-solid fa-paper-plane"></i>
+                <button onclick="toggleChatbot()" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-        </div>
+            
+            <!-- Messages Area -->
+            <div id="chat-messages" class="chat-scroll flex-1 p-5 overflow-y-auto bg-surface/30">
+                <div class="chat-message chat-message--bot">
+                    <div class="chat-bubble">
+                        Xin chào! Tôi là **Sunshine AI**. Tôi có thể giải đáp nhanh về giá bán, vị trí, tiện ích hoặc hỗ trợ bạn đặt lịch xem nhà mẫu dự án **Sunshine Bay Retreat**.
+                    </div>
+                </div>
+            </div>
 
-        <!-- Chatbot Floating Button -->
-        <button onclick="toggleChatbot()" class="w-14 h-14 bg-white text-primary rounded-full flex items-center justify-center shadow-xl hover:bg-primary-container hover:text-white transition-all group relative border border-surface">
-             <i class="fa-solid fa-robot text-xl"></i>
-             <span class="absolute right-16 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Hỏi đáp AI</span>
-        </button>
+            <!-- Suggestions Area -->
+            <div id="chat-suggestions" class="px-5 py-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <button class="chat-suggestion" onclick="pushSuggestion('Sunshine Bay giá bao nhiêu?')">Giá bán dự án</button>
+                <button class="chat-suggestion" onclick="pushSuggestion('Vị trí dự án ở đâu?')">Vị trí & Kết nối</button>
+                <button class="chat-suggestion" onclick="pushSuggestion('Tiện ích có gì nổi bật?')">Hệ sinh thái tiện ích</button>
+                <button class="chat-suggestion" onclick="pushSuggestion('Tôi muốn xem nhà mẫu')">Đặt lịch xem nhà</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white border-t border-surface">
+                <div class="flex gap-3">
+                    <textarea id="chat-input" placeholder="Hỏi về Sunshine Bay..." rows="1" class="flex-1 bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary-container resize-none" onkeypress="handleChatEnter(event)"></textarea>
+                    <button onclick="handleSendMessage()" class="w-12 h-12 gold-button text-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
         <!-- Messenger -->
-        <a href="#" class="w-14 h-14 bg-[#0084FF] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-all group relative">
+        <a href="https://m.me/" target="_blank" class="w-14 h-14 bg-[#0084FF] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-all group relative">
              <i class="fa-brands fa-facebook-messenger text-2xl"></i>
              <span class="absolute right-16 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Messenger</span>
         </a>
         <!-- Zalo -->
-        <a href="#" class="w-14 h-14 bg-[#0068FF] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-all group relative">
+        <a href="https://zalo.me/0929732929" target="_blank" class="w-14 h-14 bg-[#0068FF] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-all group relative">
              <div class="font-black italic text-sm">Zalo</div>
              <span class="absolute right-16 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Chat Zalo</span>
         </a>
+        <!-- Chatbot Button -->
+        <button onclick="toggleChatbot()" class="w-14 h-14 bg-white text-primary rounded-full flex items-center justify-center shadow-xl hover:bg-primary-container hover:text-white transition-all group relative border border-surface">
+             <i class="fa-solid fa-robot text-xl"></i>
+             <span class="absolute right-16 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">AI Support</span>
+        </button>
         <!-- Phone (Primary) -->
         <a href="tel:0929732929" class="w-16 h-16 gold-button text-white rounded-full flex items-center justify-center shadow-2xl animate-[float_4s_infinite] relative group">
              <i class="fa-solid fa-phone-volume text-2xl"></i>
-             <span class="absolute right-20 bg-primary text-white text-[10px] px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Gọi Hotline</span>
+             <span class="absolute right-20 bg-primary text-white text-[10px] px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Gọi ngay</span>
         </a>
     </div>
 
@@ -616,6 +751,7 @@
             sidebar.classList.toggle('translate-x-full');
             overlay.classList.toggle('opacity-0');
             overlay.classList.toggle('pointer-events-none');
+            document.body.classList.toggle('overflow-hidden');
         }
 
         function reveal() {
@@ -630,39 +766,134 @@
         window.addEventListener("scroll", reveal);
         window.addEventListener("load", reveal);
 
-        // Chatbot Logic
+        // --- SUNSHINE CHATBOT LOGIC (GoEco Style) ---
+        const chatbotState = {
+            isOpen: false,
+            history: [],
+            loadingNode: null
+        };
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const chatbotPanel = document.getElementById('chatbot-panel');
+
         function toggleChatbot() {
-            document.getElementById('chatbot-popup').classList.toggle('active');
+            chatbotState.isOpen = !chatbotState.isOpen;
+            chatbotPanel.classList.toggle('open', chatbotState.isOpen);
         }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const messages = document.getElementById('chat-messages');
+        function appendMessage(role, text) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `chat-message chat-message--${role}`;
             
-            if (input.value.trim() !== "") {
-                // User message
-                const userMsg = document.createElement('div');
-                userMsg.className = "bg-primary-container text-white p-4 rounded-2xl rounded-tr-none shadow-sm text-xs font-body leading-relaxed self-end ml-auto max-w-[85%]";
-                userMsg.innerText = input.value;
-                messages.appendChild(userMsg);
-                
-                input.value = "";
-                
-                // Bot response
-                setTimeout(() => {
-                    const botMsg = document.createElement('div');
-                    botMsg.className = "bg-white border border-surface p-4 rounded-2xl rounded-tl-none shadow-sm text-xs font-body leading-relaxed text-primary max-w-[85%]";
-                    botMsg.innerHTML = "<strong>Sunshine AI:</strong> Cảm ơn bạn đã quan tâm! Tính năng chat đang được phát triển và sẽ sớm ra mắt để phục vụ quý khách tốt hơn. Vui lòng gọi Hotline <strong>0929 732 929</strong> để được hỗ trợ ngay lập tức.";
-                    messages.appendChild(botMsg);
-                    messages.scrollTop = messages.scrollHeight;
-                }, 600);
-                
-                messages.scrollTop = messages.scrollHeight;
+            const bubble = document.createElement('div');
+            bubble.className = "chat-bubble";
+            bubble.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Simple bold support
+            
+            wrapper.appendChild(bubble);
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Track history for AI
+            chatbotState.history.push({ role, text });
+        }
+
+        function showTyping() {
+            const wrapper = document.createElement('div');
+            wrapper.className = "chat-message chat-message--bot";
+            wrapper.id = "typing-indicator";
+            wrapper.innerHTML = `
+                <div class="chat-bubble flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary-container">
+                    <span class="chat-status-dot">●</span>
+                    <span>Sunshine AI đang trả lời...</span>
+                </div>
+            `;
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatbotState.loadingNode = wrapper;
+        }
+
+        function hideTyping() {
+            if (chatbotState.loadingNode) {
+                chatbotState.loadingNode.remove();
+                chatbotState.loadingNode = null;
             }
         }
 
         function handleChatEnter(e) {
-            if (e.key === 'Enter') sendChatMessage();
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        }
+
+        function pushSuggestion(text) {
+            chatInput.value = text;
+            handleSendMessage();
+        }
+
+        async function handleSendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            chatInput.value = "";
+            
+            showTyping();
+
+            // Simulate AI logic or real API call
+            setTimeout(async () => {
+                const response = await getChatResponse(text);
+                hideTyping();
+                appendMessage('bot', response);
+            }, 800);
+        }
+
+        // AI Response Logic (GoEco Fallback Style)
+        async function getChatResponse(query) {
+            const normalized = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const config = window.AI_CONFIG;
+
+            // 1. Check for AI API (if key provided)
+            if (config.gemini.apiKey) {
+                try {
+                    return await fetchGeminiResponse(query);
+                } catch (e) {
+                    console.error("AI Error:", e);
+                }
+            }
+
+            // 2. Keyword Fallback (GoEco Style)
+            if (/(gia|bao nhieu|tien|chi phi|6x|tr\/m)/.test(normalized)) {
+                return `**Sunshine Bay Retreat** đang có mức giá cực kỳ hấp dẫn chỉ từ **${config.project.price}**. Đây là mức giá "vàng" giai đoạn 1 để bạn sở hữu tài sản nghỉ dưỡng chuẩn 5 sao.`;
+            }
+            if (/(vi tri|o dau|cho nao|dia chi|vung tau)/.test(normalized)) {
+                return `Dự án tọa lạc tại **${config.project.location}**. Vị trí này đón đầu các hạ tầng tỷ đô như **Cao tốc Biên Hòa - Vũng Tàu** và **Cầu Cần Giờ**, giúp giá trị BĐS tăng phi mã trong tương lai.`;
+            }
+            if (/(tien ich|co gi|ho boi|wellness|phong gym|khu vui choi)/.test(normalized)) {
+                return `Hệ sinh thái tiện ích đẳng cấp bao gồm: **Hồ bơi vô cực ngắm trọn đại dương**, Wellness Center, Phố đi bộ ven biển, và 100% căn hộ SmartHome tích hợp AI 4.0.`;
+            }
+            if (/(co ban|xem nha|tham quan|chu dau tu|sunshine group|phone|sdt|lien he|dat lich)/.test(normalized)) {
+                return `Để nhận brochure chi tiết và đặt lịch tham quan nhà mẫu thực tế, bạn vui lòng liên hệ Hotline: **${config.phoneNumber}** hoặc nhắn tin Zalo cho đội ngũ Admin nhé!`;
+            }
+
+            return `Xin lỗi, tôi chưa hiểu rõ câu hỏi này. Bạn có thể hỏi về **Giá bán, Vị trí, Tiện ích** hoặc yêu cầu **Đặt lịch xem nhà mẫu** không? Ngoài ra, Hotline **${config.phoneNumber}** luôn sẵn sàng hỗ trợ bạn 24/7.`;
+        }
+
+        // Skeleton for Gemini API (matches GoEco logic)
+        async function fetchGeminiResponse(prompt) {
+            const config = window.AI_CONFIG.gemini;
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`;
+            
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `You are a professional real estate sales assistant for ${window.AI_CONFIG.project.name}. Answer concisely in Vietnamese. If asked about price, mention ${window.AI_CONFIG.project.price}. User says: ${prompt}` }]}]
+                })
+            });
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
         }
     </script>
 
