@@ -142,6 +142,17 @@
             0% { opacity: 0.3; transform: scale(1); }
             100% { opacity: 0.6; transform: scale(1.1); }
         }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient-overlay {
+            background: linear-gradient(-45deg, rgba(0, 27, 53, 0.8), rgba(197, 160, 89, 0.4), rgba(10, 132, 255, 0.4), rgba(0, 27, 53, 0.7));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
 
 
         .amenity-card {
@@ -425,65 +436,65 @@
             <!-- Background Image with Ken Burns Effect -->
             <div class="absolute inset-0 z-0">
                 <img alt="Sunshine Bay Hero" class="w-full h-full object-cover hero-img opacity-90 scale-105" src="./luxury_beachfront_condo_hero_1774060840570.png" />
+                <div class="absolute inset-0 animated-gradient-overlay mix-blend-multiply"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-primary/60 via-primary/10 to-transparent"></div>
             </div>
 
             <div class="app-container relative z-10 pt-20 pb-20">
                 <div class="grid lg:grid-cols-2 gap-16 items-center">
                     <!-- Left: Content Message -->
                     <div class="reveal animate-fade-in-up">
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/20 border border-primary-container/30 backdrop-blur-md mb-8">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/20 border border-primary-container/30 backdrop-blur-md mb-4 sm:mb-6">
                             <i class="fa-solid fa-gem text-primary-container shadow-sm"></i>
-                            <span class="text-[10px] font-black uppercase tracking-[3px] text-primary-container">Kiến tạo di sản nghỉ dưỡng</span>
+                            <span class="text-[10px] sm:text-xs font-black uppercase tracking-[3px] text-white">Kiến tạo di sản nghỉ dưỡng</span>
                         </div>
                         
-                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-relaxed mb-8 hero-title tracking-tight uppercase py-4">
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-4 sm:mb-6 hero-title tracking-tight uppercase">
                             Sống Trọn <br/> <span class="italic font-light">Từng</span> Khoảnh Khắc
                         </h1>
                         
-                        <p class="text-white/70 text-base md:text-lg max-w-xl mb-12 font-medium leading-[1.8]">
+                        <p class="text-white/70 text-base md:text-lg max-w-xl mb-6 sm:mb-8 font-medium leading-[1.6]">
                             Trải nghiệm căn hộ <span class="text-primary-container font-black">Sky Villa</span> 100% view biển. Sự kết hợp hoàn hảo giữa công nghệ SmartHome 4.0 và không gian nghỉ dưỡng chuẩn 5 sao.
                         </p>
 
                         <!-- Mobile Content: Glass Card matching Desktop style -->
-                        <div class="lg:hidden relative mb-10 w-full max-w-[360px] mx-auto sm:mx-0">
-                            <div class="absolute -inset-1 bg-primary-container/20 blur-xl rounded-3xl"></div>
-                            <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-[2rem] shadow-2xl">
-                                <div class="flex justify-between items-start mb-5">
+                        <div class="lg:hidden relative mb-6 sm:mb-10 w-full max-w-[360px] mx-auto sm:mx-0">
+                            <div class="absolute -inset-1 bg-primary-container/20 blur-xl rounded-2xl"></div>
+                            <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl shadow-2xl">
+                                <div class="flex justify-between items-start mb-4 sm:mb-5">
                                     <div>
-                                        <div class="text-[9px] text-primary-container font-black uppercase tracking-widest mb-1.5 drop-shadow-sm">Giá chỉ từ</div>
-                                        <div class="text-3xl font-black text-white italic drop-shadow-md leading-none">6x <span class="text-sm not-italic font-bold ml-0.5">tr/m²</span></div>
+                                        <div class="text-[8px] sm:text-[9px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">Giá chỉ từ</div>
+                                        <div class="text-2xl sm:text-3xl font-black text-white italic drop-shadow-md leading-none">6x <span class="text-xs sm:text-sm not-italic font-bold ml-0.5">tr/m²</span></div>
                                     </div>
                                     <div class="text-right pt-1">
-                                        <div class="text-[8px] text-primary-container font-black uppercase tracking-widest mb-1.5 drop-shadow-sm">Tiêu chuẩn</div>
-                                        <div class="text-xs font-black text-white drop-shadow-md bg-white/10 px-3 py-1.5 rounded-full border border-white/10 whitespace-nowrap">5 SAO FULL</div>
+                                        <div class="text-[7px] sm:text-[8px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">Tiêu chuẩn</div>
+                                        <div class="text-[10px] sm:text-xs font-black text-white drop-shadow-md bg-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-white/10 whitespace-nowrap">5 SAO FULL</div>
                                     </div>
                                 </div>
-                                <div class="w-full h-px bg-gradient-to-r from-white/0 via-white/20 to-white/0 mb-5"></div>
-                                <div class="flex items-center gap-3 bg-black/20 p-3 rounded-2xl border border-white/5">
-                                    <div class="w-9 h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-sm shrink-0 shadow-inner">
+                                <div class="w-full h-px bg-gradient-to-r from-white/0 via-white/20 to-white/0 mb-4 sm:mb-5"></div>
+                                <div class="flex items-center gap-2.5 sm:gap-3 bg-black/20 p-2.5 sm:p-3 rounded-xl border border-white/5">
+                                    <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs sm:text-sm shrink-0 shadow-inner">
                                         <i class="fa-solid fa-calendar-check"></i>
                                     </div>
-                                    <div class="text-[10px] text-white/90 font-medium leading-[1.4]">Bàn giao dự kiến: <br/> <span class="text-primary-container font-black text-[11px] tracking-wide">QUÝ IV / 2026</span></div>
+                                    <div class="text-[9px] sm:text-[10px] text-white/90 font-medium leading-[1.4]">Bàn giao dự kiến: <br/> <span class="text-primary-container font-black text-[10px] sm:text-[11px] tracking-wide">QUÝ IV / 2026</span></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Main CTA Buttons (Synchronized style) -->
                         <div class="flex flex-row items-center gap-3 sm:gap-6 w-full max-w-[360px] mx-auto sm:mx-0 sm:max-w-none">
-                            <button onclick="toggleChatbot()" class="gold-button flex-1 py-3.5 px-4 sm:px-10 sm:py-5 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+                            <button onclick="toggleChatbot()" class="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
                                 <div class="relative shrink-0">
-                                    <img src="./ai_avatar_vn.png" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-white/30" alt="AI Avatar" />
+                                    <img src="./ai_avatar_vn.png" class="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover border border-white/30" alt="AI Avatar" />
                                     <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-primary sm:hidden"></div>
                                 </div>
-                                <span class="text-[10px] sm:text-xs uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Tư vấn AI</span>
+                                <span class="text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Tư vấn AI</span>
                             </button>
                             <button onclick="openVRImage()" class="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md sm:bg-transparent sm:border-none border border-white/20 pr-4 sm:pr-0 pl-1 py-1 sm:p-0 rounded-full transition-all hover:bg-white/20">
-                                <div class="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-primary/40 sm:bg-transparent border border-white/20 sm:border-2 sm:border-white/20 flex items-center justify-center text-white text-xs sm:text-lg group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
+                                <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-primary/40 sm:bg-transparent border border-white/20 sm:border-2 sm:border-white/20 flex items-center justify-center text-white text-xs sm:text-lg group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
                                     <i class="fa-solid fa-play ml-0.5"></i>
                                 </div>
-                                <span class="text-white font-black text-[9px] sm:text-[10px] uppercase tracking-widest whitespace-nowrap leading-none mt-0.5 pr-1 sm:pr-0">360° VR</span>
+                                <span class="text-white font-black text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5 pr-1 sm:pr-0">360° VR</span>
                             </button>
                         </div>
                     </div>
@@ -508,9 +519,9 @@
         </section>
 
         <!-- Section: Infrastructure -->
-        <section id="vitri" class="py-24 bg-white">
+        <section id="vitri" class="py-16 bg-white">
             <div class="app-container">
-                <div class="grid lg:grid-cols-2 gap-10 items-end mb-16 reveal">
+                <div class="grid lg:grid-cols-2 gap-6 items-end mb-8 reveal">
                     <div>
                         <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Hạ tầng trọng điểm</span>
                         <h2 class="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">Vị thế <span class="text-primary-container">Kết Nối</span> Tỷ Đô</h2>
