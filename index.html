@@ -121,7 +121,7 @@
             position: absolute;
             inset: -4px;
             background: linear-gradient(135deg, #C5A059 0%, transparent 40%, #C5A059 100%);
-            border-radius: 3rem;
+            border-radius: 1.5rem;
             z-index: -1;
             opacity: 0.3;
         }
@@ -182,9 +182,24 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #F2F7FF; }
-        ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 10px; }
+        ::-webkit-scrollbar { 
+            width: 10px; 
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track { 
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: rgba(0, 27, 53, 0.2); 
+            border-radius: 10px; 
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: rgba(197, 160, 89, 0.8); 
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -216,7 +231,7 @@
             z-index: 250;
             display: flex;
             flex-direction: column;
-            border-radius: 2rem;
+            border-radius: 1.5rem;
             overflow: hidden;
         }
 
@@ -501,8 +516,8 @@
 
                     <!-- Right: Info Insight Card (Desktop replaced by Image) -->
                     <div class="hidden lg:block relative reveal">
-                        <div class="absolute -inset-2 bg-primary-container/20 blur-2xl rounded-[3rem]"></div>
-                        <div class="relative rounded-[3rem] overflow-hidden border-4 border-white/10 shadow-3xl group">
+                        <div class="absolute -inset-2 bg-primary-container/20 blur-2xl rounded-2xl"></div>
+                        <div class="relative rounded-2xl overflow-hidden border-4 border-white/10 shadow-3xl group">
                             <img src="./sunshine_villa_interior_card_1774061099772.png" 
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]" 
                                  alt="Sky Villa Interior" />
@@ -514,6 +529,35 @@
                     </div>
                 </div>
 
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: TVC / Video Giới Thiệu -->
+        <section id="tvc" class="py-24 bg-surface-container relative overflow-hidden">
+            <div class="app-container">
+                <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                    <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Trải Nghiệm Điện Ảnh</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
+                        Thước Phim <span class="text-primary-container">Chân Thực</span>
+                    </h2>
+                    <p class="text-base opacity-60 font-body leading-relaxed">
+                        Cảm nhận nhịp sống thượng lưu và quy mô tầm cỡ của Sunshine Bay Retreat qua những hình ảnh thực tế sống động nhất.
+                    </p>
+                </div>
+                
+                <div class="max-w-5xl mx-auto reveal">
+                    <div class="relative w-full border-4 border-white aspect-video rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,27,53,0.15)] bg-slate-900 group">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/oum9PyUrZeg?si=ByhzBRYFkiMdQNtg&autoplay=1&mute=1&loop=1&playlist=oum9PyUrZeg&controls=1&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="absolute inset-0 w-full h-full scale-[1.02]"></iframe>
+                        
+                        <!-- Helper tooltip to explain muted autoplay -->
+                        <div class="absolute bottom-6 left-6 z-10 pointer-events-none opacity-100 transition-opacity duration-500 group-hover:opacity-0 hidden md:flex items-center gap-3 bg-black/60 backdrop-blur-md text-white px-5 py-2.5 rounded-full border border-white/20">
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center animate-pulse">
+                                <i class="fa-solid fa-volume-xmark text-xs"></i>
+                            </div>
+                            <span class="text-[10px] font-black uppercase tracking-widest">Tương tác trực tiếp video để bật âm thanh</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -532,28 +576,28 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
-                    <div class="amenity-card p-8 rounded-3xl shadow-sm">
+                    <div class="amenity-card p-8 rounded-2xl shadow-sm">
                         <div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i class="fa-solid fa-gauge-high"></i>
                         </div>
                         <h3 class="text-lg font-black mb-4 uppercase tracking-tighter">Cao tốc Biên Hòa</h3>
                         <p class="text-xs opacity-60 leading-relaxed font-body">Rút ngắn khoảng cách di chuyển từ trung tâm kinh tế Đông Nam Bộ.</p>
                     </div>
-                    <div class="amenity-card p-8 rounded-3xl shadow-sm">
+                    <div class="amenity-card p-8 rounded-2xl shadow-sm">
                         <div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i class="fa-solid fa-bridge"></i>
                         </div>
                         <h3 class="text-lg font-black mb-4 uppercase tracking-tighter">Cầu Biển Cần Giờ</h3>
                         <p class="text-xs opacity-60 leading-relaxed font-body">Biểu tượng kết nối đưa TP.HCM xích lại gần phố biển hơn bao giờ hết.</p>
                     </div>
-                    <div class="amenity-card p-8 rounded-3xl shadow-sm">
+                    <div class="amenity-card p-8 rounded-2xl shadow-sm">
                         <div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i class="fa-solid fa-road"></i>
                         </div>
                         <h3 class="text-lg font-black mb-4 uppercase tracking-tighter">Bến Lức Long Thành</h3>
                         <p class="text-xs opacity-60 leading-relaxed font-body">Tuyến huyết mạch quan trọng nối liền các tỉnh miền Tây với phố biển.</p>
                     </div>
-                    <div class="amenity-card p-8 rounded-3xl shadow-sm">
+                    <div class="amenity-card p-8 rounded-2xl shadow-sm">
                         <div class="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i class="fa-solid fa-train"></i>
                         </div>
@@ -613,7 +657,7 @@
                     </div>
 
                     <div class="reveal relative">
-                        <div class="aspect-square bg-slate-900 rounded-[3rem] overflow-hidden vr-container border-4 border-white/5 relative group cursor-pointer shadow-[0_30px_60px_rgba(0,0,0,0.5)]" onclick="openVRImage()">
+                        <div class="aspect-square bg-slate-900 rounded-2xl overflow-hidden vr-container border-4 border-white/5 relative group cursor-pointer shadow-[0_30px_60px_rgba(0,0,0,0.5)]" onclick="openVRImage()">
                             <div id="panorama-preview" class="w-full h-full relative">
                                 <div id="panorama-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-10 group-hover:bg-black/30 transition-all pointer-events-none">
                                     <div class="w-20 h-20 rounded-full bg-primary-container/90 flex items-center justify-center text-white text-2xl animate-pulse shadow-2xl">
@@ -626,7 +670,7 @@
                         </div>
                         
                         <!-- Premium Detail Badges -->
-                        <div class="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-2xl border border-white/20 p-6 rounded-3xl shadow-2xl z-20 max-w-[200px] hidden md:block">
+                        <div class="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-2xl border border-white/20 p-6 rounded-2xl shadow-2xl z-20 max-w-[200px] hidden md:block">
                             <div class="flex items-center gap-3 mb-2 text-primary-container">
                                 <i class="fa-solid fa-award"></i>
                                 <span class="text-[9px] font-black uppercase tracking-widest">Sky Villa Gold Edition</span>
@@ -668,7 +712,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
                     <!-- Product 1: Sky Villa -->
-                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('skyvilla')">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('skyvilla')">
                         <div class="aspect-[4/3] relative overflow-hidden">
                             <img src="./interior.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Sky Villa">
                             <div class="absolute top-4 left-4 bg-primary-container text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Hot</div>
@@ -684,7 +728,7 @@
                     </div>
 
                     <!-- Product 2: Biệt Thự Horizon -->
-                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('villa')">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('villa')">
                         <div class="aspect-[4/3] relative overflow-hidden">
                             <img src="./sunshine-bay-retreat-28.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Biệt Thự">
                         </div>
@@ -699,7 +743,7 @@
                     </div>
 
                     <!-- Product 3: Shophouse -->
-                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('shophouse')">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('shophouse')">
                         <div class="aspect-[4/3] relative overflow-hidden">
                             <img src="./sunshine_villa_interior_card_1774061099772.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Shophouse">
                         </div>
@@ -718,7 +762,7 @@
             <!-- Product Detail Modal -->
             <div id="product-modal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4">
                 <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
-                <div class="bg-white rounded-[2rem] max-w-4xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row transform scale-95 opacity-0 transition-all duration-300" id="product-modal-content">
+                <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row transform scale-95 opacity-0 transition-all duration-300" id="product-modal-content">
                     <!-- Content injected via JS -->
                 </div>
             </div>
@@ -726,7 +770,7 @@
             <!-- Booking Modal -->
             <div id="booking-modal" class="fixed inset-0 z-[350] hidden items-center justify-center p-4">
                 <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm" onclick="closeBookingModal()"></div>
-                <div class="bg-white rounded-[2rem] max-w-md w-full relative z-10 shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300" id="booking-modal-content">
+                <div class="bg-white rounded-xl max-w-md w-full relative z-10 shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300" id="booking-modal-content">
                     <button onclick="closeBookingModal()" class="absolute top-4 right-4 w-8 h-8 bg-surface-container rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
@@ -786,7 +830,7 @@
                     </form>
                     
                     <!-- Success Overlay -->
-                    <div id="booking-success" class="absolute inset-0 bg-white z-20 rounded-[2rem] flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-all duration-300">
+                    <div id="booking-success" class="absolute inset-0 bg-white z-20 rounded-xl flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-all duration-300">
                         <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner">
                             <i class="fa-solid fa-check"></i>
                         </div>
@@ -804,7 +848,7 @@
                     <div class="w-full lg:w-1/2 reveal">
                         <div class="relative">
                             <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary-container/10 rounded-full blur-3xl"></div>
-                            <img src="./hero.png" alt="" class="rounded-[3rem] shadow-2xl relative z-10" />
+                            <img src="./hero.png" alt="" class="rounded-2xl shadow-2xl relative z-10" />
                             <div class="absolute -bottom-4 -right-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl z-20 border border-surface-container transform hover:scale-105 transition-transform duration-500">
                                 <div class="text-2xl font-black text-primary-container mb-1">Sunshine</div>
                                 <div class="text-[9px] font-black uppercase tracking-widest text-primary/60">Group - Kiến tạo giá trị</div>
@@ -837,7 +881,7 @@
             <div class="app-container">
                 <div class="grid lg:grid-cols-2 gap-12">
                     <div class="reveal">
-                        <div class="bg-primary p-12 rounded-[3rem] text-white shadow-2xl h-full flex flex-col justify-center">
+                        <div class="bg-primary p-12 rounded-2xl text-white shadow-2xl h-full flex flex-col justify-center">
                             <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Chính sách đặc quyền</span>
                             <h3 class="text-3xl font-black uppercase tracking-tight mb-8 leading-tight">Ưu Đãi <span class="text-primary-container">Giai Đoạn 1</span></h3>
                             <ul class="space-y-6">
@@ -858,7 +902,7 @@
                         </div>
                     </div>
                     <div class="reveal">
-                        <div class="bg-white p-12 rounded-[3rem] border border-surface-container shadow-xl h-full">
+                        <div class="bg-white p-12 rounded-2xl border border-surface-container shadow-xl h-full">
                             <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Pháp lý minh bạch</span>
                             <h3 class="text-3xl font-black text-primary uppercase tracking-tight mb-8 leading-tight">Hồ Sơ <span class="text-primary-container">Hoàn Thiện</span></h3>
                             <div class="space-y-6">
@@ -900,21 +944,21 @@
                 
                 <div class="grid md:grid-cols-3 gap-12 text-center reveal">
                     <div class="group">
-                        <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
+                        <div class="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i class="fa-solid fa-water-ladder text-3xl"></i>
                         </div>
                         <h4 class="text-xl font-black uppercase tracking-wider mb-4">Hồ Bơi Vô Cực</h4>
                         <p class="text-white/40 text-sm font-body px-4">Đắm mình trong làn nước mát với tầm nhìn ôm trọn đường chân trời.</p>
                     </div>
                     <div class="group">
-                        <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
+                        <div class="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i class="fa-solid fa-umbrella-beach text-3xl"></i>
                         </div>
                         <h4 class="text-xl font-black uppercase tracking-wider mb-4">Phố Đi Bộ Biển</h4>
                         <p class="text-white/40 text-sm font-body px-4">Cung đường mua sắm sầm uất ngay thềm nhà cư dân thượng lưu.</p>
                     </div>
                     <div class="group">
-                        <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
+                        <div class="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i class="fa-solid fa-spa text-3xl"></i>
                         </div>
                         <h4 class="text-xl font-black uppercase tracking-wider mb-4">wellness Center</h4>
@@ -941,7 +985,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
-                    <div class="relative rounded-[3rem] overflow-hidden group shadow-2xl h-[400px]">
+                    <div class="relative rounded-2xl overflow-hidden group shadow-2xl h-[400px]">
                         <img src="./sunshine-bay-retreat-28.jpg" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         <div class="absolute bottom-8 left-8 right-8 text-white">
@@ -951,7 +995,7 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-8">
-                        <div class="bg-surface-container rounded-[2.5rem] p-8 flex items-center gap-6 group hover:translate-x-2 transition-transform">
+                        <div class="bg-surface-container rounded-2xl p-8 flex items-center gap-6 group hover:translate-x-2 transition-transform">
                             <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm text-primary-container text-2xl">
                                 <i class="fa-solid fa-hard-hat"></i>
                             </div>
@@ -960,7 +1004,7 @@
                                 <p class="text-[10px] opacity-60 font-body">Đạt chứng chỉ an toàn thi công quốc tế, 500+ ngày làm việc không tai nạn.</p>
                             </div>
                         </div>
-                        <div class="bg-surface-container rounded-[2.5rem] p-8 flex items-center gap-6 group hover:translate-x-2 transition-transform">
+                        <div class="bg-surface-container rounded-2xl p-8 flex items-center gap-6 group hover:translate-x-2 transition-transform">
                             <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm text-primary-container text-2xl">
                                 <i class="fa-solid fa-clock"></i>
                             </div>
@@ -1413,6 +1457,7 @@
                 title: 'Căn Hộ Condotel / Sky Villa',
                 price: 'Từ 6x triệu/m²',
                 image: './interior.png',
+                vrImage: './sunshine-bay-retreat-9.jpg',
                 description: 'Trải nghiệm không gian sống thượng lưu với 100% căn hộ hướng biển. Sự kết hợp hoàn hảo giữa thiết kế đương đại và công nghệ SmartHome 4.0 từ Sunshine Group.',
                 specs: [
                     'Diện tích: 45m² - 120m²',
@@ -1426,6 +1471,7 @@
                 title: 'Biệt Thự Nghỉ Dưỡng (Horizon & Eden)',
                 price: 'Liên hệ nhân viên',
                 image: './sunshine-bay-retreat-28.jpg',
+                vrImage: './can-ho-Sunshine-Bay-Retreat-8.jpg',
                 description: 'Khu biệt thự khép kín mang đến sự riêng tư tuyệt đối, bao quanh là không gian xanh mát và hệ sinh thái tiện ích đẳng cấp chuẩn thượng lưu.',
                 specs: [
                     'Diện tích: Khoảng 300m² - 500m²',
@@ -1439,6 +1485,7 @@
                 title: 'Shophouse Thương Mại Cao Cấp',
                 price: 'Số lượng cực giới hạn',
                 image: './sunshine_villa_interior_card_1774061099772.png',
+                vrImage: './sunshine-vung-tau-8.jpg',
                 description: 'Tọa lạc trên trục đường chính và phố đi bộ sầm uất của dự án, shophouse là dòng sản phẩm khan hiếm mang lại cơ hội sinh lời lớn.',
                 specs: [
                     'Thiết kế: 3-5 tầng',
@@ -1450,16 +1497,63 @@
             }
         };
 
+        let productVrViewer = null;
+
+        function switchProductMedia(type, vrPath) {
+            const imgEl = document.getElementById('product-modal-image');
+            const vrEl = document.getElementById('product-modal-vr');
+            const tabImg = document.getElementById('media-tab-image');
+            const tab3d = document.getElementById('media-tab-3d');
+            
+            if (type === 'image') {
+                imgEl.classList.remove('opacity-0');
+                vrEl.classList.add('opacity-0', 'pointer-events-none');
+                
+                tabImg.classList.add('gold-button', 'text-white');
+                tabImg.classList.remove('text-white/60', 'hover:text-white');
+                
+                tab3d.classList.remove('gold-button', 'text-white');
+                tab3d.classList.add('text-white/60', 'hover:text-white');
+            } else if (type === '3d') {
+                imgEl.classList.add('opacity-0');
+                vrEl.classList.remove('opacity-0', 'pointer-events-none');
+                
+                tab3d.classList.add('gold-button', 'text-white');
+                tab3d.classList.remove('text-white/60', 'hover:text-white');
+                
+                tabImg.classList.remove('gold-button', 'text-white');
+                tabImg.classList.add('text-white/60', 'hover:text-white');
+                
+                if (!productVrViewer && vrPath && vrPath !== 'undefined') {
+                    productVrViewer = new PANOLENS.Viewer({ 
+                        container: vrEl,
+                        controlBar: true,
+                        autoRotate: true,
+                        autoRotateSpeed: 0.5,
+                        cameraFov: 90
+                    });
+                    const pano = new PANOLENS.ImagePanorama(vrPath);
+                    productVrViewer.add(pano);
+                }
+            }
+        }
+
         function openProductModal(productId) {
             const data = productsData[productId];
             const modalContent = document.getElementById('product-modal-content');
             
             modalContent.innerHTML = `
-                <button onclick="closeProductModal()" class="absolute top-4 right-4 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center text-primary hover:bg-white z-20 shadow-md transition-colors">
+                <button onclick="closeProductModal()" class="absolute top-4 right-4 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center text-primary hover:bg-white z-30 shadow-md transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-                <div class="w-full md:w-1/2 min-h-[300px] md:min-h-[500px] relative">
-                    <img src="${data.image}" class="absolute inset-0 w-full h-full object-cover rounded-t-[2rem] md:rounded-l-[2rem] md:rounded-tr-none" alt="${data.title}">
+                <div class="w-full md:w-1/2 min-h-[300px] md:min-h-[500px] relative overflow-hidden rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none">
+                    <img id="product-modal-image" src="${data.image}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="${data.title}">
+                    <div id="product-modal-vr" class="absolute inset-0 w-full h-full bg-slate-900 opacity-0 pointer-events-none transition-opacity duration-300 z-10"></div>
+                    
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-primary/60 backdrop-blur-md p-1 rounded-[2rem] flex items-center shadow-xl border border-white/20">
+                        <button onclick="switchProductMedia('image', null)" id="media-tab-image" class="px-7 py-2 rounded-full gold-button text-white text-[11px] font-black uppercase tracking-wider transition-all">Ảnh</button>
+                        <button onclick="switchProductMedia('3d', '${data.vrImage}')" id="media-tab-3d" class="px-7 py-2 rounded-full text-white/60 hover:text-white text-[11px] font-black uppercase tracking-wider transition-all">3D</button>
+                    </div>
                 </div>
                 <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
                     <div class="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Sunshine Bay Retreat</div>
@@ -1515,6 +1609,14 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 document.body.style.overflow = '';
+                
+                if (productVrViewer) {
+                    try {
+                        productVrViewer.dispose();
+                    } catch(e) {}
+                    productVrViewer = null;
+                }
+                modalContent.innerHTML = ''; // Prevent background processing
             }, 300);
         }
 
