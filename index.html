@@ -447,40 +447,43 @@
                         </p>
 
                         <!-- Mobile Content: Glass Card matching Desktop style -->
-                        <div class="lg:hidden relative mb-12">
-                            <div class="absolute -inset-2 bg-primary-container/10 blur-xl rounded-3xl"></div>
-                            <div class="relative bg-white/5 backdrop-blur-2xl border border-white/10 p-6 rounded-3xl shadow-2xl">
-                                <div class="flex justify-between items-center mb-4">
+                        <div class="lg:hidden relative mb-10 w-full max-w-[360px] mx-auto sm:mx-0">
+                            <div class="absolute -inset-1 bg-primary-container/20 blur-xl rounded-3xl"></div>
+                            <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-[2rem] shadow-2xl">
+                                <div class="flex justify-between items-start mb-5">
                                     <div>
-                                        <div class="text-[8px] text-primary-container font-black uppercase tracking-widest mb-1">Giá chỉ từ</div>
-                                        <div class="text-2xl font-black text-white italic">6x <span class="text-xs not-italic">tr/m²</span></div>
+                                        <div class="text-[9px] text-primary-container font-black uppercase tracking-widest mb-1.5 drop-shadow-sm">Giá chỉ từ</div>
+                                        <div class="text-3xl font-black text-white italic drop-shadow-md leading-none">6x <span class="text-sm not-italic font-bold ml-0.5">tr/m²</span></div>
                                     </div>
-                                    <div class="text-right">
-                                        <div class="text-[8px] text-primary-container font-black uppercase tracking-widest mb-1">Tiêu chuẩn</div>
-                                        <div class="text-sm font-black text-white">5 SAO FULL</div>
+                                    <div class="text-right pt-1">
+                                        <div class="text-[8px] text-primary-container font-black uppercase tracking-widest mb-1.5 drop-shadow-sm">Tiêu chuẩn</div>
+                                        <div class="text-xs font-black text-white drop-shadow-md bg-white/10 px-3 py-1.5 rounded-full border border-white/10 whitespace-nowrap">5 SAO FULL</div>
                                     </div>
                                 </div>
-                                <div class="w-full h-px bg-white/10 mb-4"></div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs">
-                                        <i class="fa-solid fa-truck-fast"></i>
+                                <div class="w-full h-px bg-gradient-to-r from-white/0 via-white/20 to-white/0 mb-5"></div>
+                                <div class="flex items-center gap-3 bg-black/20 p-3 rounded-2xl border border-white/5">
+                                    <div class="w-9 h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-sm shrink-0 shadow-inner">
+                                        <i class="fa-solid fa-calendar-check"></i>
                                     </div>
-                                    <div class="text-[10px] text-white/60 font-medium">Bàn giao dự kiến: <span class="text-white font-bold">Quý IV / 2026</span></div>
+                                    <div class="text-[10px] text-white/90 font-medium leading-[1.4]">Bàn giao dự kiến: <br/> <span class="text-primary-container font-black text-[11px] tracking-wide">QUÝ IV / 2026</span></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Main CTA Buttons (Synchronized style) -->
-                        <div class="flex flex-row items-center gap-4 sm:gap-6">
-                            <button onclick="toggleChatbot()" class="flex-1 sm:flex-none gold-button px-6 sm:px-10 py-4 sm:py-5 rounded-full text-white font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-3">
-                                <img src="./ai_avatar_vn.png" class="w-8 h-8 rounded-full object-cover border border-white/20" alt="AI Avatar" />
-                                Tư vấn AI
-                            </button>
-                            <button onclick="openVRImage()" class="flex-1 sm:flex-none flex items-center justify-center gap-3 group">
-                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white/20 flex items-center justify-center text-white text-lg group-hover:bg-primary-container group-hover:border-primary-container transition-all">
-                                    <i class="fa-solid fa-play ml-1"></i>
+                        <div class="flex flex-row items-center gap-3 sm:gap-6 w-full max-w-[360px] mx-auto sm:mx-0 sm:max-w-none">
+                            <button onclick="toggleChatbot()" class="gold-button flex-1 py-3.5 px-4 sm:px-10 sm:py-5 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+                                <div class="relative shrink-0">
+                                    <img src="./ai_avatar_vn.png" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-white/30" alt="AI Avatar" />
+                                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-primary sm:hidden"></div>
                                 </div>
-                                <span class="text-white font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em]">360° VR</span>
+                                <span class="text-[10px] sm:text-xs uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Tư vấn AI</span>
+                            </button>
+                            <button onclick="openVRImage()" class="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md sm:bg-transparent sm:border-none border border-white/20 pr-4 sm:pr-0 pl-1 py-1 sm:p-0 rounded-full transition-all hover:bg-white/20">
+                                <div class="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-primary/40 sm:bg-transparent border border-white/20 sm:border-2 sm:border-white/20 flex items-center justify-center text-white text-xs sm:text-lg group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
+                                    <i class="fa-solid fa-play ml-0.5"></i>
+                                </div>
+                                <span class="text-white font-black text-[9px] sm:text-[10px] uppercase tracking-widest whitespace-nowrap leading-none mt-0.5 pr-1 sm:pr-0">360° VR</span>
                             </button>
                         </div>
                     </div>
@@ -642,45 +645,143 @@
 
         <section id="matbang" class="py-24 bg-surface-container">
             <div class="app-container">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
-                    <div class="reveal">
-                        <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block font-body">Cuộc sống thông minh 4.0</span>
-                        <h2 class="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                            Căn Hộ <span class="text-primary-container">SmartHome</span> <br /> Sunshine Retreat
-                        </h2>
-                        <p class="text-base opacity-60 mb-10 max-w-lg font-body leading-relaxed">
-                            Tiên phong kiến tạo không gian nghỉ dưỡng thông minh. Đa dạng các loại hình: Studio, 1-3PN, Duplex và Sky Villa độc bản 100% hướng biển.
-                        </p>
+                <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                    <span class="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Bộ Sưu Tập Siêu Phẩm</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
+                        Sản Phẩm <span class="text-primary-container">Độc Bản</span>
+                    </h2>
+                    <p class="text-base opacity-60 font-body leading-relaxed">
+                        Sunshine Bay Retreat mang đến đa dạng các loại hình bất động sản nghỉ dưỡng hàng đầu, kết hợp hoàn hảo giữa không gian sống thông minh 4.0 và đặc quyền thượng lưu.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+                    <!-- Product 1: Sky Villa -->
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('skyvilla')">
+                        <div class="aspect-[4/3] relative overflow-hidden">
+                            <img src="./interior.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Sky Villa">
+                            <div class="absolute top-4 left-4 bg-primary-container text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Hot</div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-black text-primary uppercase mb-2">Căn Hộ Sky Villa</h3>
+                            <p class="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Căn hộ nghỉ dưỡng 100% view biển với nội thất chuẩn 5 sao và công nghệ SmartHome.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-surface-container">
+                                <div class="text-primary-container font-black text-sm">Từ 6x triệu/m²</div>
+                                <div class="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">Chi tiết <i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 2: Biệt Thự Horizon -->
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('villa')">
+                        <div class="aspect-[4/3] relative overflow-hidden">
+                            <img src="./sunshine-bay-retreat-28.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Biệt Thự">
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-black text-primary uppercase mb-2">Biệt Thự Nghỉ Dưỡng</h3>
+                            <p class="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Biệt thự độc lập khu Horizon & Eden với kiến trúc tinh xảo và tiện ích đặc quyền.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-surface-container">
+                                <div class="text-primary-container font-black text-sm">Liên hệ</div>
+                                <div class="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">Chi tiết <i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product 3: Shophouse -->
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300" onclick="openProductModal('shophouse')">
+                        <div class="aspect-[4/3] relative overflow-hidden">
+                            <img src="./sunshine_villa_interior_card_1774061099772.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Shophouse">
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-xl font-black text-primary uppercase mb-2">Shophouse Thương Mại</h3>
+                            <p class="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Tọa lạc tại phố đi bộ biển, lợi thế kinh doanh vượt trội trong hệ sinh thái All-in-one.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-surface-container">
+                                <div class="text-primary-container font-black text-sm">Giới hạn</div>
+                                <div class="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">Chi tiết <i class="fa-solid fa-arrow-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Detail Modal -->
+            <div id="product-modal" class="fixed inset-0 z-[300] hidden items-center justify-center p-4">
+                <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
+                <div class="bg-white rounded-[2rem] max-w-4xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row transform scale-95 opacity-0 transition-all duration-300" id="product-modal-content">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+            
+            <!-- Booking Modal -->
+            <div id="booking-modal" class="fixed inset-0 z-[350] hidden items-center justify-center p-4">
+                <div class="absolute inset-0 bg-primary/80 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+                <div class="bg-white rounded-[2rem] max-w-md w-full relative z-10 shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300" id="booking-modal-content">
+                    <button onclick="closeBookingModal()" class="absolute top-4 right-4 w-8 h-8 bg-surface-container rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                    
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-primary-container/20 text-primary-container rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-file-signature"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-primary uppercase tracking-tight">Booking Online</h3>
+                        <p class="text-xs opacity-60 font-body mt-2">Giữ chỗ ưu tiên sản phẩm: <span id="booking-product-name" class="font-bold text-primary"></span></p>
+                    </div>
+
+                    <form id="booking-form" onsubmit="submitBooking(event)">
+                        <input type="hidden" id="booking-product-id" name="product_id">
                         
-                        <div class="space-y-6 mb-12">
-                            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                                <i class="fa-solid fa-circle-check text-primary-container text-lg"></i>
-                                <span class="text-xs font-bold uppercase tracking-wider text-primary">Bàn giao Full nội thất 5 sao cao cấp</span>
+                        <div class="space-y-4 mb-8">
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Họ và tên *</label>
+                                <input type="text" required class="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all" placeholder="Nhập họ và tên...">
                             </div>
-                            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                                <i class="fa-solid fa-circle-check text-primary-container text-lg"></i>
-                                <span class="text-xs font-bold uppercase tracking-wider text-primary">Hệ quản trị 4.0 từ Sunshine Group</span>
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Số điện thoại *</label>
+                                <input type="tel" required class="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all" placeholder="Nhập số điện thoại...">
                             </div>
-                            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                                <i class="fa-solid fa-circle-check text-primary-container text-lg"></i>
-                                <span class="text-xs font-bold uppercase tracking-wider text-primary">100% Ban công trực diện biển ngọc</span>
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Số tiền Booking (VNĐ)</label>
+                                <select class="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
+                                    <option value="50M">50.000.000 VNĐ</option>
+                                    <option value="100M">100.000.000 VNĐ</option>
+                                    <option value="200M">200.000.000 VNĐ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Phương thức thanh toán</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="flex items-center gap-3 p-3 rounded-xl border border-primary-container bg-primary-container/5 cursor-pointer">
+                                        <input type="radio" name="payment" value="transfer" checked class="text-primary-container focus:ring-primary-container hidden peer">
+                                        <div class="w-4 h-4 rounded-full border border-primary-container peer-checked:bg-primary-container flex items-center justify-center group">
+                                            <div class="w-2 h-2 rounded-full bg-white hidden peer-checked:block"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-primary">Chuyển khoản</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:border-primary-container cursor-pointer transition-colors">
+                                        <input type="radio" name="payment" value="card" class="text-primary-container focus:ring-primary-container hidden peer">
+                                        <div class="w-4 h-4 rounded-full border border-primary/20 peer-checked:border-primary-container peer-checked:bg-primary-container flex items-center justify-center">
+                                            <div class="w-2 h-2 rounded-full bg-white hidden peer-checked:block"></div>
+                                        </div>
+                                        <span class="text-xs font-bold text-primary">Thẻ tín dụng</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <a href="https://urlvn.net/zx8y3is" target="_blank" class="gold-button inline-flex items-center gap-3 text-white px-8 py-3.5 rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg">
-                            Xem thiết kế chi tiết
-                            <i class="fa-solid fa-building"></i>
-                        </a>
-                    </div>
-                    <div class="reveal">
-                        <div class="aspect-[4/3] lg:aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl relative group">
-                            <img alt="" class="w-full h-full object-cover transform opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-1000" src="./interior.png" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-10 left-10 right-10 text-white">
-                                <div class="text-[10px] uppercase font-black tracking-widest mb-2 text-primary-container">Sunshine Design</div>
-                                <h3 class="text-2xl font-black uppercase tracking-tight">Căn Hộ Mẫu Luxury</h3>
-                            </div>
+                        <button type="submit" id="submit-booking-btn" class="w-full gold-button py-4 rounded-xl text-white font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2">
+                            Xác nhận Booking <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Success Overlay -->
+                    <div id="booking-success" class="absolute inset-0 bg-white z-20 rounded-[2rem] flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-all duration-300">
+                        <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner">
+                            <i class="fa-solid fa-check"></i>
                         </div>
+                        <h3 class="text-2xl font-black text-primary uppercase mb-2">Khởi Tạo Thành Công</h3>
+                        <p class="text-sm opacity-60 font-body mb-8">Hệ thống đã ghi nhận yêu cầu Booking. Chuyên viên sẽ liên hệ với bạn trong ít phút để hướng dẫn thủ tục.</p>
+                        <button onclick="closeBookingSuccess()" class="bg-surface-container py-3 px-8 rounded-full text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-colors shadow-sm">Đóng cửa sổ</button>
                     </div>
                 </div>
             </div>
@@ -1293,6 +1394,192 @@
             }
 
             document.body.style.overflow = 'hidden';
+        }
+
+        // --- PRODUCT MODAL LOGIC ---
+        const productsData = {
+            'skyvilla': {
+                title: 'Căn Hộ Condotel / Sky Villa',
+                price: 'Từ 6x triệu/m²',
+                image: './interior.png',
+                description: 'Trải nghiệm không gian sống thượng lưu với 100% căn hộ hướng biển. Sự kết hợp hoàn hảo giữa thiết kế đương đại và công nghệ SmartHome 4.0 từ Sunshine Group.',
+                specs: [
+                    'Diện tích: 45m² - 120m²',
+                    'Bàn giao: Full nội thất 5 sao',
+                    'Công nghệ: Hệ thống SmartHome, FaceID thông minh',
+                    'Thiết kế: 1-3 Phòng ngủ, Studio, Duplex'
+                ],
+                features: 'Được thiết kế mở với ban công kính rộng lớn, Sky Villa mang đến tầm nhìn panorama tuyệt mỹ bao trọn biển Đông. Nội thất nhập khẩu từ các thương hiệu hàng đầu thế giới.'
+            },
+            'villa': {
+                title: 'Biệt Thự Nghỉ Dưỡng (Horizon & Eden)',
+                price: 'Liên hệ nhân viên',
+                image: './sunshine-bay-retreat-28.jpg',
+                description: 'Khu biệt thự khép kín mang đến sự riêng tư tuyệt đối, bao quanh là không gian xanh mát và hệ sinh thái tiện ích đẳng cấp chuẩn thượng lưu.',
+                specs: [
+                    'Diện tích: Khoảng 300m² - 500m²',
+                    'Bàn giao: Hoàn thiện mặt ngoài, thô bên trong',
+                    'Tiện ích riêng: Hồ bơi riêng, sân vườn cảnh quan',
+                    'Vị trí: Gần bãi biển, tầm nhìn panorama'
+                ],
+                features: 'Thiết kế theo phong cách hiện đại, tối ưu hóa ánh sáng tự nhiên và gió biển. Phân khu Horizon và Eden mang tinh thần nghỉ dưỡng tĩnh tại nhưng vẫn đầy đủ tiện nghi xa hoa.'
+            },
+            'shophouse': {
+                title: 'Shophouse Thương Mại Cao Cấp',
+                price: 'Số lượng cực giới hạn',
+                image: './sunshine_villa_interior_card_1774061099772.png',
+                description: 'Tọa lạc trên trục đường chính và phố đi bộ sầm uất của dự án, shophouse là dòng sản phẩm khan hiếm mang lại cơ hội sinh lời lớn.',
+                specs: [
+                    'Thiết kế: 3-5 tầng',
+                    'Mục đích: Kinh doanh đa ngành (F&B, Boutique, Spa)',
+                    'Lưu lượng khách: Tiếp cận toàn bộ khách du lịch và cư dân',
+                    'Pháp lý: Sở hữu lâu dài / 50 năm'
+                ],
+                features: 'Hưởng trọn lợi thế từ hệ thống "All-in-one" của khu nghỉ dưỡng 20ha, thu hút lượng lớn du khách có mức chi tiêu cao, tạo ra dòng tiền bền vững cho nhà đầu tư.'
+            }
+        };
+
+        function openProductModal(productId) {
+            const data = productsData[productId];
+            const modalContent = document.getElementById('product-modal-content');
+            
+            modalContent.innerHTML = `
+                <button onclick="closeProductModal()" class="absolute top-4 right-4 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center text-primary hover:bg-white z-20 shadow-md transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="w-full md:w-1/2 min-h-[300px] md:min-h-[500px] relative">
+                    <img src="${data.image}" class="absolute inset-0 w-full h-full object-cover rounded-t-[2rem] md:rounded-l-[2rem] md:rounded-tr-none" alt="${data.title}">
+                </div>
+                <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+                    <div class="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Sunshine Bay Retreat</div>
+                    <h2 class="text-2xl md:text-3xl font-black text-primary uppercase leading-tight mb-4">${data.title}</h2>
+                    <div class="text-xl font-black text-primary-container italic mb-6">${data.price}</div>
+                    <p class="text-sm opacity-70 font-body mb-6">${data.description}</p>
+                    
+                    <h4 class="text-sm font-black uppercase tracking-widest text-primary mb-3">Thông số cơ bản</h4>
+                    <ul class="space-y-2 mb-8">
+                        ${data.specs.map(spec => `
+                            <li class="flex items-start gap-2 text-xs font-body opacity-80">
+                                <i class="fa-solid fa-check text-primary-container mt-1"></i>
+                                <span>${spec}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h4 class="text-sm font-black uppercase tracking-widest text-primary mb-2">Điểm nhấn</h4>
+                    <p class="text-xs opacity-70 font-body mb-8">${data.features}</p>
+                    
+                    <div class="flex gap-4 mt-auto">
+                        <button onclick="openBookingModal('${productId}')" class="flex-1 bg-white text-primary py-4 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg border-2 border-primary hover:bg-primary hover:text-white transition-colors">
+                            Booking Cọc
+                        </button>
+                        <button onclick="closeProductModal(); setTimeout(() => { if(!chatbotState.isOpen) toggleChatbot(); pushSuggestion('Tư vấn ${data.title}'); }, 300);" class="flex-1 gold-button py-4 rounded-xl text-white font-black text-[10px] uppercase tracking-widest shadow-lg">
+                            Nhận tư vấn
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            const modal = document.getElementById('product-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Trigger animation
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('product-modal');
+            const modalContent = document.getElementById('product-modal-content');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function openBookingModal(productId) {
+            closeProductModal();
+            
+            setTimeout(() => {
+                const data = productsData[productId];
+                document.getElementById('booking-product-name').textContent = data.title;
+                document.getElementById('booking-product-id').value = productId;
+                
+                const modal = document.getElementById('booking-modal');
+                const content = document.getElementById('booking-modal-content');
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                const successLayer = document.getElementById('booking-success');
+                successLayer.classList.remove('opacity-100', 'pointer-events-auto');
+                successLayer.classList.add('opacity-0', 'pointer-events-none');
+                
+                document.getElementById('booking-form').reset();
+                
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+                
+                document.body.style.overflow = 'hidden';
+            }, 300);
+        }
+
+        function closeBookingModal() {
+            const modal = document.getElementById('booking-modal');
+            const content = document.getElementById('booking-modal-content');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function submitBooking(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-booking-btn');
+            
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xử lý...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                const productId = document.getElementById('booking-product-id').value;
+                const data = productsData[productId];
+                
+                // Show success overlay
+                const successLayer = document.getElementById('booking-success');
+                successLayer.classList.remove('opacity-0', 'pointer-events-none');
+                successLayer.classList.add('opacity-100', 'pointer-events-auto');
+                
+                // Notify via Chatbot
+                if(!chatbotState.isOpen) toggleChatbot();
+                setTimeout(() => {
+                    appendMessage('bot', `Hệ thống vừa ghi nhận yêu cầu Booking Cọc cho sản phẩm **${data.title}** thành công. Chuyên viên thủ tục của chúng tôi sẽ lập tức liên hệ qua số điện thoại bạn vừa cung cấp!`);
+                }, 500);
+            }, 1500);
+        }
+
+        function closeBookingSuccess() {
+            closeBookingModal();
         }
     </script>
 
