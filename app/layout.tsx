@@ -1,20 +1,24 @@
 import "./globals.css";
 import type { ReactNode } from "react";
-import { getOriginalLanding } from "@/lib/original-landing";
+import {
+  NATIVE_LANDING_BODY_CLASSNAME,
+  NATIVE_LANDING_HEAD_STYLE,
+  NATIVE_LANDING_HTML_CLASSNAME,
+  NATIVE_LANDING_TAILWIND_CONFIG,
+  NATIVE_LANDING_TITLE
+} from "@/lib/native-original-head";
 
 export default function RootLayout({
   children
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const landing = getOriginalLanding();
-
   return (
-    <html lang="vi" className={landing.htmlClassName}>
+    <html lang="vi" className={NATIVE_LANDING_HTML_CLASSNAME}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{landing.title}</title>
+        <title>{NATIVE_LANDING_TITLE}</title>
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -38,11 +42,11 @@ export default function RootLayout({
         <script src="https://cdn.jsdelivr.net/npm/panolens@0.11.0/build/panolens.min.js" />
         <script
           id="tailwind-config"
-          dangerouslySetInnerHTML={{ __html: landing.tailwindConfig }}
+          dangerouslySetInnerHTML={{ __html: NATIVE_LANDING_TAILWIND_CONFIG }}
         />
-        <style dangerouslySetInnerHTML={{ __html: landing.headStyle }} />
+        <style dangerouslySetInnerHTML={{ __html: NATIVE_LANDING_HEAD_STYLE }} />
       </head>
-      <body className={landing.bodyClassName}>{children}</body>
+      <body className={NATIVE_LANDING_BODY_CLASSNAME}>{children}</body>
     </html>
   );
 }

@@ -7,3 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 .playwright-cli
 .env.local
+data/leads.json
+output/
+data/events.json
+

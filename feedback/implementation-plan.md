@@ -4,7 +4,7 @@
 Chuyển landing từ bản "đẹp nhưng chưa chốt sale" sang bản tối ưu chuyển đổi theo toàn bộ feedback trong thư mục `feedback`, đồng thời nâng chatbot thành sales funnel thật có API Gemini phía server.
 
 ## Phase 1 - Messaging va Hero
-Status: pending
+Status: completed
 
 Scope:
 - Thay headline hero sang thông điệp chot sale: gia tong, loi ich, FOMO.
@@ -22,7 +22,7 @@ Acceptance:
 - CTA chinh huong den nhan bang gia noi bo.
 
 ## Phase 2 - Trust va FOMO Blocks
-Status: pending
+Status: completed
 
 Scope:
 - Them block trust: phap ly, chu dau tu, hinh anh thuc te, giay to.
@@ -38,7 +38,7 @@ Acceptance:
 - Co toi thieu 1 cum trust va 1 cum FOMO ro rang tren first scroll.
 
 ## Phase 3 - Conversion Flow
-Status: pending
+Status: completed
 
 Scope:
 - Sap xep lai thu tu section theo funnel: hero -> video ngan -> ly do dau tu -> trust -> FOMO -> form.
@@ -54,38 +54,37 @@ Acceptance:
 - Co duong di ro rang tu hero den form, khong phu thuoc chi vao chatbot.
 
 ## Phase 4 - Chatbot Funnel va Gemini API
-Status: in_progress
+Status: completed
 
 Done in this step:
-- Tao `app/api/chatbot/route.ts` de goi Gemini server-side.
+- Tao `app/api/chatbot/route.ts` theo huong hybrid: scripted sales funnel cho quick action va Gemini cho cau hoi mo.
 - Them fallback de chat van hoat dong khi chua co `GEMINI_API_KEY`.
 - Chuan bi prompt ban hang, quick actions va context du an trong `lib/chatbot-config.ts`.
-- Noi chat hien tai sang API moi qua transform trong `lib/original-landing.ts`.
-
-Next:
-- Day manh lead capture: ten, SDT/Zalo, nhu cau, tai chinh, muc do nong.
-- Tao API lead ingestion (`/api/leads`) de luu vao CRM/Google Sheet/Firebase.
-- Them follow-up state va event tracking cho cac quick action.
+- Tao `app/api/leads/route.ts` va `lib/lead-store.ts` de luu lead theo schema dung cho CRM/Google Sheet/Firebase.
+- Noi landing form, booking modal va chatbot vao cung pipeline lead.
+- Them follow-up state cho quick action: bang gia, video, dau tu, goi nhanh, dat lich xem du an.
 
 Acceptance:
-- Chatbot mo popup dung context hero, dua 4 quick actions, va tra loi server-side.
+- Chatbot mo popup dung context hero, dua 4 quick actions, tra loi server-side va co nhung scripted funnel cho case chot sale chinh.
+- Form, modal va chatbot deu do ve cung schema lead.
 - Loi goi API hoac thieu key van co fallback on dinh.
 
-## Phase 5 - Data va Ops
-Status: pending
+## Phase 5 - Dashboard va Supabase
+Status: completed
 
-Scope:
-- Dinh nghia schema lead va lead scoring: hot/warm/cold.
-- Day event analytics cho cac diem cham: click CTA, open chat, request bang gia, submit lead.
-- Chot diem den du lieu: Google Sheet, Firebase, hoac CRM.
+Done in this step:
+- Tao dashboard `/dashboard` trong Next.js de quan sat KPI lead, breakdown va recent activity.
+- Them `app/api/events/route.ts` va event tracking cho cac touchpoint quan trong tren landing.
+- Tao repository layer dung chung cho leads/events voi local fallback va Supabase REST sync/read.
+- Bo sung schema Supabase tai `supabase/schema.sql` va cap nhat env mau.
+- Giữ local JSON la fallback an toan khi chua cau hinh Supabase.
 
 Acceptance:
-- Moi lead tu chatbot/form deu co schema nhat quan va de ban giao cho sale.
+- Dashboard doc duoc du lieu lead/event trong Next.js.
+- Neu co `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`, he thong uu tien doc/sync voi Supabase.
+- Neu chua co Supabase, landing va dashboard van hoat dong on dinh voi local data.
 
 ## Immediate Next Build Order
-1. Hoan tat wiring chatbot API + test fallback.
-2. Refactor hero copy va CTA theo feedback 1.
-3. Them trust/FOMO blocks.
-4. Tao lead form va API luu lead.
-5. Gan analytics va diem den CRM.
-
+1. Noi Supabase vao project that bang env production va chay schema SQL.
+2. Them auth/basic protection cho `/dashboard` neu can mo cho sale team.
+3. Day tiep sang CRM/Google Sheet neu doi sale can diem den khac ngoai Supabase.

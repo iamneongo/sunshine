@@ -4,6 +4,12 @@ import {
   DEFAULT_QUICK_ACTIONS,
   PROJECT_CONTEXT
 } from "@/lib/chatbot-config";
+import { persistLead } from "@/lib/crm-data";
+import {
+  type LeadContactPreference,
+  type LeadHotness,
+  type LeadNeed
+} from "@/lib/lead-store";
 
 type ClientHistoryItem = {
   role: "user" | "assistant";
@@ -15,60 +21,306 @@ type LeadSignals = {
   budget: string;
   contactPreference: "zalo" | "phone" | "email" | "unknown";
   hotness: "hot" | "warm" | "cold";
+  name: string;
 };
 
 type ChatbotPayload = {
   reply: string;
   suggestions: string[];
   leadSignals: LeadSignals;
-  source: "gemini" | "fallback";
+  source: "gemini" | "fallback" | "scripted";
+  leadCaptured: boolean;
+  leadId?: string;
 };
 
 const DEFAULT_SUGGESTIONS = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
+const CALLBACK_OPTIONS = ["Ngay bây giờ", "Trong 30 phút tới", "Buổi chiều", "Buổi tối"];
+const VISIT_OPTIONS = ["Hôm nay", "Ngày mai", "Cuối tuần"];
+const PARTY_OPTIONS = ["Đi 1 mình", "Đi cùng gia đình / bạn bè"];
+const CONTACT_DELIVERY_OPTIONS = ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Nhận qua Email"];
 
 function normalizeVietnamese(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d");
+    .replace(/đ/g, "d")
+    .trim();
 }
 
-function detectLeadSignals(message: string): LeadSignals {
-  const normalized = normalizeVietnamese(message);
+function normalizeText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
 
-  let intent: LeadSignals["intent"] = "unknown";
-  if (/(gia|bang gia|nhan bang gia|1,2 ty|1.2 ty|tong tien|chi phi)/.test(normalized)) {
-    intent = "pricing";
-  } else if (/(phap ly|so hong|giay to|chu dau tu)/.test(normalized)) {
-    intent = "legal";
-  } else if (/(dau tu|sinh loi|dong tien|cho thue|tang gia)/.test(normalized)) {
-    intent = "investment";
-  } else if (/(nghi duong|view dep|resort|bien)/.test(normalized)) {
-    intent = "resort";
-  } else if (/(de o|an cu|o lau dai|gia dinh)/.test(normalized)) {
-    intent = "living";
+function dedupeSuggestions(suggestions: string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const item of suggestions) {
+    const trimmed = normalizeText(item);
+    const key = normalizeVietnamese(trimmed);
+
+    if (!trimmed || seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    result.push(trimmed);
+
+    if (result.length === 4) {
+      break;
+    }
   }
 
-  let contactPreference: LeadSignals["contactPreference"] = "unknown";
+  return result.length > 0 ? result : DEFAULT_SUGGESTIONS;
+}
+
+function buildConversationText(message: string, history: ClientHistoryItem[]): string {
+  return [...history.filter((item) => item.role === "user").map((item) => item.text), message]
+    .map((item) => normalizeText(item))
+    .filter(Boolean)
+    .join(" ");
+}
+
+function extractPhone(text: string): string {
+  const match = text.match(/(?:\+?84|0)[\d\s.-]{8,13}\d/);
+  return match ? match[0].replace(/[^\d+]/g, "") : "";
+}
+
+function extractEmail(text: string): string {
+  const match = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return match?.[0]?.trim() ?? "";
+}
+
+function normalizePersonName(value: string): string {
+  return value.replace(/\s+/g, " ").replace(/[.,;:!?]+$/g, "").trim();
+}
+
+function titleCaseName(value: string): string {
+  return normalizePersonName(value)
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function looksLikePersonName(value: string): boolean {
+  const trimmed = normalizePersonName(value);
+  if (!trimmed || trimmed.length < 2 || trimmed.length > 48 || /[\d@]/.test(trimmed)) {
+    return false;
+  }
+
+  const wordCount = trimmed.split(/\s+/).length;
+  const normalized = normalizeVietnamese(trimmed);
+
+  if (wordCount > 6) {
+    return false;
+  }
+
+  if (/(dau tu|nghi duong|bang gia|phap ly|video|zalo|dien thoai|email|hom nay|ngay mai|cuoi tuan|goi nhanh|gui gia|can dep|gia tot)/.test(normalized)) {
+    return false;
+  }
+
+  if (/^(anh|chi|em|toi|khach|nha dau tu)$/.test(normalized)) {
+    return false;
+  }
+
+  return true;
+}
+
+function extractNameFromText(text: string): string {
+  const patterns = [
+    /(?:tôi tên là|toi ten la|tên tôi là|ten toi la|mình tên là|minh ten la|anh tên là|anh ten la|chị tên là|chi ten la|em tên là|em ten la)\s+([^,!.;\n]+)/iu,
+    /(?:tôi là|toi la|mình là|minh la|anh là|anh la|chị là|chi la|em là|em la)\s+([^,!.;\n]+)/iu
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    const candidate = normalizePersonName(match?.[1] ?? "");
+
+    if (candidate && looksLikePersonName(candidate)) {
+      return titleCaseName(candidate);
+    }
+  }
+
+  const normalizedText = normalizeVietnamese(text);
+  const fallbackMatch = normalizedText.match(
+    /(?:toi ten la|ten toi la|minh ten la|anh ten la|chi ten la|em ten la|toi la|minh la|anh la|chi la|em la)\s+([^,!.;\n]+)/
+  );
+  const fallbackCandidate = normalizePersonName(fallbackMatch?.[1] ?? "");
+
+  if (fallbackCandidate && looksLikePersonName(fallbackCandidate)) {
+    return titleCaseName(fallbackCandidate);
+  }
+
+  return "";
+}
+
+function assistantAskedForName(text: string): boolean {
+  return /(xin ten|cho em xin ten|xin them ho ten|de sale xung ho|xin ho ten|biet ten)/.test(
+    normalizeVietnamese(text)
+  );
+}
+
+function extractLeadName(message: string, history: ClientHistoryItem[]): string {
+  const timeline = [...history, { role: "user" as const, text: message }];
+
+  for (let index = timeline.length - 1; index >= 0; index -= 1) {
+    const item = timeline[index];
+    if (item.role !== "user") {
+      continue;
+    }
+
+    const taggedName = extractNameFromText(item.text);
+    if (taggedName) {
+      return taggedName;
+    }
+
+    const previousAssistant = timeline[index - 1];
+    if (previousAssistant?.role === "assistant" && assistantAskedForName(previousAssistant.text) && looksLikePersonName(item.text)) {
+      return normalizePersonName(item.text);
+    }
+  }
+
+  return "";
+}
+
+function detectBudget(text: string): string {
+  const normalized = normalizeVietnamese(text);
+
+  if (/(1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty|duoi\s*1[,.]?5\s*ty|1-1,5\s*ty)/.test(normalized)) {
+    return "1-1,5 tỷ";
+  }
+
+  if (/(1[,.]?5\s*[-–]\s*2\s*ty|1,5-2\s*ty|tu\s*1[,.]?5\s*den\s*2\s*ty)/.test(normalized)) {
+    return "1,5-2 tỷ";
+  }
+
+  if (/(tren\s*2\s*ty|hon\s*2\s*ty|2\s*ty\s*tro\s*len)/.test(normalized)) {
+    return "Trên 2 tỷ";
+  }
+
+  const directMatch = text.match(/\d+[,.]?\d*\s*t(?:ỷ|y)/i);
+  return directMatch?.[0]?.trim() ?? "unknown";
+}
+
+function detectIntent(text: string): LeadSignals["intent"] {
+  const normalized = normalizeVietnamese(text);
+
+  if (/(gia|bang gia|nhan bang gia|1[,.]?2\s*ty|tong tien|chi phi|thanh toan|gia bao nhieu|goi gia)/.test(normalized)) {
+    return "pricing";
+  }
+
+  if (/(phap ly|so hong|giay to|chu dau tu|bao lanh|hop dong)/.test(normalized)) {
+    return "legal";
+  }
+
+  if (/(dau tu|sinh loi|dong tien|cho thue|tang gia|de tang gia|de cho thue)/.test(normalized)) {
+    return "investment";
+  }
+
+  if (/(nghi duong|view dep|resort|bien|second home)/.test(normalized)) {
+    return "resort";
+  }
+
+  if (/(de o|an cu|o lau dai|gia dinh|mua o)/.test(normalized)) {
+    return "living";
+  }
+
+  return "unknown";
+}
+
+function detectContactPreference(text: string): LeadSignals["contactPreference"] {
+  const normalized = normalizeVietnamese(text);
+
   if (/zalo/.test(normalized)) {
-    contactPreference = "zalo";
-  } else if (/(sdt|so dien thoai|phone|goi)/.test(normalized) || /(\+84|0)\d{8,10}/.test(normalized)) {
-    contactPreference = "phone";
-  } else if (/email/.test(normalized)) {
-    contactPreference = "email";
+    return "zalo";
   }
 
-  let budget = "unknown";
-  const budgetMatch = message.match(/(1[,.]?2\s*ty|1[,.]?5\s*ty|2\s*ty|\d+[,.]?\d*\s*ty)/i);
-  if (budgetMatch?.[0]) {
-    budget = budgetMatch[0];
+  if (/email/.test(normalized) || Boolean(extractEmail(text))) {
+    return "email";
   }
+
+  if (/(sdt|so dien thoai|phone|goi nhanh|goi lai|goi cho toi|dien thoai)/.test(normalized) || Boolean(extractPhone(text))) {
+    return "phone";
+  }
+
+  return "unknown";
+}
+
+function detectCallbackTime(text: string): string {
+  const normalized = normalizeVietnamese(text);
+
+  if (/ngay bay gio/.test(normalized)) {
+    return "Ngay bây giờ";
+  }
+
+  if (/30\s*phut/.test(normalized)) {
+    return "Trong 30 phút tới";
+  }
+
+  if (/buoi chieu/.test(normalized)) {
+    return "Buổi chiều";
+  }
+
+  if (/buoi toi/.test(normalized)) {
+    return "Buổi tối";
+  }
+
+  return "";
+}
+
+function detectVisitTime(text: string): string {
+  const normalized = normalizeVietnamese(text);
+
+  if (/hom nay/.test(normalized)) {
+    return "Hôm nay";
+  }
+
+  if (/ngay mai/.test(normalized)) {
+    return "Ngày mai";
+  }
+
+  if (/cuoi tuan/.test(normalized)) {
+    return "Cuối tuần";
+  }
+
+  return "";
+}
+
+function detectTravelParty(text: string): string {
+  const normalized = normalizeVietnamese(text);
+
+  if (/(di\s*1\s*minh|mot\s*minh)/.test(normalized)) {
+    return "Đi 1 mình";
+  }
+
+  if (/(gia dinh|ban be|di cung)/.test(normalized)) {
+    return "Đi cùng gia đình / bạn bè";
+  }
+
+  return "";
+}
+
+function detectLeadSignals(message: string, history: ClientHistoryItem[]): LeadSignals {
+  const conversation = buildConversationText(message, history);
+  const budget = detectBudget(conversation);
+  const contactPreference = detectContactPreference(conversation);
+  const intent = detectIntent(conversation);
+  const name = extractLeadName(message, history);
+  const hasContact = Boolean(extractPhone(conversation) || extractEmail(conversation));
+  const normalized = normalizeVietnamese(conversation);
 
   let hotness: LeadSignals["hotness"] = "cold";
-  if (/(gia bao nhieu|bang gia|nhan bang gia|phap ly|di xem|xem du an|goi lai|so dien thoai|zalo)/.test(normalized)) {
+
+  if (
+    hasContact ||
+    /(gia bao nhieu|bang gia|nhan bang gia|phap ly|dat lich|xem du an|goi nhanh|goi lai|zalo|hom nay|ngay mai|cuoi tuan)/.test(
+      normalized
+    )
+  ) {
     hotness = "hot";
-  } else if (/(dau tu|video|view dep|1,2 ty|1.2 ty|cho thue)/.test(normalized)) {
+  } else if (/(dau tu|video|view dep|1[,.]?2\s*ty|1[,.]?5\s*ty|cho thue|tang gia)/.test(normalized)) {
     hotness = "warm";
   }
 
@@ -76,89 +328,531 @@ function detectLeadSignals(message: string): LeadSignals {
     intent,
     budget,
     contactPreference,
-    hotness
+    hotness,
+    name
   };
 }
 
-function buildFallbackResponse(message: string): Omit<ChatbotPayload, "source"> {
-  const normalized = normalizeVietnamese(message);
-  const leadSignals = detectLeadSignals(message);
+function mapNeed(intent: LeadSignals["intent"]): LeadNeed {
+  switch (intent) {
+    case "investment":
+      return "Đầu tư";
+    case "living":
+    case "resort":
+      return "Ở / nghỉ dưỡng";
+    case "pricing":
+      return "Xem giá";
+    case "legal":
+      return "Xem pháp lý";
+    default:
+      return "Chưa rõ";
+  }
+}
 
-  if (/(\+84|0)\d{8,10}/.test(normalized)) {
-    return {
-      reply:
-        "Dạ em đã ghi nhận SĐT/Zalo của anh/chị rồi ạ. Em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và có thể sắp xếp **gọi nhanh 2 phút** hoặc **đặt lịch xem dự án** nếu mình muốn.",
-      suggestions: ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Đặt lịch xem dự án"],
-      leadSignals: {
+function mapContactPreference(value: LeadSignals["contactPreference"]): LeadContactPreference {
+  switch (value) {
+    case "zalo":
+      return "Zalo";
+    case "phone":
+      return "Điện thoại";
+    case "email":
+      return "Email";
+    default:
+      return "Chưa rõ";
+  }
+}
+
+function mapHotness(value: LeadSignals["hotness"]): LeadHotness {
+  switch (value) {
+    case "hot":
+      return "Nóng";
+    case "warm":
+      return "Ấm";
+    default:
+      return "Lạnh";
+  }
+}
+
+function resolveContactFields(text: string, contactPreference: LeadSignals["contactPreference"]) {
+  const phoneLike = extractPhone(text);
+  const email = extractEmail(text);
+  const normalized = normalizeVietnamese(text);
+  const prefersZalo = contactPreference === "zalo" || /zalo/.test(normalized);
+
+  return {
+    phone: phoneLike,
+    zalo: prefersZalo && phoneLike ? phoneLike : "",
+    email
+  };
+}
+
+function mergeLeadSignals(primary: Partial<LeadSignals> | null | undefined, fallback: LeadSignals): LeadSignals {
+  const intent = primary?.intent;
+  const contactPreference = primary?.contactPreference;
+  const hotness = primary?.hotness;
+  const budget = normalizeText(primary?.budget);
+  const name = normalizePersonName(primary?.name ?? "");
+
+  return {
+    intent:
+      intent === "investment" || intent === "living" || intent === "resort" || intent === "pricing" || intent === "legal"
+        ? intent
+        : fallback.intent,
+    budget: budget || fallback.budget,
+    contactPreference:
+      contactPreference === "zalo" || contactPreference === "phone" || contactPreference === "email"
+        ? contactPreference
+        : fallback.contactPreference,
+    hotness: hotness === "hot" || hotness === "warm" ? hotness : fallback.hotness,
+    name: name || fallback.name
+  };
+}
+
+function buildLeadNotes(message: string, leadSignals: LeadSignals, preferredCallbackTime: string, preferredVisitTime: string, travelParty: string): string {
+  const parts = [
+    `Chatbot intent: ${leadSignals.intent}`,
+    leadSignals.budget !== "unknown" ? `Budget: ${leadSignals.budget}` : "",
+    preferredCallbackTime ? `Callback: ${preferredCallbackTime}` : "",
+    preferredVisitTime ? `Visit: ${preferredVisitTime}` : "",
+    travelParty ? `Travel party: ${travelParty}` : "",
+    normalizeText(message) ? `Last ask: ${normalizeText(message)}` : ""
+  ].filter(Boolean);
+
+  return parts.join(" | ");
+}
+
+function buildLeadInput(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals) {
+  const conversation = buildConversationText(message, history);
+  const preferredCallbackTime = detectCallbackTime(conversation);
+  const preferredVisitTime = detectVisitTime(conversation);
+  const travelParty = detectTravelParty(conversation);
+  const { phone, zalo, email } = resolveContactFields(conversation, leadSignals.contactPreference);
+
+  return {
+    source: "chatbot" as const,
+    fullName: leadSignals.name,
+    phone,
+    zalo,
+    email,
+    need: mapNeed(leadSignals.intent),
+    budget: leadSignals.budget === "unknown" ? "Chưa rõ" : leadSignals.budget,
+    contactPreference: mapContactPreference(leadSignals.contactPreference),
+    hotness: mapHotness(leadSignals.hotness),
+    status: preferredVisitTime ? ("Đặt lịch" as const) : undefined,
+    notes: buildLeadNotes(message, leadSignals, preferredCallbackTime, preferredVisitTime, travelParty),
+    preferredCallbackTime,
+    preferredVisitTime,
+    travelParty,
+    lastMessage: normalizeText(message),
+    metadata: {
+      channel: "website_chatbot",
+      price_anchor: PROJECT_CONTEXT.priceAnchor,
+      last_user_turn: normalizeText(message)
+    }
+  };
+}
+
+function buildResponse(reply: string, suggestions: string[], leadSignals: LeadSignals) {
+  return {
+    reply,
+    suggestions: dedupeSuggestions(suggestions),
+    leadSignals
+  };
+}
+
+function buildScriptedResponse(message: string, history: ClientHistoryItem[]): Omit<ChatbotPayload, "source" | "leadCaptured" | "leadId"> | null {
+  const normalized = normalizeVietnamese(message);
+  const conversation = buildConversationText(message, history);
+  const leadSignals = detectLeadSignals(message, history);
+  const hasContact = Boolean(extractPhone(conversation) || extractEmail(conversation));
+  const hasName = Boolean(leadSignals.name);
+  const hasBudget = leadSignals.budget !== "unknown";
+  const callbackTime = detectCallbackTime(conversation);
+  const visitTime = detectVisitTime(conversation);
+  const travelParty = detectTravelParty(conversation);
+
+  if (hasContact && visitTime) {
+    const partyText = travelParty ? `, đi theo nhóm **${travelParty.toLowerCase()}**` : "";
+    return buildResponse(
+      `Dạ em đã ghi nhận lịch **${visitTime}**${partyText}. Bên em sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và xác nhận lại vị trí hẹn qua SĐT/Zalo của anh/chị ạ.`,
+      ["Xem pháp lý", "Nhận bảng giá nội bộ", "Xem video căn đẹp"],
+      {
         ...leadSignals,
         hotness: "hot"
       }
-    };
+    );
   }
 
-  if (/(gia|bang gia|nhan bang gia|1,2 ty|1.2 ty|tong tien|chi phi)/.test(normalized)) {
-    return {
-      reply:
-        `Dạ hiện giỏ hàng đang có các căn **${PROJECT_CONTEXT.priceAnchor.toLowerCase()}** tùy vị trí, tầng và thời điểm. Anh/chị để lại **SĐT/Zalo**, em gửi ngay **bảng giá nội bộ** và căn đẹp nhất hôm nay ạ.`,
-      suggestions: ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Gửi Zalo trước"],
-      leadSignals: {
+  if (hasContact && callbackTime) {
+    return buildResponse(
+      `Dạ em đã ghi nhận SĐT/Zalo và nhu cầu **gọi nhanh 2 phút** vào **${callbackTime}**. Em sẽ gửi trước **bảng giá nội bộ** và gọi đúng khung giờ này để tư vấn gọn cho mình ạ.`,
+      ["Nhận bảng giá nội bộ", "Xem pháp lý", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact && !hasName) {
+    return buildResponse(
+      "Dạ em đã ghi nhận **SĐT/Zalo** của anh/chị rồi ạ. Anh/chị cho em xin thêm **họ tên** để sale xưng hô chuẩn và gửi đúng danh sách căn phù hợp nhé.",
+      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact && hasName && leadSignals.intent === "unknown") {
+    return buildResponse(
+      `Dạ em đã ghi nhận **${leadSignals.name}** rồi ạ. Anh/chị đang nghiêng về **đầu tư sinh lời** hay **mua để ở / nghỉ dưỡng** để em lọc đúng nhóm căn trước nhé?`,
+      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact && hasName && !hasBudget) {
+    return buildResponse(
+      `Dạ em đã ghi nhận nhu cầu của **${leadSignals.name}**. Anh/chị đang quan tâm khung tài chính nào để em gửi đúng danh sách căn phù hợp hơn ạ?`,
+      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Trên 2 tỷ"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact && hasName && hasBudget && leadSignals.contactPreference === "unknown") {
+    return buildResponse(
+      `Dạ em đã ghi nhận **${leadSignals.name}** với tài chính **${leadSignals.budget}** rồi ạ. Anh/chị muốn bên em gửi thông tin theo cách nào trước?`,
+      CONTACT_DELIVERY_OPTIONS,
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact && hasName && hasBudget && leadSignals.intent !== "unknown") {
+    const needLabel = mapNeed(leadSignals.intent);
+    return buildResponse(
+      `Dạ em đã ghi nhận **${leadSignals.name}**, nhu cầu **${needLabel}** với tài chính **${leadSignals.budget}**. Anh/chị muốn bên em **gửi Zalo trước**, **gọi nhanh 2 phút** hay **đặt lịch xem dự án** ạ?`,
+      ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (hasContact) {
+    return buildResponse(
+      "Dạ em đã ghi nhận SĐT/Zalo của anh/chị rồi ạ. Trong ít phút nữa bên em sẽ gửi **bảng giá nội bộ**, **video căn đẹp** và nếu cần em sắp xếp **gọi nhanh 2 phút** hoặc **đặt lịch xem dự án** luôn cho mình.",
+      ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/nhan bang gia noi bo|nhan bang gia|bang gia noi bo/.test(normalized)) {
+    return buildResponse(
+      "Dạ để em gửi đúng bảng căn nhanh nhất, anh/chị cho em biết mình đang nghiêng về **đầu tư sinh lời** hay **mua để ở / nghỉ dưỡng** nhé.",
+      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Gửi Zalo trước"],
+      {
         ...leadSignals,
         intent: "pricing",
-        hotness: leadSignals.hotness === "cold" ? "hot" : leadSignals.hotness
+        hotness: "hot"
       }
-    };
+    );
   }
 
-  if (/(video|xem video|can dep|view dep|hinh anh|thuc te|vr)/.test(normalized)) {
-    return {
-      reply:
-        "Dạ em có thể gửi video ngắn và hình thực tế của nhóm căn đang được quan tâm nhất. Anh/chị muốn xem nhóm **đầu tư giá tốt** hay **view đẹp nghỉ dưỡng**, rồi để lại **SĐT/Zalo** giúp em để em gửi đúng căn ạ.",
-      suggestions: ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Gửi Zalo trước"],
-      leadSignals
-    };
+  if (/xem video can dep|video can dep|xem video/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có video ngắn của nhóm căn đang được hỏi nhiều nhất. Anh/chị muốn xem nhóm **căn đầu tư giá tốt** hay **căn view đẹp nghỉ dưỡng** trước ạ?",
+      ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Gửi Zalo trước"],
+      {
+        ...leadSignals,
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
   }
 
-  if (/(dau tu|sinh loi|dong tien|cho thue|tang gia)/.test(normalized)) {
-    return {
-      reply:
-        "Dạ với nhu cầu đầu tư, bên em đang ưu tiên nhóm căn dễ vào tiền từ **1,2 tỷ**, có thể khai thác cho thuê và có biên độ tăng giá tốt nếu chọn đúng căn. Anh/chị cho em xin **SĐT/Zalo**, em lọc ngay giỏ hàng phù hợp để tư vấn gọn và đúng nhu cầu ạ.",
-      suggestions: ["Tài chính 1-1,5 tỷ", "Muốn sản phẩm dễ tăng giá", "Gọi nhanh 2 phút"],
-      leadSignals: {
+  if (/tu van dau tu|dau tu sinh loi|toi muon dau tu/.test(normalized)) {
+    return buildResponse(
+      "Dạ với nhu cầu đầu tư, em sẽ lọc nhóm căn dễ vào tiền và dễ chốt hơn nếu biết khung tài chính của mình. Anh/chị đang quan tâm khoảng nào ạ?",
+      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Muốn sản phẩm dễ tăng giá"],
+      {
         ...leadSignals,
         intent: "investment",
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
       }
-    };
+    );
   }
 
-  if (/(phap ly|so hong|giay to|chu dau tu)/.test(normalized)) {
-    return {
-      reply:
-        "Dạ em có thể gửi phần thông tin pháp lý, chính sách bán hàng và tài liệu giới thiệu dự án để anh/chị xem rõ hơn. Anh/chị để lại **SĐT/Zalo**, em gửi ngay file phù hợp và bên em hỗ trợ chi tiết ạ.",
-      suggestions: ["Xem pháp lý", "Nhận bảng giá nội bộ", "Gửi Zalo trước"],
-      leadSignals: {
+  if (/mua de o|mua de o \/ nghi duong|nghi duong|o \/ nghi duong/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể lọc nhóm căn hợp nghỉ dưỡng hoặc ở lâu dài. Anh/chị đang nghiêng về tầm tài chính nào để em gửi đúng nhóm căn đẹp ạ?",
+      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Căn view đẹp nghỉ dưỡng"],
+      {
         ...leadSignals,
-        intent: "legal",
+        intent: /nghi duong|view dep|bien/.test(normalized) ? "resort" : "living",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/tai chinh 1-1,5 ty|1-1,5 ty|1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty/.test(normalized)) {
+    const suggestions = leadSignals.intent === "living" || leadSignals.intent === "resort"
+      ? ["Căn view đẹp nghỉ dưỡng", "Nhận bảng giá nội bộ", "Gửi Zalo trước"]
+      : ["Căn đầu tư giá tốt", "Muốn sản phẩm dễ tăng giá", "Muốn sản phẩm cho thuê tốt"];
+
+    return buildResponse(
+      "Dạ với tài chính **1-1,5 tỷ**, em đang ưu tiên nhóm căn vừa tầm và dễ vào tiền. Anh/chị muốn em lọc theo hướng nào trước ạ?",
+      suggestions,
+      {
+        ...leadSignals,
+        budget: "1-1,5 tỷ",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/tai chinh 1,5-2 ty|1[,.]?5-2\s*ty|1[,.]?5\s*[-–]\s*2\s*ty|1[,.]?5\s*ty/.test(normalized)) {
+    return buildResponse(
+      "Dạ với tài chính **1,5-2 tỷ**, mình có biên lựa chọn thoải mái hơn về vị trí và view. Anh/chị muốn em lọc nhóm **giá tốt**, **view đẹp** hay **dễ cho thuê** trước ạ?",
+      ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Muốn sản phẩm cho thuê tốt"],
+      {
+        ...leadSignals,
+        budget: "1,5-2 tỷ",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/tren 2 ty|2\s*ty tro len|hon 2 ty/.test(normalized)) {
+    return buildResponse(
+      "Dạ với ngân sách **trên 2 tỷ**, em có thể lọc nhóm căn view đẹp hơn và chính sách linh hoạt hơn. Anh/chị muốn em gửi **bảng giá**, **video căn đẹp** hay **pháp lý** trước ạ?",
+      ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        budget: "Trên 2 tỷ",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/can dau tu gia tot/.test(normalized)) {
+    return buildResponse(
+      "Dạ em sẽ lọc nhóm căn đầu tư giá tốt, dễ vào tiền và bám sát mức tài chính của mình. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi ngay danh sách căn phù hợp nhất hôm nay ạ.",
+      ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Nhận bảng giá nội bộ"],
+      {
+        ...leadSignals,
+        intent: "investment",
         hotness: "hot"
       }
-    };
+    );
   }
 
-  if (/(o dau|vi tri|ban do|ket noi|vung tau)/.test(normalized)) {
-    return {
-      reply:
-        "Dạ dự án nằm tại Nam Vũng Tàu, phù hợp cả đầu tư lẫn nghỉ dưỡng và đang hưởng lợi từ hạ tầng kết nối khu vực. Anh/chị để lại **Zalo/SĐT**, em gửi ngay vị trí, video thực tế và bảng giá để mình xem nhanh hơn ạ.",
-      suggestions: ["Gửi vị trí", "Xem video căn đẹp", "Gửi Zalo trước"],
-      leadSignals
-    };
+  if (/can view dep nghi duong/.test(normalized)) {
+    return buildResponse(
+      "Dạ em sẽ ưu tiên nhóm căn view đẹp phù hợp nghỉ dưỡng hoặc ở lâu dài. Anh/chị để lại **SĐT/Zalo**, em gửi video và danh sách căn đẹp nhất đang còn ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        intent: "resort",
+        hotness: "hot"
+      }
+    );
   }
 
-  return {
-    reply:
+  if (/muon san pham de tang gia|de tang gia/.test(normalized)) {
+    return buildResponse(
+      "Dạ mức tăng giá là **kỳ vọng** theo vị trí, tiến độ và bảng căn từng thời điểm. Em có thể lọc nhóm căn có biên độ tốt hơn, anh/chị để lại **SĐT/Zalo** để em gửi đúng căn nội bộ ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/muon san pham cho thue tot|de cho thue|cho thue tot/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể lọc nhóm căn dễ khai thác cho thuê hơn tùy vị trí và diện tích. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi bảng giá nội bộ và nhóm căn phù hợp ngay ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem video căn đẹp"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/xem phap ly|phap ly|so hong|giay to|chu dau tu/.test(normalized)) {
+    return buildResponse(
+      "Dạ em sẽ gửi anh/chị thông tin **pháp lý**, **chính sách bán hàng** và bộ tài liệu dự án để xem rõ hơn. Anh/chị để lại **Zalo/SĐT**, em gửi ngay ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        intent: "legal",
+        contactPreference: leadSignals.contactPreference === "unknown" ? "zalo" : leadSignals.contactPreference,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/gui zalo truoc/.test(normalized)) {
+    return buildResponse(
+      "Dạ anh/chị gửi giúp em **SĐT/Zalo** tại đây, em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và pháp lý trước qua Zalo rồi mới gọi nếu mình cần ạ.",
+      ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        contactPreference: "zalo",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/nhan qua email|gui email|email cho toi|nhan bang gia qua email/.test(normalized)) {
+    return buildResponse(
+      "Dạ anh/chị gửi giúp em **email** tại đây, em sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và tài liệu dự án. Nếu cần em mới hỗ trợ thêm qua SĐT/Zalo để tránh làm phiền ạ.",
+      ["Xem pháp lý", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        contactPreference: "email",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/goi nhanh 2 phut|goi nhanh|goi lai/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể sắp xếp **gọi nhanh 2 phút**. Anh/chị muốn em gọi **ngay bây giờ**, **trong 30 phút tới**, **buổi chiều** hay **buổi tối** ạ?",
+      CALLBACK_OPTIONS,
+      {
+        ...leadSignals,
+        contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (CALLBACK_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const callbackLabel = CALLBACK_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Buổi chiều";
+    return buildResponse(
+      `Dạ em ghi nhận khung **${callbackLabel}**. Anh/chị để lại **SĐT** giúp em, bên em sẽ gọi đúng giờ và gửi trước bảng giá nội bộ nếu mình muốn xem nhanh ạ.`,
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/dat lich xem du an|xem du an/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể hỗ trợ **đặt lịch xem dự án**. Anh/chị muốn đi **Hôm nay**, **Ngày mai** hay **Cuối tuần** ạ?",
+      VISIT_OPTIONS,
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (VISIT_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const visitLabel = VISIT_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Ngày mai";
+    return buildResponse(
+      `Dạ em ghi nhận lịch **${visitLabel}**. Anh/chị đi **1 mình** hay **cùng gia đình / bạn bè** để em sắp xếp sale tư vấn phù hợp ạ?`,
+      PARTY_OPTIONS,
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (PARTY_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const partyLabel = PARTY_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Đi 1 mình";
+    return buildResponse(
+      `Dạ em đã ghi nhận nhu cầu **${partyLabel.toLowerCase()}**. Anh/chị để lại **SĐT/Zalo**, em chốt lịch, gửi vị trí và bảng giá phù hợp trước khi mình đi xem ạ.`,
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/(gia bao nhieu|gia|bao nhieu tien|tong tien|chi phi)/.test(normalized)) {
+    return buildResponse(
+      `Dạ hiện bên em đang có các căn **${PROJECT_CONTEXT.priceAnchor.toLowerCase()}** tùy vị trí, tầng và thời điểm. Em có **bảng giá nội bộ** mới nhất, anh/chị để lại **SĐT/Zalo** em gửi đúng căn đẹp nhất hôm nay ạ.`,
+      ["Nhận bảng giá nội bộ", "Đầu tư sinh lời", "Gửi Zalo trước"],
+      {
+        ...leadSignals,
+        intent: "pricing",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/co vay duoc khong|vay duoc khong|ho tro tai chinh|tra gop/.test(normalized)) {
+    return buildResponse(
+      "Dạ thường sẽ có phương án tài chính hỗ trợ **tùy chính sách từng thời điểm**. Anh/chị cho em xin **SĐT/Zalo**, em gửi luôn bảng giá và phương án thanh toán phù hợp ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        intent: "pricing",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/o dau|vi tri|ban do|ket noi|vung tau/.test(normalized)) {
+    return buildResponse(
+      "Dạ em gửi ngay **vị trí**, **bản đồ** và **video thực tế** cho anh/chị nhé. Anh/chị cho em xin **Zalo/SĐT** để em gửi đầy đủ và nhanh hơn ạ.",
+      ["Xem video căn đẹp", "Gửi Zalo trước", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/co tang gia that khong|tang gia that khong|co tang gia khong/.test(normalized)) {
+    return buildResponse(
+      "Dạ mức tăng giá là **kỳ vọng** theo thị trường, vị trí, tiến độ và bảng căn từng thời điểm. Điều quan trọng là chọn đúng căn đang có biên độ tốt, anh/chị cho em xin **SĐT/Zalo** để em lọc nhanh nhóm phù hợp nhất ạ.",
+      ["Muốn sản phẩm dễ tăng giá", "Nhận bảng giá nội bộ", "Gửi Zalo trước"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
+      }
+    );
+  }
+
+  return null;
+}
+
+function buildFallbackResponse(message: string, history: ClientHistoryItem[]): Omit<ChatbotPayload, "source" | "leadCaptured" | "leadId"> {
+  return (
+    buildScriptedResponse(message, history) ??
+    buildResponse(
       "Dạ em có thể hỗ trợ anh/chị xem **bảng giá nội bộ**, **video căn đẹp**, **thông tin pháp lý** hoặc tư vấn nhanh theo nhu cầu đầu tư và nghỉ dưỡng. Anh/chị muốn em gửi phần nào trước ạ?",
-    suggestions: DEFAULT_SUGGESTIONS,
-    leadSignals
-  };
+      DEFAULT_SUGGESTIONS,
+      detectLeadSignals(message, history)
+    )
+  );
 }
 
 function sanitizeSuggestions(value: unknown): string[] {
@@ -166,13 +860,9 @@ function sanitizeSuggestions(value: unknown): string[] {
     return DEFAULT_SUGGESTIONS;
   }
 
-  const suggestions = value
-    .filter((item): item is string => typeof item === "string")
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .slice(0, 4);
-
-  return suggestions.length > 0 ? suggestions : DEFAULT_SUGGESTIONS;
+  return dedupeSuggestions(
+    value.filter((item): item is string => typeof item === "string").map((item) => item.trim())
+  );
 }
 
 function parseGeminiText(responseData: any): string {
@@ -188,7 +878,7 @@ function parseGeminiText(responseData: any): string {
     .trim();
 }
 
-function tryParseJsonPayload(rawText: string): Omit<ChatbotPayload, "source"> | null {
+function tryParseJsonPayload(rawText: string): Omit<ChatbotPayload, "source" | "leadCaptured" | "leadId"> | null {
   if (!rawText) {
     return null;
   }
@@ -199,35 +889,41 @@ function tryParseJsonPayload(rawText: string): Omit<ChatbotPayload, "source"> | 
       return null;
     }
 
+    const fallbackSignals: LeadSignals = {
+      intent: "unknown",
+      budget: "unknown",
+      contactPreference: "unknown",
+      hotness: "cold",
+      name: ""
+    };
+
     return {
       reply: parsed.reply.trim(),
       suggestions: sanitizeSuggestions(parsed.suggestions),
-      leadSignals: {
-        intent: parsed?.leadSignals?.intent ?? "unknown",
-        budget: typeof parsed?.leadSignals?.budget === "string" ? parsed.leadSignals.budget : "unknown",
-        contactPreference: parsed?.leadSignals?.contactPreference ?? "unknown",
-        hotness: parsed?.leadSignals?.hotness ?? "cold"
-      }
+      leadSignals: mergeLeadSignals(parsed?.leadSignals, fallbackSignals)
     };
   } catch {
     return null;
   }
 }
 
-async function requestGeminiReply(message: string, history: ClientHistoryItem[]): Promise<Omit<ChatbotPayload, "source">> {
+async function requestGeminiReply(message: string, history: ClientHistoryItem[]): Promise<Omit<ChatbotPayload, "source" | "leadCaptured" | "leadId">> {
+  const scripted = buildScriptedResponse(message, history);
+  if (scripted) {
+    return scripted;
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
   if (!apiKey) {
-    return buildFallbackResponse(message);
+    return buildFallbackResponse(message, history);
   }
 
-  const contents = history
-    .slice(-10)
-    .map((item) => ({
-      role: item.role === "assistant" ? "model" : "user",
-      parts: [{ text: item.text }]
-    }));
+  const contents = history.slice(-10).map((item) => ({
+    role: item.role === "assistant" ? "model" : "user",
+    parts: [{ text: item.text }]
+  }));
 
   contents.push({
     role: "user",
@@ -248,7 +944,7 @@ async function requestGeminiReply(message: string, history: ClientHistoryItem[])
         },
         contents,
         generationConfig: {
-          temperature: 0.55,
+          temperature: 0.45,
           topP: 0.9,
           responseMimeType: "application/json"
         }
@@ -264,20 +960,35 @@ async function requestGeminiReply(message: string, history: ClientHistoryItem[])
   const responseData = await response.json();
   const rawText = parseGeminiText(responseData);
   const parsed = tryParseJsonPayload(rawText);
+  const detectedSignals = detectLeadSignals(message, history);
 
   if (parsed) {
-    return parsed;
+    return {
+      ...parsed,
+      leadSignals: mergeLeadSignals(parsed.leadSignals, detectedSignals)
+    };
   }
 
-  const fallback = buildFallbackResponse(message);
+  const fallback = buildFallbackResponse(message, history);
   if (rawText) {
     return {
       ...fallback,
-      reply: rawText
+      reply: rawText,
+      leadSignals: detectedSignals
     };
   }
 
   return fallback;
+}
+
+async function persistLeadIfPossible(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals) {
+  const leadInput = buildLeadInput(message, history, leadSignals);
+
+  if (!leadInput.phone && !leadInput.zalo && !leadInput.email) {
+    return null;
+  }
+
+  return persistLead(leadInput);
 }
 
 export async function POST(request: Request) {
@@ -299,12 +1010,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "message is required" }, { status: 400 });
     }
 
-    const payload = await requestGeminiReply(message, history);
+    const scripted = buildScriptedResponse(message, history);
+    const payload = scripted ?? (await requestGeminiReply(message, history));
+    const source: ChatbotPayload["source"] = scripted
+      ? "scripted"
+      : process.env.GEMINI_API_KEY
+        ? "gemini"
+        : "fallback";
+
+    let leadCaptured = false;
+    let leadId: string | undefined;
+
+    try {
+      const lead = await persistLeadIfPossible(message, history, payload.leadSignals);
+      if (lead) {
+        leadCaptured = true;
+        leadId = lead.id;
+      }
+    } catch (leadError) {
+      console.error("/api/chatbot lead persistence error", leadError);
+    }
 
     return NextResponse.json(
       {
         ...payload,
-        source: process.env.GEMINI_API_KEY ? "gemini" : "fallback"
+        source,
+        leadCaptured,
+        leadId
       },
       {
         headers: {
@@ -317,8 +1049,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        ...buildFallbackResponse(message),
-        source: "fallback"
+        ...buildFallbackResponse(message, []),
+        source: "fallback",
+        leadCaptured: false
       },
       {
         headers: {
@@ -328,3 +1061,9 @@ export async function POST(request: Request) {
     );
   }
 }
+
+
+
+
+
+
