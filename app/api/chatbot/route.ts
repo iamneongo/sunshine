@@ -564,7 +564,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
 
   if (/nhan bang gia noi bo|nhan bang gia|bang gia noi bo/.test(normalized)) {
     return buildResponse(
-      "Dạ để em gửi đúng bảng căn nhanh nhất, anh/chị cho em biết mình đang nghiêng về **đầu tư sinh lời** hay **mua để ở / nghỉ dưỡng** nhé.",
+      "Dạ em gửi anh/chị ngay ạ. Trước khi gửi, anh/chị đang quan tâm theo hướng nào để em gửi đúng căn phù hợp?",
       ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Gửi Zalo trước"],
       {
         ...leadSignals,
@@ -576,7 +576,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
 
   if (/xem video can dep|video can dep|xem video/.test(normalized)) {
     return buildResponse(
-      "Dạ em có video ngắn của nhóm căn đang được hỏi nhiều nhất. Anh/chị muốn xem nhóm **căn đầu tư giá tốt** hay **căn view đẹp nghỉ dưỡng** trước ạ?",
+      "Dạ em có video ngắn và hình thực tế của các căn đang được quan tâm nhất. Anh/chị muốn xem theo hướng nào ạ?",
       ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Gửi Zalo trước"],
       {
         ...leadSignals,
@@ -794,6 +794,18 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
+
+  if (/gui gia/.test(normalized)) {
+    return buildResponse(
+      "Dạ em vẫn giữ sẵn **bảng giá nội bộ** và **video căn đẹp** cho anh/chị ạ. Anh/chị để lại **SĐT/Zalo**, em gửi ngay trong ít phút tới.",
+      ["Gửi Zalo trước", "Xem video căn đẹp", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        intent: "pricing",
+        hotness: "hot"
+      }
+    );
+  }
   if (/(gia bao nhieu|gia|bao nhieu tien|tong tien|chi phi)/.test(normalized)) {
     return buildResponse(
       `Dạ hiện bên em đang có các căn **${PROJECT_CONTEXT.priceAnchor.toLowerCase()}** tùy vị trí, tầng và thời điểm. Em có **bảng giá nội bộ** mới nhất, anh/chị để lại **SĐT/Zalo** em gửi đúng căn đẹp nhất hôm nay ạ.`,

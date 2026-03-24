@@ -1,7 +1,10 @@
 import Script from "next/script";
 import NativeOriginalLanding from "@/app/_components/native-original-landing";
 import {
+  CHATBOT_FOLLOW_UP_10M_MESSAGE,
+  CHATBOT_MOBILE_TEASER_MESSAGE,
   CHATBOT_PLACEHOLDER,
+  CHATBOT_RETURNING_MESSAGE,
   DEFAULT_QUICK_ACTIONS,
   INITIAL_CHAT_MESSAGE,
   PROJECT_CONTEXT,
@@ -13,8 +16,10 @@ import {
 } from "@/lib/native-original-scripts";
 
 const defaultSuggestions = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
-const initialMessages = [INITIAL_CHAT_MESSAGE, "Anh/chị muốn xem phần nào trước ạ?"];
-const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn xem phần nào trước ạ?"];
+const initialMessages = [INITIAL_CHAT_MESSAGE, "Dự án hiện có căn từ 1,2 tỷ, phù hợp đầu tư và nghỉ dưỡng."];
+const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn em gửi bảng giá nội bộ hay video căn đẹp nhất hôm nay ạ?"];
+const followUpSuggestions = ["GỬI GIÁ", "Xem video căn đẹp", "Xem pháp lý"];
+const returningSuggestions = ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"];
 
 const inlineEventBridgeScript = String.raw`
 (() => {
@@ -68,6 +73,19 @@ const chatbotBridgeScript = `
   const legacyWelcomeKey = "seen_sunshine_welcome_v2";
   const feedbackWelcomeKey = "seen_sunshine_feedback_welcome_v1";
   const feedbackPriceAnchor = ${JSON.stringify(PROJECT_CONTEXT.priceAnchor)};
+  const mobileTeaserMessage = ${JSON.stringify(CHATBOT_MOBILE_TEASER_MESSAGE)};
+  const followUp10MinuteMessage = ${JSON.stringify(CHATBOT_FOLLOW_UP_10M_MESSAGE)};
+  const returningMessage = ${JSON.stringify(CHATBOT_RETURNING_MESSAGE)};
+  const followUpSuggestions = ${JSON.stringify(followUpSuggestions)};
+  const returningSuggestions = ${JSON.stringify(returningSuggestions)};
+  const desktopWelcomeDelayMs = 6000;
+  const idleFollowUpDelayMs = 10 * 60 * 1000;
+  const returnVisitDelayMs = 24 * 60 * 60 * 1000;
+  const feedbackSessionIdKey = "sunshine_feedback_chat_session_v1";
+  const feedbackLastActivityKey = "sunshine_feedback_last_chat_activity_v1";
+  const feedbackLeadCapturedKey = "sunshine_feedback_lead_captured_v1";
+  const feedbackReturnFollowUpKey = "sunshine_feedback_return_follow_up_v1";
+  const feedbackIdleShownKey = "sunshine_feedback_idle_follow_up_v1";
 
   try {
     sessionStorage.setItem(legacyWelcomeKey, "true");
@@ -155,6 +173,202 @@ const chatbotBridgeScript = `
           : document.getElementById("chatbot-panel"),
       suggestions: document.getElementById("chat-suggestions")
     };
+  }
+
+  function getSessionId() {
+    try {
+      const existing = sessionStorage.getItem(feedbackSessionIdKey);
+      if (existing) {
+        return existing;
+      }
+
+      const next = "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+      sessionStorage.setItem(feedbackSessionIdKey, next);
+      return next;
+    } catch (error) {
+      return "chat_" + Date.now();
+    }
+  }
+
+  function recordEvent(name, metadata) {
+    try {
+      void fetch("/api/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          source: "chatbot",
+          sessionId: getSessionId(),
+          path: window.location.pathname,
+          metadata: metadata || {}
+        }),
+        cache: "no-store"
+      });
+    } catch (error) {
+      console.warn("Unable to record chatbot event", error);
+    }
+  }
+
+  function hasLeadCaptured() {
+    try {
+      return localStorage.getItem(feedbackLeadCapturedKey) === "true";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function markLeadCaptured(source, leadId) {
+    clearIdleFollowUpTimer();
+    hideMiniTeaser();
+
+    try {
+      localStorage.setItem(feedbackLeadCapturedKey, "true");
+    } catch (error) {
+      console.warn("Unable to persist chatbot lead captured state", error);
+    }
+
+    recordEvent("chatbot_lead_captured", {
+      source: normalizeText(source) || "unknown",
+      leadId: normalizeText(leadId)
+    });
+  }
+
+  function getLastActivityAt() {
+    try {
+      const raw = localStorage.getItem(feedbackLastActivityKey) || "0";
+      const parsed = Number(raw);
+      return Number.isFinite(parsed) ? parsed : 0;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  function persistChatActivity(reason) {
+    const timestamp = String(Date.now());
+
+    try {
+      localStorage.setItem(feedbackLastActivityKey, timestamp);
+      sessionStorage.removeItem(feedbackIdleShownKey);
+    } catch (error) {
+      console.warn("Unable to persist chatbot activity", error);
+    }
+
+    recordEvent("chatbot_activity", {
+      reason: normalizeText(reason) || "interaction"
+    });
+  }
+
+  function getMiniTeaserNodes() {
+    return {
+      wrapper: document.getElementById("chatbot-mini-teaser"),
+      text: document.getElementById("chatbot-mini-teaser-text"),
+      cta: document.getElementById("chatbot-mini-teaser-cta")
+    };
+  }
+
+  function hideMiniTeaser() {
+    const teaser = getMiniTeaserNodes().wrapper;
+    if (!teaser) {
+      return;
+    }
+
+    teaser.classList.add("hidden");
+    teaser.classList.remove("block");
+
+    if (window.__chatbotMiniTeaserTimer) {
+      window.clearTimeout(window.__chatbotMiniTeaserTimer);
+      window.__chatbotMiniTeaserTimer = null;
+    }
+  }
+
+  function showMiniTeaser(message, ctaLabel) {
+    if (window.innerWidth >= 1024) {
+      return;
+    }
+
+    const nodes = getMiniTeaserNodes();
+    if (!nodes.wrapper) {
+      return;
+    }
+
+    if (nodes.text) {
+      nodes.text.textContent = normalizeText(message) || mobileTeaserMessage;
+    }
+
+    if (nodes.cta) {
+      nodes.cta.textContent = normalizeText(ctaLabel) || "Nhận bảng giá";
+    }
+
+    nodes.wrapper.classList.remove("hidden");
+    nodes.wrapper.classList.add("block");
+
+    if (window.__chatbotMiniTeaserTimer) {
+      window.clearTimeout(window.__chatbotMiniTeaserTimer);
+    }
+
+    window.__chatbotMiniTeaserTimer = window.setTimeout(() => {
+      hideMiniTeaser();
+    }, 12000);
+  }
+
+  function clearIdleFollowUpTimer() {
+    if (window.__chatbotIdleTimer) {
+      window.clearTimeout(window.__chatbotIdleTimer);
+      window.__chatbotIdleTimer = null;
+    }
+  }
+
+  function triggerIdleFollowUp() {
+    if (hasLeadCaptured()) {
+      return;
+    }
+
+    try {
+      if (sessionStorage.getItem(feedbackIdleShownKey) === "true") {
+        return;
+      }
+      sessionStorage.setItem(feedbackIdleShownKey, "true");
+    } catch (error) {
+      console.warn("Unable to persist idle follow-up state", error);
+    }
+
+    const state = getState();
+    window.appendMessage("bot", followUp10MinuteMessage);
+    renderSuggestionBar(followUpSuggestions);
+    recordEvent("chatbot_follow_up_10m", {
+      device: window.innerWidth >= 1024 ? "desktop" : "mobile"
+    });
+
+    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !state.isOpen) {
+      window.toggleChatbot();
+    } else {
+      showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá và video căn đẹp cho anh/chị ạ.", "GỬI GIÁ");
+    }
+  }
+
+  function scheduleIdleFollowUp() {
+    clearIdleFollowUpTimer();
+
+    if (hasLeadCaptured()) {
+      return;
+    }
+
+    const state = getState();
+    const hasUserTurn = Array.isArray(state.history) && state.history.some((item) => item.role === "user");
+    if (!hasUserTurn) {
+      return;
+    }
+
+    window.__chatbotIdleTimer = window.setTimeout(() => {
+      const lastActivity = getLastActivityAt();
+      if (!lastActivity || Date.now() - lastActivity < idleFollowUpDelayMs - 1500) {
+        return;
+      }
+
+      triggerIdleFollowUp();
+    }, idleFollowUpDelayMs);
   }
 
   function syncScroll() {
@@ -283,6 +497,89 @@ const chatbotBridgeScript = `
     return response.json();
   }
 
+  async function persistLeadCapture(payload) {
+    const response = await fetch("/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Lead capture failed with status " + response.status);
+    }
+
+    return response.json();
+  }
+
+  function getElement(id) {
+    return document.getElementById(id);
+  }
+
+  function readFieldValue(id) {
+    const field = getElement(id);
+    return field && typeof field.value === "string" ? normalizeText(field.value) : "";
+  }
+
+  function clearFormNotice(id) {
+    const notice = getElement(id);
+    if (!notice) {
+      return;
+    }
+
+    notice.className = "hidden mt-4 rounded-2xl border px-4 py-3 text-sm leading-6";
+    notice.textContent = "";
+  }
+
+  function renderFormNotice(id, tone, text) {
+    const notice = getElement(id);
+    if (!notice) {
+      return;
+    }
+
+    const palette = {
+      success: ["border-emerald-200", "bg-emerald-50", "text-emerald-700"],
+      error: ["border-rose-200", "bg-rose-50", "text-rose-700"],
+      neutral: ["border-slate-200", "bg-slate-50", "text-slate-600"]
+    };
+
+    notice.className = "mt-4 rounded-2xl border px-4 py-3 text-sm leading-6 block";
+    (palette[tone] || palette.neutral).forEach((className) => notice.classList.add(className));
+    notice.textContent = text;
+  }
+
+  function setButtonLoading(button, loading, idleHtml) {
+    if (!button) {
+      return;
+    }
+
+    if (loading) {
+      button.disabled = true;
+      button.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang gửi...';
+      return;
+    }
+
+    button.disabled = false;
+    button.innerHTML = idleHtml;
+  }
+
+  function resolveLeadHotness(need, budget) {
+    const normalizedNeed = normalizeText(need).toLowerCase();
+    const normalizedBudget = normalizeText(budget).toLowerCase();
+
+    if (normalizedNeed.includes("đầu tư") || normalizedNeed.includes("giá") || normalizedNeed.includes("pháp lý")) {
+      return "hot";
+    }
+
+    if (normalizedBudget.includes("1,5") || normalizedBudget.includes("trên 2")) {
+      return "hot";
+    }
+
+    return "warm";
+  }
+
   async function submitChat(rawText) {
     const text = normalizeText(rawText);
     const { input } = getNodes();
@@ -290,6 +587,10 @@ const chatbotBridgeScript = `
     if (!text) {
       return null;
     }
+
+    hideMiniTeaser();
+    clearIdleFollowUpTimer();
+    persistChatActivity("user_message");
 
     if (input) {
       input.value = "";
@@ -307,6 +608,17 @@ const chatbotBridgeScript = `
       }
       window.appendMessage("bot", payload.reply);
       renderSuggestionBar(payload.suggestions || defaultSuggestions);
+
+      if (payload && payload.leadCaptured) {
+        markLeadCaptured("chatbot", payload.leadId);
+      } else {
+        scheduleIdleFollowUp();
+      }
+
+      recordEvent("chatbot_reply_rendered", {
+        source: normalizeText(payload && payload.source ? payload.source : "unknown")
+      });
+
       return payload;
     } catch (error) {
       console.error("Landing chatbot bridge error", error);
@@ -318,6 +630,7 @@ const chatbotBridgeScript = `
         "Dạ em có thể hỗ trợ anh/chị nhận **bảng giá nội bộ**, **video căn đẹp**, **pháp lý** hoặc **đặt lịch xem dự án**. Anh/chị để lại SĐT/Zalo giúp em để em gửi đúng phần mình cần nhé."
       );
       renderSuggestionBar(defaultSuggestions);
+      scheduleIdleFollowUp();
       return null;
     }
   }
@@ -349,10 +662,60 @@ const chatbotBridgeScript = `
 
     const state = getState();
     resetConversation(welcomeMessages);
+    renderSuggestionBar(defaultSuggestions);
+    recordEvent("chatbot_welcome_shown", {
+      device: window.innerWidth >= 1024 ? "desktop" : "mobile"
+    });
 
-    if (window.innerWidth >= 1024 && typeof toggleChatbot === "function" && !state.isOpen) {
-      toggleChatbot();
+    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !state.isOpen) {
+      window.toggleChatbot();
+    } else {
+      showMiniTeaser(mobileTeaserMessage, "Nhận bảng giá");
     }
+  }
+
+  function maybeShowReturningPrompt() {
+    if (hasLeadCaptured()) {
+      return false;
+    }
+
+    const lastActivity = getLastActivityAt();
+    if (!lastActivity || Date.now() - lastActivity < returnVisitDelayMs) {
+      return false;
+    }
+
+    try {
+      const lastShown = Number(localStorage.getItem(feedbackReturnFollowUpKey) || "0");
+      if (lastShown && Date.now() - lastShown < 12 * 60 * 60 * 1000) {
+        return false;
+      }
+
+      localStorage.setItem(feedbackReturnFollowUpKey, String(Date.now()));
+    } catch (error) {
+      console.warn("Unable to persist returning chatbot state", error);
+    }
+
+    resetConversation([returningMessage, "Anh/chị muốn em gửi lại bảng giá nội bộ hay video căn đẹp nhất hôm nay ạ?"]);
+    renderSuggestionBar(returningSuggestions);
+    recordEvent("chatbot_follow_up_1d", {
+      device: window.innerWidth >= 1024 ? "desktop" : "mobile"
+    });
+
+    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !getState().isOpen) {
+      window.toggleChatbot();
+    } else {
+      showMiniTeaser("Mình muốn nhận lại bảng giá hay video căn đẹp ạ?", "Nhận bảng giá");
+    }
+
+    return true;
+  }
+
+  function openInitialChatPrompt() {
+    if (maybeShowReturningPrompt()) {
+      return;
+    }
+
+    openFeedbackWelcome();
   }
 
   function installBridge() {
@@ -366,6 +729,31 @@ const chatbotBridgeScript = `
     }
 
     window.__nativeLandingChatBridgeReady = true;
+
+    const nativeToggleChatbot = window.toggleChatbot;
+    window.toggleChatbot = function toggleChatbotWithFeedback() {
+      const stateBefore = getState();
+      const wasOpen = Boolean(stateBefore && stateBefore.isOpen);
+      hideMiniTeaser();
+      const result = nativeToggleChatbot();
+      const stateAfter = getState();
+      const isOpen = Boolean(stateAfter && stateAfter.isOpen);
+
+      if (!wasOpen && isOpen) {
+        persistChatActivity("open_chatbot");
+        recordEvent("chatbot_opened", {
+          device: window.innerWidth >= 1024 ? "desktop" : "mobile"
+        });
+      }
+
+      if (wasOpen && !isOpen) {
+        recordEvent("chatbot_closed", {
+          device: window.innerWidth >= 1024 ? "desktop" : "mobile"
+        });
+      }
+
+      return result;
+    };
 
     window.getChatResponse = async function getChatResponse(query) {
       const payload = await requestReply(normalizeText(query));
@@ -390,15 +778,154 @@ const chatbotBridgeScript = `
       return submitChat(input ? input.value : "");
     };
 
+    window.startChatFromLanding = function startChatFromLanding(prompt) {
+      const state = getState();
+      const nextPrompt = normalizeText(prompt) || defaultSuggestions[0];
+
+      if (typeof toggleChatbot === "function" && !state.isOpen) {
+        toggleChatbot();
+      }
+
+      return submitChat(nextPrompt);
+    };
+
+    window.submitLeadForm = async function submitLeadForm(event) {
+      event.preventDefault();
+      clearFormNotice("lead-form-notice");
+
+      const fullName = readFieldValue("lead-full-name");
+      const phoneOrZalo = readFieldValue("lead-contact");
+      const need = readFieldValue("lead-need");
+      const budget = readFieldValue("lead-budget");
+      const contactPreference = readFieldValue("lead-contact-preference");
+      const submitButton = getElement("lead-submit-btn");
+      const form = getElement("lead-capture-form");
+
+      if (!fullName || !phoneOrZalo) {
+        renderFormNotice("lead-form-notice", "error", "Anh/chị vui lòng để lại họ tên và ít nhất một cách liên hệ để bên em gửi thông tin đúng phần mình cần.");
+        return false;
+      }
+
+      setButtonLoading(submitButton, true, "Nhận bảng giá nội bộ");
+
+      try {
+        const leadResponse = await persistLeadCapture({
+          source: "landing_form",
+          fullName,
+          phoneOrZalo,
+          need,
+          budget,
+          contactPreference,
+          hotness: resolveLeadHotness(need, budget),
+          notes: "Khách để lại thông tin từ form landing để nhận bảng giá, video hoặc pháp lý.",
+          metadata: {
+            entryPoint: "landing_lead_form"
+          }
+        });
+
+        markLeadCaptured("landing_form", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
+        recordEvent("landing_lead_form_submitted", {
+          contactPreference,
+          need,
+          budget
+        });
+
+        if (form && typeof form.reset === "function") {
+          form.reset();
+        }
+
+        renderFormNotice("lead-form-notice", "success", "Thông tin đã được ghi nhận. Bên em sẽ gửi bảng giá nội bộ, video căn đẹp và phần khách đang quan tâm trong ít phút tới.");
+      } catch (error) {
+        console.error("Landing lead form submit error", error);
+        renderFormNotice("lead-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn qua chatbot để bên em hỗ trợ ngay.");
+      } finally {
+        setButtonLoading(submitButton, false, "Nhận bảng giá nội bộ");
+      }
+
+      return false;
+    };
+
+    window.submitBooking = async function submitBooking(event) {
+      event.preventDefault();
+      clearFormNotice("booking-form-notice");
+
+      const fullName = readFieldValue("booking-full-name");
+      const phoneOrZalo = readFieldValue("booking-contact");
+      const need = readFieldValue("booking-need");
+      const budget = readFieldValue("booking-budget");
+      const contactPreference = readFieldValue("booking-contact-preference");
+      const productId = readFieldValue("booking-product-id");
+      const productNameNode = getElement("booking-product-name");
+      const productName = productNameNode ? normalizeText(productNameNode.textContent || "") : "";
+      const submitButton = getElement("submit-booking-btn");
+      const successLayer = getElement("booking-success");
+
+      if (!fullName || !phoneOrZalo) {
+        renderFormNotice("booking-form-notice", "error", "Anh/chị vui lòng để lại họ tên và thông tin liên hệ để bên em gửi phần phù hợp của sản phẩm này.");
+        return false;
+      }
+
+      setButtonLoading(submitButton, true, 'Nhận bảng giá & video <i class="fa-solid fa-arrow-right"></i>');
+
+      try {
+        const leadResponse = await persistLeadCapture({
+          source: "booking_modal",
+          fullName,
+          phoneOrZalo,
+          need,
+          budget,
+          contactPreference,
+          hotness: resolveLeadHotness(need, budget),
+          notes: "Khách xin bảng giá và video từ modal sản phẩm: " + productName,
+          metadata: {
+            entryPoint: "product_modal",
+            productId,
+            productName
+          }
+        });
+
+        markLeadCaptured("booking_modal", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
+        recordEvent("product_modal_lead_submitted", {
+          productId,
+          productName,
+          contactPreference
+        });
+
+        if (successLayer) {
+          successLayer.classList.remove("opacity-0", "pointer-events-none");
+          successLayer.classList.add("opacity-100", "pointer-events-auto");
+        }
+      } catch (error) {
+        console.error("Product modal lead submit error", error);
+        renderFormNotice("booking-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn chatbot để bên em gửi thông tin ngay.");
+      } finally {
+        setButtonLoading(submitButton, false, 'Nhận bảng giá & video <i class="fa-solid fa-arrow-right"></i>');
+      }
+
+      return false;
+    };
+
+    if (typeof window.openBookingModal === "function") {
+      const nativeOpenBookingModal = window.openBookingModal;
+      window.openBookingModal = function openBookingModalWithReset(productId) {
+        nativeOpenBookingModal(productId);
+        window.setTimeout(() => {
+          clearFormNotice("booking-form-notice");
+          const submitButton = getElement("submit-booking-btn");
+          setButtonLoading(submitButton, false, 'Nhận bảng giá & video <i class="fa-solid fa-arrow-right"></i>');
+        }, 360);
+      };
+    }
+
     initChat();
 
     if (document.readyState === "complete") {
-      window.setTimeout(openFeedbackWelcome, 2400);
+      window.setTimeout(openInitialChatPrompt, desktopWelcomeDelayMs);
     } else {
       window.addEventListener(
         "load",
         () => {
-          window.setTimeout(openFeedbackWelcome, 2400);
+          window.setTimeout(openInitialChatPrompt, desktopWelcomeDelayMs);
         },
         { once: true }
       );
@@ -438,4 +965,8 @@ export default function HomePage() {
     </>
   );
 }
+
+
+
+
 

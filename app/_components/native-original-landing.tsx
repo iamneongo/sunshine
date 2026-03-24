@@ -125,7 +125,7 @@ export default function NativeOriginalLanding() {
                     <img src="./ai_avatar_vn.png"
                         className="w-6 h-6 rounded-full object-cover border border-white/20 group-hover:scale-110 transition-transform"
                         alt="AI Chatbot" />
-                    Chat với AI
+                    AI tư vấn 24/7
                 </button>
                 <button type="button" data-onclick="toggleSidebar()"
                     className="lg:hidden w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary text-lg">
@@ -153,20 +153,31 @@ export default function NativeOriginalLanding() {
                         <div
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/20 border border-primary-container/30 backdrop-blur-md mb-4 sm:mb-6">
                             <i className="fa-solid fa-gem text-primary-container shadow-sm"></i>
-                            <span className="text-[10px] sm:text-xs font-black uppercase tracking-[3px] text-white">Kiến tạo
-                                di sản nghỉ dưỡng</span>
+                            <span className="text-[10px] sm:text-xs font-black uppercase tracking-[3px] text-white">Căn hộ
+                                biển dòng tiền Vũng Tàu</span>
                         </div>
 
                         <h1
                             className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-4 sm:mb-6 hero-title tracking-tight uppercase">
-                            Sống Trọn <br /> <span className="italic font-light">Từng</span> Khoảnh Khắc
+                            Căn Hộ Biển <br /> Vũng Tàu <br /> <span className="italic font-light">Chỉ Từ 1,2 Tỷ</span>
                         </h1>
 
                         <p className="text-white/70 text-base md:text-lg max-w-xl mb-6 sm:mb-8 font-medium leading-[1.6]">
-                            Trải nghiệm căn hộ <span className="text-primary-container font-black">Sky Villa</span> 100%
-                            view biển. Sự kết hợp hoàn hảo giữa công nghệ SmartHome 4.0 và không gian nghỉ dưỡng chuẩn 5
-                            sao.
+                            Dòng căn hộ biển dễ vào tiền cho cả nhu cầu <span className="text-primary-container font-black">đầu tư</span> lẫn
+                            <span className="text-primary-container font-black"> nghỉ dưỡng</span>. Anh/chị có thể xem ngay bảng giá nội bộ,
+                            video căn đẹp và chính sách mới nhất để chọn đúng căn trước khi nhóm view biển đẹp đi nhanh.
                         </p>
+
+                        <div className="flex flex-wrap gap-3 mb-6 sm:mb-8 max-w-xl">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                                <i className="fa-solid fa-chart-line text-primary-container"></i>
+                                Khai thác kỳ vọng 8-12%/năm
+                            </div>
+                            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                                <i className="fa-solid fa-fire text-primary-container"></i>
+                                Chỉ còn 27 căn view biển đẹp
+                            </div>
+                        </div>
 
                         
                         <div className="lg:hidden relative mb-6 sm:mb-10 w-full max-w-[360px] mx-auto sm:mx-0">
@@ -177,19 +188,20 @@ export default function NativeOriginalLanding() {
                                     <div>
                                         <div
                                             className="text-[8px] sm:text-[9px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">
-                                            Giá chỉ từ</div>
+                                            Chỉ từ</div>
                                         <div
                                             className="text-2xl sm:text-3xl font-black text-white italic drop-shadow-md leading-none">
-                                            6x <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">tr/m²</span>
+                                            1,2 <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">tỷ/căn</span>
                                         </div>
+                                        <div className="mt-1 text-[9px] sm:text-[10px] text-white/70 font-bold">Tương đương 6x triệu/m²</div>
                                     </div>
                                     <div className="text-right pt-1">
                                         <div
                                             className="text-[7px] sm:text-[8px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">
-                                            Tiêu chuẩn</div>
+                                            Đã giữ chỗ</div>
                                         <div
                                             className="text-[10px] sm:text-xs font-black text-white drop-shadow-md bg-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-white/10 whitespace-nowrap">
-                                            5 SAO FULL</div>
+                                            73% quỹ căn</div>
                                     </div>
                                 </div>
                                 <div
@@ -199,42 +211,34 @@ export default function NativeOriginalLanding() {
                                     className="flex items-center gap-2.5 sm:gap-3 bg-black/20 p-2.5 sm:p-3 rounded-xl border border-white/5">
                                     <div
                                         className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs sm:text-sm shrink-0 shadow-inner">
-                                        <i className="fa-solid fa-calendar-check"></i>
+                                        <i className="fa-solid fa-bolt"></i>
                                     </div>
-                                    <div className="text-[9px] sm:text-[10px] text-white/90 font-medium leading-[1.4]">Bàn
-                                        giao dự kiến: <br /> <span
-                                            className="text-primary-container font-black text-[10px] sm:text-[11px] tracking-wide">QUÝ
-                                            IV / 2026</span></div>
+                                    <div className="text-[9px] sm:text-[10px] text-white/90 font-medium leading-[1.4]">Khai
+                                        thác kỳ vọng: <br /> <span
+                                            className="text-primary-container font-black text-[10px] sm:text-[11px] tracking-wide">8-12% / NĂM</span></div>
                                 </div>
                             </div>
                         </div>
 
                         
                         <div
-                            className="flex flex-row items-center gap-3 sm:gap-6 w-full max-w-[360px] mx-auto sm:mx-0 sm:max-w-none">
-                            <button type="button" data-onclick="toggleChatbot()"
-                                className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
-                                <div className="relative shrink-0">
-                                    <img src="./ai_avatar_vn.png"
-                                        className="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover border border-white/30"
-                                        alt="AI Avatar" />
-                                    <div
-                                        className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-primary sm:hidden">
-                                    </div>
-                                </div>
+                            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6 w-full max-w-[360px] mx-auto sm:mx-0 sm:max-w-none">
+                            <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
+                                className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
+                                <i className="fa-solid fa-file-lines text-sm sm:text-base"></i>
                                 <span
-                                    className="text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Tư
-                                    vấn AI</span>
+                                    className="text-[11px] sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Nhận
+                                    bảng giá nội bộ</span>
                             </button>
-                            <button type="button" data-onclick="openVRImage()"
-                                className="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md sm:bg-transparent sm:border-none border border-white/20 pr-4 sm:pr-0 pl-1 py-1 sm:p-0 rounded-full transition-all hover:bg-white/20">
+                            <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')"
+                                className="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 sm:px-6 rounded-full transition-all hover:bg-white/20">
                                 <div
-                                    className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-primary/40 sm:bg-transparent border border-white/20 sm:border-2 sm:border-white/20 flex items-center justify-center text-white text-xs sm:text-lg group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
+                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/40 border border-white/20 flex items-center justify-center text-white text-xs sm:text-base group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
                                     <i className="fa-solid fa-play ml-0.5"></i>
                                 </div>
                                 <span
-                                    className="text-white font-black text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5 pr-1 sm:pr-0">360°
-                                    VR</span>
+                                    className="text-white font-black text-[11px] sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Xem
+                                    video căn đẹp nhất</span>
                             </button>
                         </div>
                     </div>
@@ -250,8 +254,8 @@ export default function NativeOriginalLanding() {
                                 className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-primary/80 to-transparent">
                                 <div
                                     className="text-[10px] text-primary-container font-black uppercase tracking-widest mb-1">
-                                    Thiết kế chuẩn Quốc tế</div>
-                                <div className="text-xl text-white font-black italic">PHÂN KHU SKY VILLA</div>
+                                    Chỉ còn 27 căn view biển đẹp</div>
+                                <div className="text-xl text-white font-black italic">ƯU TIÊN NHẬN BẢNG GIÁ NỘI BỘ</div>
                             </div>
                         </div>
                     </div>
@@ -265,15 +269,15 @@ export default function NativeOriginalLanding() {
             <div className="app-container">
                 <div className="text-center max-w-2xl mx-auto mb-16 reveal">
                     <span
-                        className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Trải
-                        Nghiệm Điện Ảnh</span>
+                        className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Video
+                        Xem Nhanh</span>
                     <h2
                         className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                        Thước Phim <span className="text-primary-container">Chân Thực</span>
+                        Xem Nhanh <span className="text-primary-container">Dự Án</span> Trước Khi Xin Giá
                     </h2>
                     <p className="text-base opacity-60 font-body leading-relaxed">
-                        Cảm nhận nhịp sống thượng lưu và quy mô tầm cỡ của Sunshine Bay Retreat qua những hình ảnh thực
-                        tế sống động nhất.
+                        Nhiều khách sẽ xem video tổng quan trước, rồi mới xin bảng giá nội bộ, video căn đẹp hoặc phần
+                        pháp lý mình cần kiểm tra kỹ hơn.
                     </p>
                 </div>
 
@@ -303,19 +307,256 @@ export default function NativeOriginalLanding() {
         </section>
 
         
+        <section className="py-24 bg-white">
+            <div className="app-container">
+                <div className="grid xl:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
+                    <div className="reveal">
+                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Lý do xem sớm</span>
+                        <h2 className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tight">
+                            Nhiều Khách Xem <span className="text-primary-container">Bảng Giá Sớm</span> Vì 3 Lý Do Này
+                        </h2>
+                        <p className="text-on-surface/60 text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
+                            Thường khách đi tiếp khi họ nhìn rõ tổng giá, biết khu vực đang có câu chuyện gì và thấy có đủ video,
+                            tiến độ, pháp lý để đối chiếu trước khi xin thông tin chi tiết hơn.
+                        </p>
+                        <div className="grid md:grid-cols-3 gap-5 mt-10">
+                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
+                                    <i className="fa-solid fa-wallet"></i>
+                                </div>
+                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Tổng Giá Dễ Hình Dung</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Nhìn vào mức từ 1,2 tỷ/căn là khách có thể biết khá nhanh sản phẩm này có hợp khung tài chính của mình hay không.</p>
+                            </div>
+                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
+                                    <i className="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Có Thứ Để Đối Chiếu</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Video, tiến độ thực tế tháng 03/2026 và phần pháp lý giúp khách kiểm tra nhanh trước khi quyết định có nên đi sâu hơn hay không.</p>
+                            </div>
+                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
+                                    <i className="fa-solid fa-chart-line"></i>
+                                </div>
+                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Hạ Tầng Dễ Hiểu</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Cao tốc Biên Hòa - Vũng Tàu và Cầu Cần Giờ là 2 chi tiết khách hỏi khá nhiều khi nhìn vào dư địa tăng giá của khu vực.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="reveal">
+                        <div className="bg-primary rounded-[2rem] p-8 text-white shadow-2xl border border-white/5">
+                            <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Gửi đúng phần cần xem</span>
+                            <h3 className="text-2xl font-black uppercase tracking-tight leading-tight mb-5">Bên Em Gửi Gọn Theo Đúng Nhu Cầu</h3>
+                            <p className="text-white/70 text-sm leading-7 mb-6">Anh/chị muốn xem giá, video căn đẹp, tiến độ hay pháp lý thì bên em gửi đúng phần đó trước để mình đỡ mất thời gian lọc lại.</p>
+                            <div className="space-y-3">
+                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                                    <i className="fa-solid fa-file-lines text-primary-container mt-1"></i>
+                                    <div>
+                                        <div className="text-xs font-black uppercase tracking-widest text-white">Bảng giá nội bộ</div>
+                                        <p className="text-xs text-white/60 mt-1 leading-6">Gửi đúng nhóm căn giá phù hợp thay vì gửi một danh sách dài và khó lọc.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                                    <i className="fa-solid fa-circle-play text-primary-container mt-1"></i>
+                                    <div>
+                                        <div className="text-xs font-black uppercase tracking-widest text-white">Video căn đẹp và tiến độ</div>
+                                        <p className="text-xs text-white/60 mt-1 leading-6">Xem nhanh hình ảnh thực tế để biết dự án đang ở đâu trước khi trao đổi sâu hơn.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                                    <i className="fa-solid fa-folder-open text-primary-container mt-1"></i>
+                                    <div>
+                                        <div className="text-xs font-black uppercase tracking-widest text-white">Pháp lý và chính sách</div>
+                                        <p className="text-xs text-white/60 mt-1 leading-6">Nếu cần kiểm tra kỹ hơn, bên em gửi phần pháp lý và chính sách bán hàng đang áp dụng trong cùng một lượt.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                                <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')" className="gold-button flex-1 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest shadow-lg">Nhận bảng giá nội bộ</button>
+                                <button type="button" data-onclick="startChatFromLanding('Xem pháp lý')" className="flex-1 py-4 rounded-full border border-white/15 bg-white/10 text-white font-black text-[10px] uppercase tracking-widest">Xem pháp lý</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section className="py-24 bg-surface-container">
+            <div className="app-container">
+                <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
+                    <div className="reveal">
+                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Thông tin khách hay kiểm tra</span>
+                        <h2 className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tight">
+                            Có Chủ Đầu Tư, Pháp Lý Và <span className="text-primary-container">Tiến Độ</span> Để Đối Chiếu
+                        </h2>
+                        <p className="text-on-surface/60 text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
+                            Trước khi xin bảng giá, phần lớn khách sẽ kiểm tra nhanh chủ đầu tư, phần pháp lý, hình ảnh thực tế và
+                            câu chuyện hạ tầng quanh khu vực để biết dự án này có đủ căn cứ để đi tiếp hay không.
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-4 mt-10">
+                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
+                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Chủ đầu tư</div>
+                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Sunshine Group</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Thông tin chủ đầu tư đã có sẵn trên landing để khách kiểm tra nhanh độ nhận diện trước khi xem sâu hơn.</p>
+                            </div>
+                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
+                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Pháp lý</div>
+                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Các đầu mục cơ bản</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Landing đã có các mốc pháp lý như giấy phép xây dựng, quy hoạch 1/500, sổ tổng và bảo lãnh ngân hàng để đối chiếu.</p>
+                            </div>
+                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
+                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Hình ảnh thực tế</div>
+                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Video và tiến độ</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Khách có thể xem TVC, hình ảnh thực tế và cập nhật tiến độ tháng 03/2026 thay vì chỉ nghe mô tả bằng lời.</p>
+                            </div>
+                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
+                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Hạ tầng khu vực</div>
+                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Nam Vũng Tàu</h3>
+                                <p className="text-sm text-on-surface/60 leading-7">Cao tốc Biên Hòa - Vũng Tàu và Cầu Cần Giờ là 2 điểm neo giúp khách nhìn ra câu chuyện tăng giá dài hơn.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="reveal">
+                        <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-white/70">
+                            <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Cập nhật quỹ căn</span>
+                            <h3 className="text-2xl font-black text-primary uppercase tracking-tight leading-tight">Nhóm Căn Đẹp Và Chính Sách Hiện Tại</h3>
+                            <p className="text-sm text-on-surface/60 leading-7 mt-5">Sau khi đã thấy đủ thông tin để tin hơn, điều khách thường hỏi tiếp là hiện còn bao nhiêu căn dễ chọn, chính sách đang ở mức nào và có nên xem bảng giá sớm hay không.</p>
+                            <div className="grid grid-cols-2 gap-4 mt-8">
+                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Đã có khách giữ chỗ</div>
+                                    <div className="text-3xl font-black text-primary">73%</div>
+                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Quỹ căn đẹp đang được quan tâm khá nhanh.</p>
+                                </div>
+                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Căn view biển đẹp</div>
+                                    <div className="text-3xl font-black text-primary">27</div>
+                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Nhóm căn dễ chọn đang còn không nhiều.</p>
+                                </div>
+                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Chiết khấu giai đoạn 1</div>
+                                    <div className="text-3xl font-black text-primary">15%</div>
+                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Đang áp dụng cho nhóm căn hiện tại.</p>
+                                </div>
+                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Hỗ trợ tài chính</div>
+                                    <div className="text-3xl font-black text-primary">24T</div>
+                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">0% lãi suất theo chính sách đang mở.</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4 mt-8">
+                                <div className="rounded-2xl bg-primary text-white p-5">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Thời điểm xem</div>
+                                    <p className="text-sm text-white/75 leading-7">Nếu đang quan tâm thật, khách nên xin bảng giá sớm để biết mình còn chọn được căn nào và mức giá hiện tại ra sao.</p>
+                                </div>
+                                <div className="rounded-2xl border border-surface-container p-5">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Tiến độ</div>
+                                    <p className="text-sm text-on-surface/60 leading-7">Tiến độ thực tế đang được cập nhật tháng 03/2026, nên khách có thêm căn cứ thay vì chỉ nhìn phối cảnh.</p>
+                                </div>
+                                <div className="rounded-2xl border border-surface-container p-5">
+                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Lọc căn đẹp</div>
+                                    <p className="text-sm text-on-surface/60 leading-7">Những căn view biển hoặc tầng đẹp thường được hỏi trước trong nhóm khách xin bảng giá nội bộ.</p>
+                                </div>
+                            </div>
+                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                                <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')" className="gold-button flex-1 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest shadow-lg">Nhận bảng giá nội bộ</button>
+                                <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')" className="flex-1 py-4 rounded-full border border-primary/10 bg-surface text-primary font-black text-[10px] uppercase tracking-widest">Xem video thực tế</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lead-form" className="py-24 bg-primary text-white">
+            <div className="app-container">
+                <div className="grid xl:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
+                    <div className="reveal">
+                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Để lại thông tin ngắn</span>
+                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight">
+                            Nhận Bảng Giá, Video Và <span className="text-primary-container">Phần Mình Cần</span> Trong Một Lượt
+                        </h2>
+                        <p className="text-white/70 text-base md:text-lg mt-6 max-w-2xl leading-relaxed">
+                            Nếu đã xem xong phần chính, anh/chị chỉ cần để lại thông tin ngắn. Bên em sẽ gửi đúng bảng giá nội bộ,
+                            video căn đẹp, tiến độ hoặc pháp lý theo đúng nhu cầu trước, không gửi lan man.
+                        </p>
+                        <div className="grid sm:grid-cols-3 gap-4 mt-10">
+                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
+                                    <i className="fa-solid fa-clock"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Phản hồi nhanh</h3>
+                                <p className="text-sm text-white/60 leading-7">Thường bên em gửi Zalo trước trong khoảng 2-5 phút nếu đang trong giờ làm việc.</p>
+                            </div>
+                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
+                                    <i className="fa-solid fa-filter-circle-dollar"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Lọc đúng tầm tiền</h3>
+                                <p className="text-sm text-white/60 leading-7">Bên em ưu tiên lọc đúng căn hợp tài chính trước để anh/chị dễ so sánh hơn.</p>
+                            </div>
+                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
+                                    <i className="fa-solid fa-file-shield"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Gửi đúng phần cần xem</h3>
+                                <p className="text-sm text-white/60 leading-7">Anh/chị cần giá, video hay pháp lý thì bên em gửi riêng đúng phần đó trước.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="reveal">
+                        <div className="rounded-[2rem] bg-white p-6 text-primary shadow-[0_30px_80px_rgba(0,0,0,0.25)] sm:p-8">
+                            <div className="mb-6">
+                                <div className="text-[10px] font-black uppercase tracking-[0.35em] text-primary-container mb-3">Form nhận thông tin</div>
+                                <h3 className="text-2xl font-black uppercase tracking-tight">Điền Nhanh Trong 30 Giây</h3>
+                                <p className="text-sm text-primary/60 leading-7 mt-3">Anh/chị điền ngắn gọn là được. Bên em sẽ gửi đúng phần mình cần trước qua Zalo, điện thoại hoặc email.</p>
+                            </div>
+                            <form id="lead-capture-form" data-onsubmit="submitLeadForm(event)" className="space-y-4">
+                                <input id="lead-full-name" type="text" required className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm outline-none transition focus:border-primary-container focus:bg-white" placeholder="Họ và tên *" />
+                                <input id="lead-contact" type="text" required className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm outline-none transition focus:border-primary-container focus:bg-white" placeholder="SĐT / Zalo / Email *" />
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <select id="lead-need" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
+                                        <option>Đầu tư sinh lời</option>
+                                        <option>Mua để ở / nghỉ dưỡng</option>
+                                        <option>Muốn xem giá trước</option>
+                                        <option>Muốn xem pháp lý trước</option>
+                                    </select>
+                                    <select id="lead-budget" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
+                                        <option>1-1,5 tỷ</option>
+                                        <option>1,5-2 tỷ</option>
+                                        <option>Trên 2 tỷ</option>
+                                        <option>Chưa rõ</option>
+                                    </select>
+                                </div>
+                                <select id="lead-contact-preference" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
+                                    <option>Zalo</option>
+                                    <option>Điện thoại</option>
+                                    <option>Email</option>
+                                </select>
+                                <button type="submit" id="lead-submit-btn" className="gold-button inline-flex w-full items-center justify-center rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-[0.22em] text-white shadow-[0_18px_50px_rgba(197,160,89,0.28)]">
+                                    Nhận bảng giá nội bộ
+                                </button>
+                                <p className="text-xs leading-6 text-primary/50">Bên em thường gửi Zalo trước, sau đó mới gọi nếu anh/chị muốn trao đổi nhanh hơn.</p>
+                            </form>
+                            <div id="lead-form-notice" className="hidden mt-4 rounded-2xl border px-4 py-3 text-sm leading-6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="vitri" className="py-16 bg-white">
             <div className="app-container">
                 <div className="grid lg:grid-cols-2 gap-6 items-end mb-8 reveal">
                     <div>
                         <span
                             className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Hạ
-                            tầng trọng điểm</span>
+                            tầng khu vực</span>
                         <h2
                             className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">
-                            Vị thế <span className="text-primary-container">Kết Nối</span> Tỷ Đô</h2>
+                            Nam Vũng Tàu <span className="text-primary-container">Đang Được</span> Kéo Gần Hơn</h2>
                     </div>
                     <p className="text-on-surface/50 text-base md:text-lg max-w-md lg:ml-auto">
-                        Sunshine Bay Retreat là tâm điểm đón đầu sóng hạ tầng hoàn thiện vào năm 2025-2026 tại Vũng Tàu.
+                        Đây là phần nhiều khách hỏi khá kỹ, vì hạ tầng là cơ sở dễ hiểu nhất để nhìn vào dư địa tăng giá của khu vực trong vài năm tới.
                     </p>
                 </div>
 
@@ -511,7 +752,7 @@ export default function NativeOriginalLanding() {
                             <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Căn hộ nghỉ dưỡng 100% view
                                 biển với nội thất chuẩn 5 sao và công nghệ SmartHome.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
-                                <div className="text-primary-container font-black text-sm">Từ 6x triệu/m²</div>
+                                <div className="text-primary-container font-black text-sm">Từ 1,2 tỷ/căn</div>
                                 <div
                                     className="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">
                                     Chi tiết <i className="fa-solid fa-arrow-right"></i></div>
@@ -575,7 +816,7 @@ export default function NativeOriginalLanding() {
             
             <div id="booking-modal" className="fixed inset-0 z-[350] hidden items-center justify-center p-4">
                 <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm" data-onclick="closeBookingModal()"></div>
-                <div className="bg-white rounded-xl max-w-md w-full relative z-10 shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300"
+                <div className="bg-white rounded-[1.75rem] max-w-lg w-full relative z-10 shadow-2xl p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300"
                     id="booking-modal-content">
                     <button type="button" data-onclick="closeBookingModal()"
                         className="absolute top-4 right-4 w-8 h-8 bg-surface-container rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
@@ -585,92 +826,85 @@ export default function NativeOriginalLanding() {
                     <div className="text-center mb-8">
                         <div
                             className="w-16 h-16 bg-primary-container/20 text-primary-container rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                            <i className="fa-solid fa-file-signature"></i>
+                            <i className="fa-solid fa-file-lines"></i>
                         </div>
-                        <h3 className="text-2xl font-black text-primary uppercase tracking-tight">Booking Online</h3>
-                        <p className="text-xs opacity-60 font-body mt-2">Giữ chỗ ưu tiên sản phẩm: <span
+                        <h3 className="text-2xl font-black text-primary uppercase tracking-tight">Nhận Bảng Giá &amp; Video</h3>
+                        <p className="text-sm opacity-60 font-body mt-3 leading-7">Bên em sẽ gửi thông tin ưu tiên cho sản phẩm: <span
                                 id="booking-product-name" className="font-bold text-primary"></span></p>
                     </div>
 
-                    <form id="booking-form" data-onsubmit="submitBooking(event)">
+                    <form id="booking-form" data-onsubmit="submitBooking(event)" className="space-y-4">
                         <input type="hidden" id="booking-product-id" name="product_id" />
 
-                        <div className="space-y-4 mb-8">
+                        <div>
+                            <label
+                                className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Họ và tên *</label>
+                            <input id="booking-full-name" type="text" required
+                                className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all"
+                                placeholder="Nhập họ và tên..." />
+                        </div>
+                        <div>
+                            <label
+                                className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">SĐT / Zalo / Email *</label>
+                            <input id="booking-contact" type="text" required
+                                className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all"
+                                placeholder="Nhập số liên hệ hoặc email..." />
+                        </div>
+                        <div className="grid gap-4 sm:grid-cols-2">
                             <div>
                                 <label
-                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Họ
-                                    và tên *</label>
-                                <input type="text" required
-                                    className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all"
-                                    placeholder="Nhập họ và tên..." />
-                            </div>
-                            <div>
-                                <label
-                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Số
-                                    điện thoại *</label>
-                                <input type="tel" required
-                                    className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all"
-                                    placeholder="Nhập số điện thoại..." />
-                            </div>
-                            <div>
-                                <label
-                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Số
-                                    tiền Booking (VNĐ)</label>
-                                <select
-                                    className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
-                                    <option value="50M">50.000.000 VNĐ</option>
-                                    <option value="100M">100.000.000 VNĐ</option>
-                                    <option value="200M">200.000.000 VNĐ</option>
+                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Nhu cầu</label>
+                                <select id="booking-need"
+                                    className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
+                                    <option>Muốn xem giá trước</option>
+                                    <option>Đầu tư sinh lời</option>
+                                    <option>Mua để ở / nghỉ dưỡng</option>
+                                    <option>Muốn xem pháp lý trước</option>
                                 </select>
                             </div>
                             <div>
                                 <label
-                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Phương
-                                    thức thanh toán</label>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <label
-                                        className="flex items-center gap-3 p-3 rounded-xl border border-primary-container bg-primary-container/5 cursor-pointer">
-                                        <input type="radio" name="payment" value="transfer" defaultChecked
-                                            className="text-primary-container focus:ring-primary-container hidden peer" />
-                                        <div
-                                            className="w-4 h-4 rounded-full border border-primary-container peer-checked:bg-primary-container flex items-center justify-center group">
-                                            <div className="w-2 h-2 rounded-full bg-white hidden peer-checked:block"></div>
-                                        </div>
-                                        <span className="text-xs font-bold text-primary">Chuyển khoản</span>
-                                    </label>
-                                    <label
-                                        className="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:border-primary-container cursor-pointer transition-colors">
-                                        <input type="radio" name="payment" value="card"
-                                            className="text-primary-container focus:ring-primary-container hidden peer" />
-                                        <div
-                                            className="w-4 h-4 rounded-full border border-primary/20 peer-checked:border-primary-container peer-checked:bg-primary-container flex items-center justify-center">
-                                            <div className="w-2 h-2 rounded-full bg-white hidden peer-checked:block"></div>
-                                        </div>
-                                        <span className="text-xs font-bold text-primary">Thẻ tín dụng</span>
-                                    </label>
-                                </div>
+                                    className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Tài chính</label>
+                                <select id="booking-budget"
+                                    className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
+                                    <option>1-1,5 tỷ</option>
+                                    <option>1,5-2 tỷ</option>
+                                    <option>Trên 2 tỷ</option>
+                                    <option>Chưa rõ</option>
+                                </select>
                             </div>
                         </div>
+                        <div>
+                            <label
+                                className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Ưu tiên nhận thông tin qua</label>
+                            <select id="booking-contact-preference"
+                                className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
+                                <option>Zalo</option>
+                                <option>Điện thoại</option>
+                                <option>Email</option>
+                            </select>
+                        </div>
+
+                        <p className="text-xs leading-6 text-primary/55">Bước này chỉ để bên em gửi đúng phần mình cần, chưa phải đặt cọc hay chuyển khoản.</p>
 
                         <button type="submit" id="submit-booking-btn"
-                            className="w-full gold-button py-4 rounded-xl text-white font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2">
-                            Xác nhận Booking <i className="fa-solid fa-arrow-right"></i>
+                            className="w-full gold-button py-4 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2">
+                            Nhận bảng giá &amp; video <i className="fa-solid fa-arrow-right"></i>
                         </button>
                     </form>
 
-                    
+                    <div id="booking-form-notice" className="hidden mt-4 rounded-2xl border px-4 py-3 text-sm leading-6"></div>
+
                     <div id="booking-success"
-                        className="absolute inset-0 bg-white z-20 rounded-xl flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-all duration-300">
+                        className="absolute inset-0 bg-white z-20 rounded-[1.75rem] flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-all duration-300">
                         <div
                             className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner">
                             <i className="fa-solid fa-check"></i>
                         </div>
-                        <h3 className="text-2xl font-black text-primary uppercase mb-2">Khởi Tạo Thành Công</h3>
-                        <p className="text-sm opacity-60 font-body mb-8">Hệ thống đã ghi nhận yêu cầu Booking. Chuyên viên
-                            sẽ liên hệ với bạn trong ít phút để hướng dẫn thủ tục.</p>
+                        <h3 className="text-2xl font-black text-primary uppercase mb-3">Đã Ghi Nhận Thông Tin</h3>
+                        <p className="text-sm opacity-60 font-body mb-8 leading-7">Bên em sẽ gửi bảng giá nội bộ, video căn đẹp và phần phù hợp với nhu cầu của anh/chị trong ít phút tới.</p>
                         <button type="button" data-onclick="closeBookingSuccess()"
-                            className="bg-surface-container py-3 px-8 rounded-full text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-colors shadow-sm">Đóng
-                            cửa sổ</button>
+                            className="bg-surface-container py-3 px-8 rounded-full text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-colors shadow-sm">Đóng cửa sổ</button>
                     </div>
                 </div>
             </div>
@@ -1002,7 +1236,7 @@ export default function NativeOriginalLanding() {
                     </h4>
                     <button type="button" data-onclick="toggleChatbot()"
                         className="gold-button px-6 py-3 rounded-full text-white font-black text-[10px] uppercase tracking-widest">
-                        Nhắn cho AI Trợ Lý
+                        AI tư vấn 24/7
                     </button>
                 </div>
             </div>
@@ -1028,8 +1262,8 @@ export default function NativeOriginalLanding() {
                     </div>
                     <div>
                         <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-container mb-0.5">
-                            Sunshine Assistant</div>
-                        <h3 className="text-sm font-black uppercase tracking-tighter leading-none">AI Phản hồi tức thì</h3>
+                            Sunshine AI</div>
+                        <h3 className="text-sm font-black uppercase tracking-tighter leading-none">AI tư vấn 24/7</h3>
                     </div>
                 </div>
 
@@ -1043,28 +1277,28 @@ export default function NativeOriginalLanding() {
             <div id="chat-messages" className="chat-scroll flex-1 p-5 overflow-y-auto bg-surface/30">
                 <div className="chat-message chat-message--bot">
                     <div className="chat-bubble">
-                        Xin chào! Tôi là **Sunshine AI**. Tôi có thể giải đáp nhanh về giá bán, vị trí, tiện ích hoặc hỗ
-                        trợ bạn đặt lịch xem nhà mẫu dự án **Sunshine Bay Retreat**.
+                        Chào anh/chị, em là **Sunshine AI** của dự án. Em có thể gửi ngay **bảng giá nội bộ**, **video căn đẹp**
+                        và **pháp lý** nếu mình cần xem nhanh trước ạ.
                     </div>
                 </div>
             </div>
 
             
             <div id="chat-suggestions" className="px-5 py-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Sunshine Bay giá bao nhiêu?')">Giá bán dự
-                    án</button>
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Vị trí dự án ở đâu?')">Vị trí & Kết
-                    nối</button>
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Tiện ích có gì nổi bật?')">Hệ sinh thái tiện
-                    ích</button>
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Tôi muốn xem nhà mẫu')">Đặt lịch xem
-                    nhà</button>
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá</button>
+
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem video căn đẹp</button>
+
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Tư vấn đầu tư')">Tư vấn đầu tư</button>
+
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem pháp lý')">Xem pháp lý</button>
+
             </div>
 
             
             <div className="p-4 bg-white border-t border-surface">
                 <div className="flex gap-3">
-                    <textarea id="chat-input" placeholder="Hỏi về Sunshine Bay..." rows={1}
+                    <textarea id="chat-input" placeholder="Nhập câu hỏi hoặc để lại SĐT/Zalo..." rows={1}
                         className="flex-1 bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary-container resize-none"
                         data-onkeypress="handleChatEnter(event)"></textarea>
                     <button type="button" data-onclick="handleSendMessage()"
@@ -1083,30 +1317,45 @@ export default function NativeOriginalLanding() {
                 className="absolute -top-1 -right-1 w-5 h-5 bg-primary-container text-white text-[8px] flex items-center justify-center rounded-full font-black animate-pulse">
                 1</div>
             <span
-                className="absolute right-20 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">AI
-                Sunshine Assistant</span>
+                className="absolute right-20 bg-primary text-white text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap">Nhận bảng giá</span>
+
         </button>
     </div>
+
+    <button type="button" id="chatbot-mini-teaser" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
+        className="fixed bottom-28 right-4 z-[205] hidden max-w-[260px] rounded-2xl border border-primary/10 bg-white px-4 py-3 text-left shadow-2xl">
+        <div className="text-[10px] font-black uppercase tracking-[0.24em] text-primary/40">Popup mini</div>
+        <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem căn phù hợp tài chính 1,2 tỷ không ạ?</p>
+        <span id="chatbot-mini-teaser-cta" className="mt-3 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-primary-container">
+            Nhận bảng giá <i className="fa-solid fa-arrow-right"></i>
+        </span>
+    </button>
 
     
     <div
         className="fixed bottom-0 left-0 w-full z-[140] bg-white border-t flex items-center justify-around py-3 md:hidden shadow-2xl">
-        <a href="#vitri" className="flex flex-col items-center gap-1 text-primary">
-            <i className="fa-solid fa-map-location-dot"></i>
-            <span className="text-[8px] font-black uppercase tracking-widest">Vị trí</span>
+        <a href="#lead-form" className="flex flex-col items-center gap-1 text-primary">
+            <i className="fa-solid fa-file-invoice-dollar"></i>
+            <span className="text-[8px] font-black uppercase tracking-widest">Bảng giá</span>
         </a>
         <button type="button" data-onclick="toggleChatbot()"
             className="w-14 h-14 bg-primary rounded-full flex items-center justify-center -mt-8 shadow-2xl border-4 border-white overflow-hidden">
             <img src="./ai_avatar_vn.png" className="w-full h-full object-cover" alt="AI Chatbot" />
         </button>
-        <a href="#tiendo" className="flex flex-col items-center gap-1 text-primary">
-            <i className="fa-solid fa-file-pdf"></i>
-            <span className="text-[8px] font-black uppercase tracking-widest">Tiến độ</span>
+        <a href="#video-tour" className="flex flex-col items-center gap-1 text-primary">
+            <i className="fa-solid fa-circle-play"></i>
+            <span className="text-[8px] font-black uppercase tracking-widest">Xem video</span>
         </a>
     </div>
     </>
   );
 }
+
+
+
+
+
+
 
 
 

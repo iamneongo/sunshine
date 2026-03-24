@@ -5,7 +5,7 @@ export type QuickAction = {
 
 export const PROJECT_CONTEXT = {
   projectName: "Sunshine Bay Retreat Vũng Tàu",
-  headline: "Căn hộ biển Vũng Tàu chỉ từ 1,2 tỷ/căn",
+  headline: "Căn hộ biển Vũng Tàu - giá chỉ từ 1,2 tỷ/căn",
   priceAnchor: "Từ 1,2 tỷ/căn",
   priceSecondary: "Tương đương 6x triệu/m²",
   yieldNote: "Khai thác kỳ vọng 8-12%/năm",
@@ -34,10 +34,19 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
 export const CHATBOT_PLACEHOLDER = "Nhập câu hỏi hoặc để lại SĐT/Zalo...";
 
 export const INITIAL_CHAT_MESSAGE =
-  "Anh/chị đang xem các căn hộ biển từ **1,2 tỷ/căn** phải không ạ? Em có thể gửi ngay **bảng giá nội bộ**, **video căn đẹp nhất hôm nay**, **thông tin pháp lý** hoặc hỗ trợ **đặt lịch xem dự án**.";
+  "Chào anh/chị, em là trợ lý AI của dự án. Hiện có một số căn giá tốt từ **1,2 tỷ**, phù hợp đầu tư và nghỉ dưỡng. Anh/chị muốn em gửi **bảng giá nội bộ** hay **video căn đẹp nhất hôm nay** trước ạ?";
 
 export const WELCOME_MESSAGE =
-  "Anh/chị đang xem căn hộ biển chỉ từ **1,2 tỷ/căn** phải không ạ? Hiện những căn đẹp đang được quan tâm khá nhanh, em có thể gửi ngay **bảng giá nội bộ**, **video căn đẹp nhất hôm nay** và **chính sách bán hàng mới nhất**.";
+  "Anh/chị đang xem căn hộ dòng tiền chỉ từ **1,2 tỷ** phải không ạ? Em có thể gửi ngay **bảng giá nội bộ**, **video căn đẹp nhất** và **chính sách mới nhất**. Anh/chị muốn xem phần nào trước ạ?";
+
+export const CHATBOT_MOBILE_TEASER_MESSAGE =
+  "Anh/chị muốn xem căn phù hợp tài chính 1,2 tỷ không ạ?";
+
+export const CHATBOT_FOLLOW_UP_10M_MESSAGE =
+  "Dạ em vẫn giữ sẵn **bảng giá nội bộ** và **video căn đẹp** cho anh/chị ạ. Khi cần, anh/chị chỉ cần nhắn **GỬI GIÁ** là em gửi ngay.";
+
+export const CHATBOT_RETURNING_MESSAGE =
+  "Chào anh/chị, nếu mình vẫn đang cân nhắc, em có thể gửi lại **bảng giá nội bộ**, **video căn đẹp** hoặc **pháp lý** trong một lượt ạ.";
 
 export const CHATBOT_SYSTEM_PROMPT = `
 Bạn là Sunshine AI, trợ lý bán hàng cho dự án ${PROJECT_CONTEXT.projectName}.
@@ -111,4 +120,8 @@ Hãy trả về JSON hợp lệ với đúng cấu trúc sau:
   }
 }
 `.trim();
+
+
+
+
 
