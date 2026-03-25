@@ -254,14 +254,6 @@ export default function NativeOriginalLanding() {
                                     video căn đẹp nhất</span>
                             </button>
                         </div>
-                        <div className="mt-4 flex flex-wrap items-center gap-3 max-w-xl">
-                            <a href="#contact"
-                                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white backdrop-blur-md transition-all hover:bg-white/20">
-                                <i className="fa-solid fa-address-card text-primary-container"></i>
-                                Đăng ký để lại thông tin
-                            </a>
-                            <p className="text-sm font-medium leading-6 text-white/70">Thông tin phù hợp như bảng giá, video căn đẹp và căn hợp tài chính sẽ được gửi trong ít phút.</p>
-                        </div>
                     </div>
 
                     
@@ -1292,6 +1284,61 @@ export default function NativeOriginalLanding() {
 
         .chat-input-field::placeholder {
             line-height: 1.5;
+        }
+
+        .hero-copy .hero-title--mobile {
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.04em;
+            line-height: 0.94;
+            padding-top: 0.22em;
+            padding-bottom: 0.2em;
+            overflow: visible;
+        }
+
+        .hero-copy .hero-title-line {
+            display: block;
+            line-height: 0.9;
+            overflow: visible;
+        }
+
+        .hero-copy .hero-title-price-display {
+            display: inline-block;
+            line-height: 1.18;
+            padding-top: 0.12em;
+            padding-bottom: 0.14em;
+            overflow: visible;
+        }
+
+        @media (min-width: 768px) {
+            .hero-banner-content {
+                padding-top: 6.5rem !important;
+                padding-bottom: 4.75rem !important;
+            }
+
+            .hero-copy {
+                max-width: 40rem;
+            }
+
+            .hero-copy .hero-title--mobile {
+                font-size: clamp(3.45rem, 4.95vw, 4.55rem);
+                row-gap: 0.06em;
+                line-height: 0.96;
+                padding-top: 0.28em;
+                padding-bottom: 0.24em;
+            }
+
+            .hero-copy .hero-title-line {
+                line-height: 0.95;
+            }
+
+            .hero-copy .hero-title-price-display {
+                font-size: clamp(3rem, 4.9vw, 4rem);
+                line-height: 1.12;
+                padding-top: 0.14em;
+                padding-bottom: 0.16em;
+                margin-bottom: 1.4rem;
+            }
         }
 
         @media (max-width: 767px) {
