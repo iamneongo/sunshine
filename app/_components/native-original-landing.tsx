@@ -24,6 +24,8 @@ export default function NativeOriginalLanding() {
                     className="hover:text-primary-container transition-colors py-1">Mặt bằng</a>
                 <a href="#tiendo" data-onclick="toggleSidebar()"
                     className="hover:text-primary-container transition-colors py-1">Tiến độ</a>
+                <a href="#contact" data-onclick="toggleSidebar()"
+                    className="hover:text-primary-container transition-colors py-1">Nhận thông tin</a>
             </nav>
             <div className="mt-auto">
                 <div className="flex justify-center gap-3 mb-6">
@@ -117,6 +119,12 @@ export default function NativeOriginalLanding() {
                     <span
                         className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-container transition-all group-hover:w-full"></span>
                 </a>
+                <a className="text-primary/70 hover:text-primary font-headline font-bold text-xs tracking-[0.1em] uppercase transition-all relative group"
+                    href="#contact">
+                    Nhận thông tin
+                    <span
+                        className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-container transition-all group-hover:w-full"></span>
+                </a>
             </div>
 
             <div className="flex items-center gap-4">
@@ -135,9 +143,9 @@ export default function NativeOriginalLanding() {
         </div>
     </nav>
 
-    <main>
+    <main className="pb-24 md:pb-0">
         
-        <section className="relative min-h-screen flex items-center overflow-hidden bg-primary">
+        <section className="hero-banner-section relative min-h-[100svh] flex items-center overflow-hidden bg-primary">
             
             <div className="absolute inset-0 z-0">
                 <img alt="Sunshine Bay Hero" className="w-full h-full object-cover hero-img opacity-90 scale-105"
@@ -146,29 +154,34 @@ export default function NativeOriginalLanding() {
                 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent"></div>
             </div>
 
-            <div className="app-container relative z-10 pt-20 pb-20">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="app-container hero-banner-content relative z-10 pt-24 pb-32 sm:pt-24 sm:pb-28 lg:pt-20 lg:pb-20">
+                <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
                     
-                    <div className="reveal animate-fade-in-up">
+                    <div className="reveal animate-fade-in-up hero-copy">
                         <div
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/20 border border-primary-container/30 backdrop-blur-md mb-4 sm:mb-6">
+                            className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary-container/30 bg-primary-container/20 px-4 py-2 backdrop-blur-md mb-4 sm:mb-6">
                             <i className="fa-solid fa-gem text-primary-container shadow-sm"></i>
-                            <span className="text-[10px] sm:text-xs font-black uppercase tracking-[3px] text-white">Căn hộ
+                            <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.24em] sm:tracking-[3px] text-white leading-tight">Căn hộ
                                 biển dòng tiền Vũng Tàu</span>
                         </div>
 
                         <h1
-                            className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-4 sm:mb-6 hero-title tracking-tight uppercase">
-                            Căn Hộ Biển <br /> Vũng Tàu <br /> <span className="italic font-light">Chỉ Từ 1,2 Tỷ</span>
+                            className="hero-title hero-title--mobile mb-2 text-[2.85rem] font-black uppercase tracking-tight text-white leading-[1.02] sm:mb-3 sm:text-5xl sm:leading-tight md:text-6xl lg:text-7xl">
+                            <span className="hero-title-line">Căn Hộ Biển</span>
+                            <span className="hero-title-line">Vũng Tàu</span>
                         </h1>
 
-                        <p className="text-white/70 text-base md:text-lg max-w-xl mb-6 sm:mb-8 font-medium leading-[1.6]">
+                        <div className="hero-title-price-display mb-4 text-[2.45rem] font-light italic text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+                            Chỉ Từ 1,2 Tỷ
+                        </div>
+
+                        <p className="hero-subcopy max-w-xl mb-6 text-base font-medium leading-[1.7] text-white/70 sm:mb-8 md:text-lg">
                             Dòng căn hộ biển dễ vào tiền cho cả nhu cầu <span className="text-primary-container font-black">đầu tư</span> lẫn
                             <span className="text-primary-container font-black"> nghỉ dưỡng</span>. Anh/chị có thể xem ngay bảng giá nội bộ,
                             video căn đẹp và chính sách mới nhất để chọn đúng căn trước khi nhóm view biển đẹp đi nhanh.
                         </p>
 
-                        <div className="flex flex-wrap gap-3 mb-6 sm:mb-8 max-w-xl">
+                        <div className="hero-highlights mb-6 flex max-w-xl flex-wrap gap-3 sm:mb-8">
                             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
                                 <i className="fa-solid fa-chart-line text-primary-container"></i>
                                 Khai thác kỳ vọng 8-12%/năm
@@ -222,7 +235,7 @@ export default function NativeOriginalLanding() {
 
                         
                         <div
-                            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6 w-full max-w-[360px] mx-auto sm:mx-0 sm:max-w-none">
+                            className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-6">
                             <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
                                 className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
                                 <i className="fa-solid fa-file-lines text-sm sm:text-base"></i>
@@ -240,6 +253,14 @@ export default function NativeOriginalLanding() {
                                     className="text-white font-black text-[11px] sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Xem
                                     video căn đẹp nhất</span>
                             </button>
+                        </div>
+                        <div className="mt-4 flex flex-wrap items-center gap-3 max-w-xl">
+                            <a href="#contact"
+                                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white backdrop-blur-md transition-all hover:bg-white/20">
+                                <i className="fa-solid fa-address-card text-primary-container"></i>
+                                Đăng ký để lại thông tin
+                            </a>
+                            <p className="text-sm font-medium leading-6 text-white/70">Thông tin phù hợp như bảng giá, video căn đẹp và căn hợp tài chính sẽ được gửi trong ít phút.</p>
                         </div>
                     </div>
 
@@ -270,14 +291,14 @@ export default function NativeOriginalLanding() {
                 <div className="text-center max-w-2xl mx-auto mb-16 reveal">
                     <span
                         className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Video
-                        Xem Nhanh</span>
+                        Tổng Quan</span>
                     <h2
                         className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                        Xem Nhanh <span className="text-primary-container">Dự Án</span> Trước Khi Xin Giá
+                        Xem Tổng Quan <span className="text-primary-container">Dự Án</span> Trước Khi Xem Chi Tiết
                     </h2>
                     <p className="text-base opacity-60 font-body leading-relaxed">
-                        Nhiều khách sẽ xem video tổng quan trước, rồi mới xin bảng giá nội bộ, video căn đẹp hoặc phần
-                        pháp lý mình cần kiểm tra kỹ hơn.
+                        Video này giúp nắm nhanh vị trí, tiện ích và không gian dự án trước khi xem tiếp bảng giá,
+                        video căn đẹp hoặc tài liệu pháp lý cần đối chiếu kỹ hơn.
                     </p>
                 </div>
 
@@ -306,257 +327,19 @@ export default function NativeOriginalLanding() {
             </div>
         </section>
 
-        
-        <section className="py-24 bg-white">
-            <div className="app-container">
-                <div className="grid xl:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
-                    <div className="reveal">
-                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Lý do xem sớm</span>
-                        <h2 className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tight">
-                            Nhiều Khách Xem <span className="text-primary-container">Bảng Giá Sớm</span> Vì 3 Lý Do Này
-                        </h2>
-                        <p className="text-on-surface/60 text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
-                            Thường khách đi tiếp khi họ nhìn rõ tổng giá, biết khu vực đang có câu chuyện gì và thấy có đủ video,
-                            tiến độ, pháp lý để đối chiếu trước khi xin thông tin chi tiết hơn.
-                        </p>
-                        <div className="grid md:grid-cols-3 gap-5 mt-10">
-                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
-                                    <i className="fa-solid fa-wallet"></i>
-                                </div>
-                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Tổng Giá Dễ Hình Dung</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Nhìn vào mức từ 1,2 tỷ/căn là khách có thể biết khá nhanh sản phẩm này có hợp khung tài chính của mình hay không.</p>
-                            </div>
-                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
-                                    <i className="fa-solid fa-shield-halved"></i>
-                                </div>
-                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Có Thứ Để Đối Chiếu</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Video, tiến độ thực tế tháng 03/2026 và phần pháp lý giúp khách kiểm tra nhanh trước khi quyết định có nên đi sâu hơn hay không.</p>
-                            </div>
-                            <div className="rounded-3xl border border-surface-container bg-surface p-6 shadow-sm">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-5">
-                                    <i className="fa-solid fa-chart-line"></i>
-                                </div>
-                                <h3 className="text-lg font-black text-primary uppercase tracking-tight mb-3">Hạ Tầng Dễ Hiểu</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Cao tốc Biên Hòa - Vũng Tàu và Cầu Cần Giờ là 2 chi tiết khách hỏi khá nhiều khi nhìn vào dư địa tăng giá của khu vực.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="reveal">
-                        <div className="bg-primary rounded-[2rem] p-8 text-white shadow-2xl border border-white/5">
-                            <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Gửi đúng phần cần xem</span>
-                            <h3 className="text-2xl font-black uppercase tracking-tight leading-tight mb-5">Bên Em Gửi Gọn Theo Đúng Nhu Cầu</h3>
-                            <p className="text-white/70 text-sm leading-7 mb-6">Anh/chị muốn xem giá, video căn đẹp, tiến độ hay pháp lý thì bên em gửi đúng phần đó trước để mình đỡ mất thời gian lọc lại.</p>
-                            <div className="space-y-3">
-                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                    <i className="fa-solid fa-file-lines text-primary-container mt-1"></i>
-                                    <div>
-                                        <div className="text-xs font-black uppercase tracking-widest text-white">Bảng giá nội bộ</div>
-                                        <p className="text-xs text-white/60 mt-1 leading-6">Gửi đúng nhóm căn giá phù hợp thay vì gửi một danh sách dài và khó lọc.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                    <i className="fa-solid fa-circle-play text-primary-container mt-1"></i>
-                                    <div>
-                                        <div className="text-xs font-black uppercase tracking-widest text-white">Video căn đẹp và tiến độ</div>
-                                        <p className="text-xs text-white/60 mt-1 leading-6">Xem nhanh hình ảnh thực tế để biết dự án đang ở đâu trước khi trao đổi sâu hơn.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                                    <i className="fa-solid fa-folder-open text-primary-container mt-1"></i>
-                                    <div>
-                                        <div className="text-xs font-black uppercase tracking-widest text-white">Pháp lý và chính sách</div>
-                                        <p className="text-xs text-white/60 mt-1 leading-6">Nếu cần kiểm tra kỹ hơn, bên em gửi phần pháp lý và chính sách bán hàng đang áp dụng trong cùng một lượt.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                                <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')" className="gold-button flex-1 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest shadow-lg">Nhận bảng giá nội bộ</button>
-                                <button type="button" data-onclick="startChatFromLanding('Xem pháp lý')" className="flex-1 py-4 rounded-full border border-white/15 bg-white/10 text-white font-black text-[10px] uppercase tracking-widest">Xem pháp lý</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section className="py-24 bg-surface-container">
-            <div className="app-container">
-                <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-start">
-                    <div className="reveal">
-                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Thông tin khách hay kiểm tra</span>
-                        <h2 className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tight">
-                            Có Chủ Đầu Tư, Pháp Lý Và <span className="text-primary-container">Tiến Độ</span> Để Đối Chiếu
-                        </h2>
-                        <p className="text-on-surface/60 text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
-                            Trước khi xin bảng giá, phần lớn khách sẽ kiểm tra nhanh chủ đầu tư, phần pháp lý, hình ảnh thực tế và
-                            câu chuyện hạ tầng quanh khu vực để biết dự án này có đủ căn cứ để đi tiếp hay không.
-                        </p>
-                        <div className="grid sm:grid-cols-2 gap-4 mt-10">
-                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
-                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Chủ đầu tư</div>
-                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Sunshine Group</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Thông tin chủ đầu tư đã có sẵn trên landing để khách kiểm tra nhanh độ nhận diện trước khi xem sâu hơn.</p>
-                            </div>
-                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
-                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Pháp lý</div>
-                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Các đầu mục cơ bản</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Landing đã có các mốc pháp lý như giấy phép xây dựng, quy hoạch 1/500, sổ tổng và bảo lãnh ngân hàng để đối chiếu.</p>
-                            </div>
-                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
-                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Hình ảnh thực tế</div>
-                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Video và tiến độ</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Khách có thể xem TVC, hình ảnh thực tế và cập nhật tiến độ tháng 03/2026 thay vì chỉ nghe mô tả bằng lời.</p>
-                            </div>
-                            <div className="rounded-3xl bg-white p-6 border border-white/70 shadow-sm">
-                                <div className="text-xs font-black uppercase tracking-widest text-primary-container mb-3">Hạ tầng khu vực</div>
-                                <h3 className="text-xl font-black text-primary uppercase tracking-tight mb-3">Nam Vũng Tàu</h3>
-                                <p className="text-sm text-on-surface/60 leading-7">Cao tốc Biên Hòa - Vũng Tàu và Cầu Cần Giờ là 2 điểm neo giúp khách nhìn ra câu chuyện tăng giá dài hơn.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="reveal">
-                        <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-white/70">
-                            <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Cập nhật quỹ căn</span>
-                            <h3 className="text-2xl font-black text-primary uppercase tracking-tight leading-tight">Nhóm Căn Đẹp Và Chính Sách Hiện Tại</h3>
-                            <p className="text-sm text-on-surface/60 leading-7 mt-5">Sau khi đã thấy đủ thông tin để tin hơn, điều khách thường hỏi tiếp là hiện còn bao nhiêu căn dễ chọn, chính sách đang ở mức nào và có nên xem bảng giá sớm hay không.</p>
-                            <div className="grid grid-cols-2 gap-4 mt-8">
-                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Đã có khách giữ chỗ</div>
-                                    <div className="text-3xl font-black text-primary">73%</div>
-                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Quỹ căn đẹp đang được quan tâm khá nhanh.</p>
-                                </div>
-                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Căn view biển đẹp</div>
-                                    <div className="text-3xl font-black text-primary">27</div>
-                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Nhóm căn dễ chọn đang còn không nhiều.</p>
-                                </div>
-                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Chiết khấu giai đoạn 1</div>
-                                    <div className="text-3xl font-black text-primary">15%</div>
-                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">Đang áp dụng cho nhóm căn hiện tại.</p>
-                                </div>
-                                <div className="rounded-2xl bg-surface p-5 border border-surface-container">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2">Hỗ trợ tài chính</div>
-                                    <div className="text-3xl font-black text-primary">24T</div>
-                                    <p className="text-xs text-on-surface/55 leading-6 mt-2">0% lãi suất theo chính sách đang mở.</p>
-                                </div>
-                            </div>
-                            <div className="space-y-4 mt-8">
-                                <div className="rounded-2xl bg-primary text-white p-5">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Thời điểm xem</div>
-                                    <p className="text-sm text-white/75 leading-7">Nếu đang quan tâm thật, khách nên xin bảng giá sớm để biết mình còn chọn được căn nào và mức giá hiện tại ra sao.</p>
-                                </div>
-                                <div className="rounded-2xl border border-surface-container p-5">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Tiến độ</div>
-                                    <p className="text-sm text-on-surface/60 leading-7">Tiến độ thực tế đang được cập nhật tháng 03/2026, nên khách có thêm căn cứ thay vì chỉ nhìn phối cảnh.</p>
-                                </div>
-                                <div className="rounded-2xl border border-surface-container p-5">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-primary-container mb-2">Lọc căn đẹp</div>
-                                    <p className="text-sm text-on-surface/60 leading-7">Những căn view biển hoặc tầng đẹp thường được hỏi trước trong nhóm khách xin bảng giá nội bộ.</p>
-                                </div>
-                            </div>
-                            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                                <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')" className="gold-button flex-1 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest shadow-lg">Nhận bảng giá nội bộ</button>
-                                <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')" className="flex-1 py-4 rounded-full border border-primary/10 bg-surface text-primary font-black text-[10px] uppercase tracking-widest">Xem video thực tế</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="lead-form" className="py-24 bg-primary text-white">
-            <div className="app-container">
-                <div className="grid xl:grid-cols-[1.05fr_0.95fr] gap-10 items-center">
-                    <div className="reveal">
-                        <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Để lại thông tin ngắn</span>
-                        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight">
-                            Nhận Bảng Giá, Video Và <span className="text-primary-container">Phần Mình Cần</span> Trong Một Lượt
-                        </h2>
-                        <p className="text-white/70 text-base md:text-lg mt-6 max-w-2xl leading-relaxed">
-                            Nếu đã xem xong phần chính, anh/chị chỉ cần để lại thông tin ngắn. Bên em sẽ gửi đúng bảng giá nội bộ,
-                            video căn đẹp, tiến độ hoặc pháp lý theo đúng nhu cầu trước, không gửi lan man.
-                        </p>
-                        <div className="grid sm:grid-cols-3 gap-4 mt-10">
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
-                                    <i className="fa-solid fa-clock"></i>
-                                </div>
-                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Phản hồi nhanh</h3>
-                                <p className="text-sm text-white/60 leading-7">Thường bên em gửi Zalo trước trong khoảng 2-5 phút nếu đang trong giờ làm việc.</p>
-                            </div>
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
-                                    <i className="fa-solid fa-filter-circle-dollar"></i>
-                                </div>
-                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Lọc đúng tầm tiền</h3>
-                                <p className="text-sm text-white/60 leading-7">Bên em ưu tiên lọc đúng căn hợp tài chính trước để anh/chị dễ so sánh hơn.</p>
-                            </div>
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                                <div className="w-12 h-12 rounded-2xl bg-primary-container/15 text-primary-container flex items-center justify-center text-xl mb-4">
-                                    <i className="fa-solid fa-file-shield"></i>
-                                </div>
-                                <h3 className="text-sm font-black uppercase tracking-widest mb-2">Gửi đúng phần cần xem</h3>
-                                <p className="text-sm text-white/60 leading-7">Anh/chị cần giá, video hay pháp lý thì bên em gửi riêng đúng phần đó trước.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="reveal">
-                        <div className="rounded-[2rem] bg-white p-6 text-primary shadow-[0_30px_80px_rgba(0,0,0,0.25)] sm:p-8">
-                            <div className="mb-6">
-                                <div className="text-[10px] font-black uppercase tracking-[0.35em] text-primary-container mb-3">Form nhận thông tin</div>
-                                <h3 className="text-2xl font-black uppercase tracking-tight">Điền Nhanh Trong 30 Giây</h3>
-                                <p className="text-sm text-primary/60 leading-7 mt-3">Anh/chị điền ngắn gọn là được. Bên em sẽ gửi đúng phần mình cần trước qua Zalo, điện thoại hoặc email.</p>
-                            </div>
-                            <form id="lead-capture-form" data-onsubmit="submitLeadForm(event)" className="space-y-4">
-                                <input id="lead-full-name" type="text" required className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm outline-none transition focus:border-primary-container focus:bg-white" placeholder="Họ và tên *" />
-                                <input id="lead-contact" type="text" required className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm outline-none transition focus:border-primary-container focus:bg-white" placeholder="SĐT / Zalo / Email *" />
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <select id="lead-need" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
-                                        <option>Đầu tư sinh lời</option>
-                                        <option>Mua để ở / nghỉ dưỡng</option>
-                                        <option>Muốn xem giá trước</option>
-                                        <option>Muốn xem pháp lý trước</option>
-                                    </select>
-                                    <select id="lead-budget" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
-                                        <option>1-1,5 tỷ</option>
-                                        <option>1,5-2 tỷ</option>
-                                        <option>Trên 2 tỷ</option>
-                                        <option>Chưa rõ</option>
-                                    </select>
-                                </div>
-                                <select id="lead-contact-preference" className="w-full rounded-2xl border border-surface-container bg-surface px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-primary-container focus:bg-white">
-                                    <option>Zalo</option>
-                                    <option>Điện thoại</option>
-                                    <option>Email</option>
-                                </select>
-                                <button type="submit" id="lead-submit-btn" className="gold-button inline-flex w-full items-center justify-center rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-[0.22em] text-white shadow-[0_18px_50px_rgba(197,160,89,0.28)]">
-                                    Nhận bảng giá nội bộ
-                                </button>
-                                <p className="text-xs leading-6 text-primary/50">Bên em thường gửi Zalo trước, sau đó mới gọi nếu anh/chị muốn trao đổi nhanh hơn.</p>
-                            </form>
-                            <div id="lead-form-notice" className="hidden mt-4 rounded-2xl border px-4 py-3 text-sm leading-6"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="vitri" className="py-16 bg-white">
             <div className="app-container">
                 <div className="grid lg:grid-cols-2 gap-6 items-end mb-8 reveal">
                     <div>
                         <span
-                            className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Hạ
-                            tầng khu vực</span>
+                            className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Vị
+                            trí dự án</span>
                         <h2
                             className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">
-                            Nam Vũng Tàu <span className="text-primary-container">Đang Được</span> Kéo Gần Hơn</h2>
+                            Đường Ba Tháng Hai, <span className="text-primary-container">Phường 11</span>, TP. Vũng Tàu</h2>
                     </div>
                     <p className="text-on-surface/50 text-base md:text-lg max-w-md lg:ml-auto">
-                        Đây là phần nhiều khách hỏi khá kỹ, vì hạ tầng là cơ sở dễ hiểu nhất để nhìn vào dư địa tăng giá của khu vực trong vài năm tới.
+                        Theo website chính thức, đây là trục đường kết nối thuận tiện về trung tâm thành phố, Bãi Sau và sân bay Long Thành.
                     </p>
                 </div>
 
@@ -566,36 +349,32 @@ export default function NativeOriginalLanding() {
                             className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i className="fa-solid fa-gauge-high"></i>
                         </div>
-                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Cao tốc Biên Hòa</h3>
-                        <p className="text-xs opacity-60 leading-relaxed font-body">Rút ngắn khoảng cách di chuyển từ trung
-                            tâm kinh tế Đông Nam Bộ.</p>
+                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">3km Đến Trung Tâm</h3>
+                        <p className="text-xs opacity-60 leading-relaxed font-body">Khoảng 10 phút di chuyển về trung tâm TP. Vũng Tàu theo thông tin trên site.</p>
                     </div>
                     <div className="amenity-card p-8 rounded-2xl shadow-sm">
                         <div
                             className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
-                            <i className="fa-solid fa-bridge"></i>
+                            <i className="fa-solid fa-umbrella-beach"></i>
                         </div>
-                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Cầu Biển Cần Giờ</h3>
-                        <p className="text-xs opacity-60 leading-relaxed font-body">Biểu tượng kết nối đưa TP.HCM xích lại
-                            gần phố biển hơn bao giờ hết.</p>
+                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">5 Phút Đến Bãi Sau</h3>
+                        <p className="text-xs opacity-60 leading-relaxed font-body">Đồng thời cũng gần Mega Market và Bệnh viện Vũng Tàu theo phần vị trí dự án.</p>
+                    </div>
+                    <div className="amenity-card p-8 rounded-2xl shadow-sm">
+                        <div
+                            className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
+                            <i className="fa-solid fa-plane-departure"></i>
+                        </div>
+                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">57km Đến Long Thành</h3>
+                        <p className="text-xs opacity-60 leading-relaxed font-body">Hiện khoảng 1,2 giờ di chuyển; thời gian có thể rút ngắn khi hạ tầng hoàn thiện.</p>
                     </div>
                     <div className="amenity-card p-8 rounded-2xl shadow-sm">
                         <div
                             className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                             <i className="fa-solid fa-road"></i>
                         </div>
-                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Bến Lức Long Thành</h3>
-                        <p className="text-xs opacity-60 leading-relaxed font-body">Tuyến huyết mạch quan trọng nối liền các
-                            tỉnh miền Tây với phố biển.</p>
-                    </div>
-                    <div className="amenity-card p-8 rounded-2xl shadow-sm">
-                        <div
-                            className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
-                            <i className="fa-solid fa-train"></i>
-                        </div>
-                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Đường Sắt Biên Hòa</h3>
-                        <p className="text-xs opacity-60 leading-relaxed font-body">Giải pháp vận chuyển đa phương thức hiện
-                            đại, bền vững cho tương lai.</p>
+                        <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">3 Tuyến Cao Tốc Trọng Điểm</h3>
+                        <p className="text-xs opacity-60 leading-relaxed font-body">Long Thành - Dầu Giây, Bến Lức - Long Thành và Biên Hòa - Vũng Tàu.</p>
                     </div>
                 </div>
             </div>
@@ -723,15 +502,15 @@ export default function NativeOriginalLanding() {
             <div className="app-container">
                 <div className="text-center max-w-2xl mx-auto mb-16 reveal">
                     <span
-                        className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Bộ
-                        Sưu Tập Siêu Phẩm</span>
+                        className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Loại
+                        hình sản phẩm</span>
                     <h2
                         className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                        Sản Phẩm <span className="text-primary-container">Độc Bản</span>
+                        Các Dòng <span className="text-primary-container">Sản Phẩm</span> Tại Dự Án
                     </h2>
                     <p className="text-base opacity-60 font-body leading-relaxed">
-                        Sunshine Bay Retreat mang đến đa dạng các loại hình bất động sản nghỉ dưỡng hàng đầu, kết hợp
-                        hoàn hảo giữa không gian sống thông minh 4.0 và đặc quyền thượng lưu.
+                        Theo phần tổng quan trên website chính thức, dự án phát triển căn hộ du lịch, căn hộ khách sạn,
+                        biệt thự du lịch và dòng sản phẩm thương mại dịch vụ.
                     </p>
                 </div>
 
@@ -748,9 +527,8 @@ export default function NativeOriginalLanding() {
                                 Hot</div>
                         </div>
                         <div className="p-8">
-                            <h3 className="text-xl font-black text-primary uppercase mb-2">Căn Hộ Sky Villa</h3>
-                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Căn hộ nghỉ dưỡng 100% view
-                                biển với nội thất chuẩn 5 sao và công nghệ SmartHome.</p>
+                            <h3 className="text-xl font-black text-primary uppercase mb-2">Căn Hộ Du Lịch</h3>
+                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Dòng căn hộ biển phù hợp cho nhu cầu nghỉ dưỡng và khai thác lưu trú theo định hướng dự án.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
                                 <div className="text-primary-container font-black text-sm">Từ 1,2 tỷ/căn</div>
                                 <div
@@ -769,9 +547,8 @@ export default function NativeOriginalLanding() {
                                 alt="Biệt Thự" />
                         </div>
                         <div className="p-8">
-                            <h3 className="text-xl font-black text-primary uppercase mb-2">Biệt Thự Nghỉ Dưỡng</h3>
-                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Biệt thự độc lập khu Horizon &
-                                Eden với kiến trúc tinh xảo và tiện ích đặc quyền.</p>
+                            <h3 className="text-xl font-black text-primary uppercase mb-2">Biệt Thự Du Lịch</h3>
+                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Thuộc 2 phân khu Horizon và Eden, phù hợp nhóm khách ưu tiên không gian riêng và trải nghiệm nghỉ dưỡng.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
                                 <div className="text-primary-container font-black text-sm">Liên hệ</div>
                                 <div
@@ -791,8 +568,7 @@ export default function NativeOriginalLanding() {
                         </div>
                         <div className="p-8">
                             <h3 className="text-xl font-black text-primary uppercase mb-2">Shophouse Thương Mại</h3>
-                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Tọa lạc tại phố đi bộ biển,
-                                lợi thế kinh doanh vượt trội trong hệ sinh thái All-in-one.</p>
+                            <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Nằm trong hệ sinh thái nghỉ dưỡng và dịch vụ của dự án, phù hợp khai thác kinh doanh phục vụ cư dân và du khách.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
                                 <div className="text-primary-container font-black text-sm">Giới hạn</div>
                                 <div
@@ -829,7 +605,7 @@ export default function NativeOriginalLanding() {
                             <i className="fa-solid fa-file-lines"></i>
                         </div>
                         <h3 className="text-2xl font-black text-primary uppercase tracking-tight">Nhận Bảng Giá &amp; Video</h3>
-                        <p className="text-sm opacity-60 font-body mt-3 leading-7">Bên em sẽ gửi thông tin ưu tiên cho sản phẩm: <span
+                        <p className="text-sm opacity-60 font-body mt-3 leading-7">Thông tin ưu tiên sẽ được gửi cho sản phẩm: <span
                                 id="booking-product-name" className="font-bold text-primary"></span></p>
                     </div>
 
@@ -885,7 +661,7 @@ export default function NativeOriginalLanding() {
                             </select>
                         </div>
 
-                        <p className="text-xs leading-6 text-primary/55">Bước này chỉ để bên em gửi đúng phần mình cần, chưa phải đặt cọc hay chuyển khoản.</p>
+                        <p className="text-xs leading-6 text-primary/55">Bước này chỉ để gửi đúng phần mình cần, chưa phải đặt cọc hay chuyển khoản.</p>
 
                         <button type="submit" id="submit-booking-btn"
                             className="w-full gold-button py-4 rounded-2xl text-white font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2">
@@ -902,7 +678,7 @@ export default function NativeOriginalLanding() {
                             <i className="fa-solid fa-check"></i>
                         </div>
                         <h3 className="text-2xl font-black text-primary uppercase mb-3">Đã Ghi Nhận Thông Tin</h3>
-                        <p className="text-sm opacity-60 font-body mb-8 leading-7">Bên em sẽ gửi bảng giá nội bộ, video căn đẹp và phần phù hợp với nhu cầu của anh/chị trong ít phút tới.</p>
+                        <p className="text-sm opacity-60 font-body mb-8 leading-7">Bảng giá nội bộ, video căn đẹp và phần phù hợp với nhu cầu của anh/chị sẽ được gửi trong ít phút tới.</p>
                         <button type="button" data-onclick="closeBookingSuccess()"
                             className="bg-surface-container py-3 px-8 rounded-full text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-white transition-colors shadow-sm">Đóng cửa sổ</button>
                     </div>
@@ -930,26 +706,25 @@ export default function NativeOriginalLanding() {
                     <div className="w-full lg:w-1/2 reveal">
                         <span
                             className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Chủ
-                            đầu tư uy tín</span>
+                            đầu tư</span>
                         <h2
                             className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                            Sunshine Group <br /> <span className="text-primary-container">Tiên Phong</span> Công Nghệ</h2>
+                            Sunshine Group <br /> <span className="text-primary-container">Phát Triển</span> Dự Án</h2>
                         <p className="text-on-surface/60 text-base font-body leading-relaxed mb-8">
-                            Sunshine Group là tập đoàn kinh tế đa ngành hàng đầu Việt Nam, nổi tiếng với việc tích hợp
-                            công nghệ 4.0 vào bất động sản. Với triết lý "Hôm nay tuyệt vời hơn ngày hôm qua", Sunshine
-                            Group cam kết mang đến những sản phẩm mang tính biểu tượng và trải nghiệm sống đẳng cấp
-                            nhất.
+                            Theo website chính thức, Sunshine Bay Retreat do Tập đoàn Sunshine đầu tư và phát triển tại
+                            đường Ba Tháng Hai, phường 11, TP. Vũng Tàu. Phần tổng quan trên site cũng cho thấy dự án có
+                            quy mô gần 20ha với gần 6.000 sản phẩm.
                         </p>
                         <div className="grid grid-cols-2 gap-6">
                             <div className="p-6 bg-surface-container rounded-2xl">
-                                <div className="text-2xl font-black text-primary mb-1">10+</div>
-                                <div className="text-[9px] font-black uppercase tracking-widest text-primary/40">Năm kinh
-                                    nghiệm</div>
+                                <div className="text-2xl font-black text-primary mb-1">Gần 20ha</div>
+                                <div className="text-[9px] font-black uppercase tracking-widest text-primary/40">Quy mô dự
+                                    án</div>
                             </div>
                             <div className="p-6 bg-surface-container rounded-2xl">
-                                <div className="text-2xl font-black text-primary mb-1">50+</div>
-                                <div className="text-[9px] font-black uppercase tracking-widest text-primary/40">Dự án toàn
-                                    quốc</div>
+                                <div className="text-2xl font-black text-primary mb-1">Gần 6.000</div>
+                                <div className="text-[9px] font-black uppercase tracking-widest text-primary/40">Sản phẩm dự
+                                    kiến</div>
                             </div>
                         </div>
                     </div>
@@ -965,36 +740,33 @@ export default function NativeOriginalLanding() {
                         <div
                             className="bg-primary p-12 rounded-2xl text-white shadow-2xl h-full flex flex-col justify-center">
                             <span
-                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Chính
-                                sách đặc quyền</span>
-                            <h3 className="text-3xl font-black uppercase tracking-tight mb-8 leading-tight">Ưu Đãi <span
-                                    className="text-primary-container">Giai Đoạn 1</span></h3>
+                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Thông
+                                tin bán hàng</span>
+                            <h3 className="text-3xl font-black uppercase tracking-tight mb-8 leading-tight">Các Mục <span
+                                    className="text-primary-container">Khách Thường Xem</span></h3>
                             <ul className="space-y-6">
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-percent"></i></div>
-                                    <span className="text-sm font-body opacity-80">Chiết khấu thanh toán nhanh lên đến
-                                        **15%**</span>
+                                    <span className="text-sm font-body opacity-80">Bảng giá 1PN, 2PN và 3PN đang được cập nhật theo từng đợt mở bán.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-gift"></i></div>
-                                    <span className="text-sm font-body opacity-80">Tặng gói nội thất SmartHome AI trị giá
-                                        **300.000.000đ**</span>
+                                    <span className="text-sm font-body opacity-80">Phương thức thanh toán và tài liệu tư vấn được gửi theo đúng loại hình anh/chị quan tâm.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-building-columns"></i></div>
-                                    <span className="text-sm font-body opacity-80">Hỗ trợ vay 0% lãi suất trong **24
-                                        tháng**</span>
+                                    <span className="text-sm font-body opacity-80">Thông tin có thể được gửi qua Zalo, điện thoại hoặc email tùy cách anh/chị muốn nhận.</span>
                                 </li>
                             </ul>
                             <button type="button" data-onclick="toggleChatbot()"
-                                className="gold-button mt-12 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest w-full">Xem
-                                bảng tính dòng tiền</button>
+                                className="gold-button mt-12 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest w-full">Nhận
+                                bảng giá và chính sách</button>
                         </div>
                     </div>
                     <div className="reveal">
@@ -1047,12 +819,11 @@ export default function NativeOriginalLanding() {
 
             <div className="app-container relative z-10">
                 <div className="text-center max-w-2xl mx-auto mb-20 reveal">
-                    <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Hệ
-                        tiện ích độc bản</span>
-                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight mb-6 italic">Thiên
-                        Đường <span className="text-primary-container">Nghỉ Dưỡng</span></h2>
-                    <p className="text-white/40 text-base font-body">Chuỗi tiện ích thượng lưu được thiết kế dành riêng cho
-                        giới tinh hoa.</p>
+                    <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Tiện
+                        ích dự án</span>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight mb-6 italic">Chuỗi
+                        <span className="text-primary-container"> Tiện Ích Nghỉ Dưỡng</span></h2>
+                    <p className="text-white/40 text-base font-body">Site chính thức giới thiệu dự án theo mô hình resort tích hợp, với nhóm tiện ích như nhà hàng, spa, gym, khu thương mại, BBQ, hồ bơi và không gian giải trí.</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-12 text-center reveal">
@@ -1061,27 +832,24 @@ export default function NativeOriginalLanding() {
                             className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i className="fa-solid fa-water-ladder text-3xl"></i>
                         </div>
-                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">Hồ Bơi Vô Cực</h4>
-                        <p className="text-white/40 text-sm font-body px-4">Đắm mình trong làn nước mát với tầm nhìn ôm trọn
-                            đường chân trời.</p>
+                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">Hồ Bơi &amp; Sky Bar</h4>
+                        <p className="text-white/40 text-sm font-body px-4">Nhóm tiện ích thư giãn và ngắm biển là điểm nhấn được nhắc khá rõ trên site dự án.</p>
                     </div>
                     <div className="group">
                         <div
                             className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i className="fa-solid fa-umbrella-beach text-3xl"></i>
                         </div>
-                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">Phố Đi Bộ Biển</h4>
-                        <p className="text-white/40 text-sm font-body px-4">Cung đường mua sắm sầm uất ngay thềm nhà cư dân
-                            thượng lưu.</p>
+                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">Nhà Hàng &amp; Thương Mại</h4>
+                        <p className="text-white/40 text-sm font-body px-4">Phục vụ nhu cầu ăn uống, mua sắm và trải nghiệm ngay trong nội khu nghỉ dưỡng.</p>
                     </div>
                     <div className="group">
                         <div
                             className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary-container mb-8 mx-auto group-hover:bg-primary-container group-hover:text-white transition-all transform group-hover:rotate-12">
                             <i className="fa-solid fa-spa text-3xl"></i>
                         </div>
-                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">wellness Center</h4>
-                        <p className="text-white/40 text-sm font-body px-4">Bầu không khí trong lành với hệ thống cây xanh
-                            đa tầng, đa lớp.</p>
+                        <h4 className="text-xl font-black uppercase tracking-wider mb-4">Spa, Gym &amp; Wellness</h4>
+                        <p className="text-white/40 text-sm font-body px-4">Hoàn thiện trải nghiệm nghỉ dưỡng và chăm sóc sức khỏe cho khách lưu trú lẫn chủ sở hữu.</p>
                     </div>
                 </div>
             </div>
@@ -1155,7 +923,170 @@ export default function NativeOriginalLanding() {
         </section>
 
         
-        <section id="contact" className="hidden">
+        <section id="contact" className="py-24 bg-primary relative overflow-hidden">
+            <div className="absolute inset-0">
+                <div className="absolute -top-16 left-0 h-56 w-56 rounded-full bg-primary-container/15 blur-3xl"></div>
+                <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(201,168,97,0.16),_transparent_30%)]"></div>
+            </div>
+
+            <div className="app-container relative z-10">
+                <div className="grid gap-10 xl:grid-cols-[1.05fr_0.95fr] items-start">
+                    <div className="reveal text-white">
+                        <span
+                            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary-container">
+                            <i className="fa-solid fa-file-signature"></i>
+                            Đăng ký ưu tiên
+                        </span>
+                        <h2 className="mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight">
+                            Để Lại Thông Tin
+                            <br />
+                            Nhận Đúng Tài Liệu
+                            <span className="block text-primary-container">Phù Hợp Nhu Cầu</span>
+                        </h2>
+                        <p className="mt-6 max-w-2xl text-base md:text-lg leading-8 text-white/75">
+                            Anh/chị chỉ cần để lại thông tin cơ bản, hệ thống sẽ lọc và gửi đúng phần mình đang cần như bảng giá nội bộ,
+                            video căn đẹp, chính sách mới hoặc quỹ căn phù hợp tài chính để tiết kiệm thời gian chọn lọc.
+                        </p>
+
+                        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                            <div className="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+                                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-container/20 text-primary-container text-xl">
+                                    <i className="fa-solid fa-bolt"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white">Phản hồi nhanh</h3>
+                                <p className="mt-3 text-sm leading-6 text-white/65">Ưu tiên gửi thông tin qua Zalo hoặc điện thoại trong ít phút khi có online.</p>
+                            </div>
+                            <div className="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+                                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-container/20 text-primary-container text-xl">
+                                    <i className="fa-solid fa-layer-group"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white">Đúng nhu cầu</h3>
+                                <p className="mt-3 text-sm leading-6 text-white/65">Chỉ gửi phần liên quan tới đầu tư, nghỉ dưỡng, pháp lý hoặc căn theo ngân sách.</p>
+                            </div>
+                            <div className="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+                                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-container/20 text-primary-container text-xl">
+                                    <i className="fa-solid fa-shield-heart"></i>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white">Không ràng buộc</h3>
+                                <p className="mt-3 text-sm leading-6 text-white/65">Đây chỉ là bước nhận thông tin tham khảo, chưa phải đặt cọc hay cam kết giao dịch.</p>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 rounded-[2rem] border border-white/12 bg-white/8 p-6 backdrop-blur-md">
+                            <div className="flex items-start gap-4">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-primary-container text-xl">
+                                    <i className="fa-solid fa-paper-plane"></i>
+                                </div>
+                                <div>
+                                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-container">Thường được gửi trước</div>
+                                    <div className="mt-3 flex flex-wrap gap-3">
+                                        <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Bảng giá nội bộ</span>
+                                        <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Video căn đẹp</span>
+                                        <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Quỹ căn hợp tài chính</span>
+                                        <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Pháp lý & chính sách</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="reveal">
+                        <div className="rounded-[2rem] bg-white p-6 sm:p-8 shadow-2xl">
+                            <div className="text-center mb-8">
+                                <div
+                                    className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/15 text-2xl text-primary-container">
+                                    <i className="fa-solid fa-file-circle-check"></i>
+                                </div>
+                                <h3 className="text-2xl font-black uppercase tracking-tight text-primary">Nhận Thông Tin Dự Án</h3>
+                                <p className="mt-3 text-sm leading-7 text-primary/60">
+                                    Điền form để hệ thống gửi đúng tài liệu anh/chị đang cần, tránh nhận thông tin quá nhiều nhưng không đúng trọng tâm.
+                                </p>
+                            </div>
+
+                            <form id="lead-capture-form" data-onsubmit="submitLeadForm(event)" className="space-y-4">
+                                <div>
+                                    <label
+                                        className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Họ và tên *</label>
+                                    <input id="lead-full-name" type="text" required
+                                        className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm transition-all focus:ring-2 focus:ring-primary-container"
+                                        placeholder="Nhập họ và tên..." />
+                                </div>
+
+                                <div>
+                                    <label
+                                        className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">SĐT / Zalo / Email *</label>
+                                    <input id="lead-contact" type="text" required
+                                        className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm transition-all focus:ring-2 focus:ring-primary-container"
+                                        placeholder="Nhập số liên hệ hoặc email..." />
+                                </div>
+
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <label
+                                            className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Mình muốn nhận</label>
+                                        <select id="lead-need"
+                                            className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
+                                            <option>Nhận bảng giá nội bộ</option>
+                                            <option>Xem video căn đẹp</option>
+                                            <option>Xem căn hợp tài chính</option>
+                                            <option>Xem pháp lý và chính sách</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Ngân sách dự kiến</label>
+                                        <select id="lead-budget"
+                                            className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
+                                            <option>1-1,5 tỷ</option>
+                                            <option>1,5-2 tỷ</option>
+                                            <option>Trên 2 tỷ</option>
+                                            <option>Chưa rõ</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label
+                                        className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Ưu tiên liên hệ qua</label>
+                                    <select id="lead-contact-preference"
+                                        className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
+                                        <option>Zalo</option>
+                                        <option>Điện thoại</option>
+                                        <option>Email</option>
+                                    </select>
+                                </div>
+
+                                <p className="text-xs leading-6 text-primary/55">
+                                    Thông tin này được dùng để gửi đúng nội dung mình quan tâm và hỗ trợ nhanh hơn, không phát sinh chi phí hay ràng buộc.
+                                </p>
+
+                                <button type="submit" id="lead-submit-btn"
+                                    className="flex w-full items-center justify-center gap-2 rounded-2xl gold-button py-4 text-xs font-black uppercase tracking-widest text-white shadow-lg">
+                                    Nhận thông tin dự án <i className="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </form>
+
+                            <div id="lead-form-notice" className="hidden mt-4 rounded-2xl border px-4 py-3 text-sm leading-6"></div>
+
+                            <div className="mt-6 flex flex-wrap gap-3">
+                                <span className="inline-flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                                    <i className="fa-solid fa-phone-volume text-primary-container"></i>
+                                    Hỗ trợ 1:1
+                                </span>
+                                <span className="inline-flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                                    <i className="fa-solid fa-clock text-primary-container"></i>
+                                    Gửi nhanh trong ngày
+                                </span>
+                                <span className="inline-flex items-center gap-2 rounded-full bg-surface-container px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-primary">
+                                    <i className="fa-solid fa-building-shield text-primary-container"></i>
+                                    Thông tin chọn lọc
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -1284,7 +1215,7 @@ export default function NativeOriginalLanding() {
             </div>
 
             
-            <div id="chat-suggestions" className="px-5 py-4 flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <div id="chat-suggestions" className="chat-suggestions-strip px-4 sm:px-5 py-3 sm:py-4 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
                 <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá</button>
 
                 <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem video căn đẹp</button>
@@ -1299,10 +1230,10 @@ export default function NativeOriginalLanding() {
             <div className="p-4 bg-white border-t border-surface">
                 <div className="flex gap-3">
                     <textarea id="chat-input" placeholder="Nhập câu hỏi hoặc để lại SĐT/Zalo..." rows={1}
-                        className="flex-1 bg-surface border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary-container resize-none"
+                        className="chat-input-field no-scrollbar flex-1 bg-surface border-none rounded-xl px-4 py-2.5 text-sm leading-6 focus:ring-1 focus:ring-primary-container resize-none"
                         data-onkeypress="handleChatEnter(event)"></textarea>
                     <button type="button" data-onclick="handleSendMessage()"
-                        className="w-12 h-12 gold-button text-white rounded-xl flex items-center justify-center shadow-lg">
+                        className="h-11 w-11 gold-button text-white rounded-xl flex items-center justify-center shadow-lg">
                         <i className="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
@@ -1334,19 +1265,189 @@ export default function NativeOriginalLanding() {
     
     <div
         className="fixed bottom-0 left-0 w-full z-[140] bg-white border-t flex items-center justify-around py-3 md:hidden shadow-2xl">
-        <a href="#lead-form" className="flex flex-col items-center gap-1 text-primary">
+        <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')" className="flex flex-col items-center gap-1 text-primary">
             <i className="fa-solid fa-file-invoice-dollar"></i>
             <span className="text-[8px] font-black uppercase tracking-widest">Bảng giá</span>
-        </a>
+        </button>
         <button type="button" data-onclick="toggleChatbot()"
             className="w-14 h-14 bg-primary rounded-full flex items-center justify-center -mt-8 shadow-2xl border-4 border-white overflow-hidden">
             <img src="./ai_avatar_vn.png" className="w-full h-full object-cover" alt="AI Chatbot" />
         </button>
-        <a href="#video-tour" className="flex flex-col items-center gap-1 text-primary">
+        <a href="#tvc" className="flex flex-col items-center gap-1 text-primary">
             <i className="fa-solid fa-circle-play"></i>
             <span className="text-[8px] font-black uppercase tracking-widest">Xem video</span>
         </a>
     </div>
+    <style>{`
+        .chat-input-field {
+            display: block;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            line-height: 1.5;
+        }
+
+        .chat-input-field::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat-input-field::placeholder {
+            line-height: 1.5;
+        }
+
+        @media (max-width: 767px) {
+            .hero-banner-section {
+                align-items: flex-start;
+            }
+
+            .hero-banner-content {
+                padding-top: 5.75rem !important;
+                padding-bottom: 8rem !important;
+            }
+
+            .hero-banner-content > .grid {
+                min-height: calc(100svh - 9.5rem);
+                align-content: center;
+            }
+
+            .hero-copy .hero-title--mobile {
+                font-size: clamp(2.6rem, 12vw, 3.5rem);
+                display: flex;
+                flex-direction: column;
+                row-gap: 0.02em;
+                line-height: 1;
+                padding-top: 0.3em;
+                padding-bottom: 0.16em;
+            }
+
+            .hero-copy .hero-title-line {
+                display: block;
+                line-height: 0.98;
+            }
+
+            .hero-copy .hero-title-price-display {
+                display: inline-block;
+                background: linear-gradient(to right, #ffffff, #C5A059);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: none;
+                font-size: clamp(2.2rem, 10.5vw, 3.1rem);
+                line-height: 1.28;
+                margin-top: 0.02em;
+                padding-top: 0.16em;
+                padding-bottom: 0.2em;
+                overflow: visible;
+                vertical-align: top;
+            }
+
+            .hero-copy .hero-subcopy {
+                font-size: 0.98rem;
+                line-height: 1.75;
+            }
+
+            .hero-highlights > div {
+                width: 100%;
+                min-width: 0;
+                justify-content: center;
+            }
+
+            .hero-actions button {
+                min-height: 3.4rem;
+            }
+
+            .hero-actions button span {
+                white-space: normal !important;
+                text-align: center;
+            }
+
+            .chatbot-panel {
+                left: 0.75rem !important;
+                right: 0.75rem !important;
+                bottom: 5.25rem !important;
+                bottom: calc(5.25rem + env(safe-area-inset-bottom)) !important;
+                width: auto !important;
+                max-height: min(74svh, 34rem) !important;
+                border-radius: 1.25rem !important;
+                transform: translateY(18px) scale(0.98);
+            }
+
+            .chatbot-panel.open {
+                transform: translateY(0) scale(1);
+            }
+
+            #chat-messages {
+                padding: 1rem !important;
+            }
+
+            #chat-suggestions {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                align-items: stretch !important;
+                grid-auto-rows: 1fr;
+                gap: 0.5rem !important;
+                overflow-x: visible !important;
+                overflow-y: visible !important;
+                padding: 0.75rem 1rem !important;
+            }
+
+            #chat-suggestions .chat-suggestion:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+            }
+
+            .chat-suggestion {
+                display: inline-flex !important;
+                min-width: 0 !important;
+                width: 100%;
+                min-height: 2.75rem;
+                align-items: center;
+                justify-content: center;
+                padding: 0.65rem 0.75rem !important;
+                text-align: center;
+                white-space: normal !important;
+                line-height: 1.35;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .chatbot-panel > .p-4.bg-white.border-t.border-surface {
+                padding: 0.85rem 1rem 1rem !important;
+                padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+            }
+
+            #chat-input {
+                min-height: 3.1rem;
+                max-height: 6.25rem;
+                overflow-y: hidden !important;
+                padding-top: 0.72rem !important;
+                padding-bottom: 0.72rem !important;
+                padding-left: 0.85rem !important;
+                padding-right: 0.85rem !important;
+                font-size: 0.9rem !important;
+            }
+
+            .chatbot-panel .gold-button.h-11.w-11 {
+                height: 3.1rem !important;
+                width: 3.1rem !important;
+            }
+        }
+
+        @media (max-width: 389px) {
+            .hero-copy .hero-title--mobile {
+                font-size: clamp(2.35rem, 12vw, 3rem);
+            }
+
+            .hero-copy .hero-title-price-display {
+                font-size: clamp(2rem, 10.5vw, 2.6rem);
+                line-height: 1.28;
+                padding-top: 0.18em;
+                padding-bottom: 0.22em;
+            }
+
+            .hero-highlights {
+                gap: 0.5rem;
+            }
+        }
+    `}</style>
     </>
   );
 }

@@ -802,11 +802,11 @@ const chatbotBridgeScript = `
       const form = getElement("lead-capture-form");
 
       if (!fullName || !phoneOrZalo) {
-        renderFormNotice("lead-form-notice", "error", "Anh/chị vui lòng để lại họ tên và ít nhất một cách liên hệ để bên em gửi thông tin đúng phần mình cần.");
+        renderFormNotice("lead-form-notice", "error", "Anh/chị vui lòng để lại họ tên và ít nhất một cách liên hệ để hệ thống gửi đúng phần mình cần.");
         return false;
       }
 
-      setButtonLoading(submitButton, true, "Nhận bảng giá nội bộ");
+      setButtonLoading(submitButton, true, "Nhận thông tin dự án");
 
       try {
         const leadResponse = await persistLeadCapture({
@@ -834,12 +834,12 @@ const chatbotBridgeScript = `
           form.reset();
         }
 
-        renderFormNotice("lead-form-notice", "success", "Thông tin đã được ghi nhận. Bên em sẽ gửi bảng giá nội bộ, video căn đẹp và phần khách đang quan tâm trong ít phút tới.");
+        renderFormNotice("lead-form-notice", "success", "Thông tin đã được ghi nhận. Thông tin anh/chị đang quan tâm sẽ được gửi trong ít phút tới.");
       } catch (error) {
         console.error("Landing lead form submit error", error);
-        renderFormNotice("lead-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn qua chatbot để bên em hỗ trợ ngay.");
+        renderFormNotice("lead-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn qua chatbot để được hỗ trợ ngay.");
       } finally {
-        setButtonLoading(submitButton, false, "Nhận bảng giá nội bộ");
+        setButtonLoading(submitButton, false, "Nhận thông tin dự án");
       }
 
       return false;
@@ -861,7 +861,7 @@ const chatbotBridgeScript = `
       const successLayer = getElement("booking-success");
 
       if (!fullName || !phoneOrZalo) {
-        renderFormNotice("booking-form-notice", "error", "Anh/chị vui lòng để lại họ tên và thông tin liên hệ để bên em gửi phần phù hợp của sản phẩm này.");
+        renderFormNotice("booking-form-notice", "error", "Anh/chị vui lòng để lại họ tên và thông tin liên hệ để hệ thống gửi phần phù hợp của sản phẩm này.");
         return false;
       }
 
@@ -897,7 +897,7 @@ const chatbotBridgeScript = `
         }
       } catch (error) {
         console.error("Product modal lead submit error", error);
-        renderFormNotice("booking-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn chatbot để bên em gửi thông tin ngay.");
+        renderFormNotice("booking-form-notice", "error", "Hệ thống đang bận một chút. Anh/chị vui lòng thử lại sau hoặc nhắn chatbot để nhận thông tin ngay.");
       } finally {
         setButtonLoading(submitButton, false, 'Nhận bảng giá & video <i class="fa-solid fa-arrow-right"></i>');
       }
@@ -965,6 +965,7 @@ export default function HomePage() {
     </>
   );
 }
+
 
 
 

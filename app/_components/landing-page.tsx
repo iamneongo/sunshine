@@ -69,7 +69,7 @@ const INFRASTRUCTURE_ITEMS = [
 const PROOF_ITEMS = [
   "Thông tin chủ đầu tư và các đầu mục pháp lý có thể gửi riêng qua Zalo hoặc email để khách đối chiếu thuận tiện hơn.",
   "Video thực tế và các mốc tiến độ giúp khách hình dung dự án rõ hơn, thay vì chỉ nhìn phối cảnh.",
-  "Nếu khách cần, bên em sẽ gửi bảng giá nội bộ, video phù hợp và phần pháp lý đang quan tâm trong cùng một lượt."
+  "Nếu khách cần, hệ thống có thể gửi bảng giá nội bộ, video phù hợp và phần pháp lý đang quan tâm trong cùng một lượt."
 ] as const;
 
 const INITIAL_LEAD_FORM: LeadFormState = {
@@ -248,7 +248,7 @@ export default function LandingPage() {
 
       setLeadNotice({
         type: "success",
-        text: "Thông tin đã được ghi nhận. Bên em sẽ gửi bảng giá nội bộ, video căn đẹp và phần khách quan tâm trong ít phút tới."
+        text: "Thông tin đã được ghi nhận. Bảng giá nội bộ, video căn đẹp và phần anh/chị quan tâm sẽ được gửi trong ít phút tới."
       });
       setLeadForm(INITIAL_LEAD_FORM);
       void trackEvent("lead_form_submitted", {
@@ -424,7 +424,7 @@ export default function LandingPage() {
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-300">Đăng ký nhanh</div>
               <h2 className="mt-4 text-3xl font-black leading-tight sm:text-5xl">Để lại thông tin để nhận bảng giá, video và phần mình cần</h2>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">Khách cần bảng giá, video hay pháp lý thì bên em gửi đúng phần đó trước, không gửi lan man.</p>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">Khách cần bảng giá, video hay pháp lý thì hệ thống sẽ gửi đúng phần đó trước, không gửi lan man.</p>
               <div className="mt-8 space-y-3">
                 {[
                   "Bảng giá nội bộ theo mức tài chính đang quan tâm",
@@ -470,7 +470,7 @@ export default function LandingPage() {
                 <button type="submit" disabled={leadSubmitting} className="inline-flex w-full items-center justify-center rounded-2xl bg-amber-400 px-6 py-4 text-sm font-bold uppercase tracking-[0.22em] text-slate-950 shadow-[0_18px_50px_rgba(251,191,36,0.28)] transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-70">
                   {leadSubmitting ? "Đang gửi..." : "Nhận bảng giá nội bộ"}
                 </button>
-                <p className="text-xs leading-6 text-slate-500">Bên em thường gửi Zalo trước trong 2-5 phút, sau đó mới gọi nếu anh/chị muốn trao đổi nhanh hơn.</p>
+                <p className="text-xs leading-6 text-slate-500">Thông tin thường được gửi qua Zalo trước trong 2-5 phút, sau đó mới gọi nếu anh/chị muốn trao đổi nhanh hơn.</p>
               </form>
 
               {leadNotice ? (
@@ -505,7 +505,7 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-700">Pháp lý & tiến độ</div>
-              <h2 className="mt-4 text-3xl font-black leading-tight text-slate-950 sm:text-5xl">Khi cần, bên em gửi riêng pháp lý và tiến độ qua Zalo</h2>
+              <h2 className="mt-4 text-3xl font-black leading-tight text-slate-950 sm:text-5xl">Khi cần, pháp lý và tiến độ sẽ được gửi riêng qua Zalo</h2>
               <p className="mt-5 text-lg leading-8 text-slate-600">Khách không nhất thiết phải đọc hết trên trang. Nhưng khi cần đối chiếu, mình phải gửi được ngay.</p>
               <button type="button" onClick={() => void sendPrompt("Xem pháp lý")} className="mt-8 inline-flex items-center justify-center rounded-full bg-slate-950 px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800">
                 Nhận pháp lý qua Zalo
@@ -594,4 +594,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
 

@@ -187,6 +187,19 @@ function extractLeadName(message: string, history: ClientHistoryItem[]): string 
 
 function detectBudget(text: string): string {
   const normalized = normalizeVietnamese(text);
+  const amount = extractBudgetAmount(text);
+
+  if (amount !== null) {
+    if (amount < 1.5) {
+      return "1-1,5 tỷ";
+    }
+
+    if (amount <= 2.05) {
+      return "1,5-2 tỷ";
+    }
+
+    return "Trên 2 tỷ";
+  }
 
   if (/(1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty|duoi\s*1[,.]?5\s*ty|1-1,5\s*ty)/.test(normalized)) {
     return "1-1,5 tỷ";
@@ -300,6 +313,187 @@ function detectTravelParty(text: string): string {
   }
 
   return "";
+}
+
+function getLastAssistantMessage(history: ClientHistoryItem[]): string {
+  for (let index = history.length - 1; index >= 0; index -= 1) {
+    if (history[index]?.role === "assistant") {
+      return normalizeText(history[index].text);
+    }
+  }
+
+  return "";
+}
+
+function assistantAskedForBudget(text: string): boolean {
+  return /(khung tai chinh|tam tai chinh|tai chinh nao|ngan sach nao|quan tam khoang nao)/.test(
+    normalizeVietnamese(text)
+  );
+}
+
+function assistantAskedForNeed(text: string): boolean {
+  return /(dau tu sinh loi|mua de o|nghi duong)/.test(normalizeVietnamese(text));
+}
+
+function assistantAskedForPropertyPreference(text: string): boolean {
+  return /(gia tot|view dep|view bien|de cho thue|huong bien|huong nao truoc|loc theo huong nao)/.test(
+    normalizeVietnamese(text)
+  );
+}
+
+function assistantAskedForDeliveryMethod(text: string): boolean {
+  return /(gui thong tin theo cach nao|gui zalo truoc|nhan qua email|goi nhanh 2 phut|cach nao truoc)/.test(
+    normalizeVietnamese(text)
+  );
+}
+
+function assistantAskedForVisitTime(text: string): boolean {
+  const normalized = normalizeVietnamese(text);
+  return /dat lich|muon di/.test(normalized) && /hom nay|ngay mai|cuoi tuan/.test(normalized);
+}
+
+function assistantAskedForTravelParty(text: string): boolean {
+  const normalized = normalizeVietnamese(text);
+  return /di/.test(normalized) && /1 minh|gia dinh|ban be/.test(normalized);
+}
+
+function extractBudgetAmount(text: string): number | null {
+  const normalized = normalizeVietnamese(text);
+
+  const separatedMatch = normalized.match(/(\d+)\s*ty\s*(\d{1,2})\b/);
+  if (separatedMatch) {
+    const major = Number(separatedMatch[1]);
+    const minorRaw = Number(separatedMatch[2]);
+    const minor = minorRaw >= 10 ? minorRaw / 100 : minorRaw / 10;
+
+    if (Number.isFinite(major) && Number.isFinite(minor)) {
+      return major + minor;
+    }
+  }
+
+  const directMatch = normalized.match(/(\d+)(?:[,.](\d+))?\s*ty\b/);
+  if (!directMatch) {
+    return null;
+  }
+
+  const major = Number(directMatch[1]);
+  const decimalPart = directMatch[2] ? Number(`0.${directMatch[2]}`) : 0;
+
+  if (!Number.isFinite(major) || !Number.isFinite(decimalPart)) {
+    return null;
+  }
+
+  return major + decimalPart;
+}
+
+function canonicalizeUserReply(message: string, history: ClientHistoryItem[]): string {
+  const normalized = normalizeVietnamese(message);
+  const lastAssistant = getLastAssistantMessage(history);
+  const detectedBudget = detectBudget(message);
+
+  if (!normalized) {
+    return message;
+  }
+
+  if (assistantAskedForVisitTime(lastAssistant)) {
+    if (/cuoi tuan|weekend|thu\s*7|chu nhat/.test(normalized)) {
+      return "Cuối tuần";
+    }
+
+    if (/ngay mai|mai /.test(`${normalized} `) || normalized === "mai") {
+      return "Ngày mai";
+    }
+
+    if (/hom nay|toi nay|chieu nay|nay/.test(normalized)) {
+      return "Hôm nay";
+    }
+  }
+
+  if (assistantAskedForTravelParty(lastAssistant)) {
+    if (/(1 minh|mot minh|di le)/.test(normalized)) {
+      return "Đi 1 mình";
+    }
+
+    if (/(gia dinh|ban be|vo chong|2 nguoi|3 nguoi|di cung)/.test(normalized)) {
+      return "Đi cùng gia đình / bạn bè";
+    }
+  }
+
+  if ((assistantAskedForBudget(lastAssistant) || /\bty\b/.test(normalized)) && detectedBudget !== "unknown") {
+    return `Tài chính ${detectedBudget}`;
+  }
+
+  if (assistantAskedForNeed(lastAssistant)) {
+    if (/(dau tu|sinh loi|dong tien|khai thac|cho thue)/.test(normalized)) {
+      return "Đầu tư sinh lời";
+    }
+
+    if (/(de o|o lau dai|an cu|nghi duong|gia dinh)/.test(normalized)) {
+      return "Mua để ở / nghỉ dưỡng";
+    }
+  }
+
+  if (assistantAskedForPropertyPreference(lastAssistant) || /(view dep|view bien|can dep|huong bien|gia tot|cho thue|tang gia)/.test(normalized)) {
+    if (/(view dep|view bien|can dep|nghi duong|huong bien)/.test(normalized)) {
+      return "Căn view đẹp nghỉ dưỡng";
+    }
+
+    if (/(gia tot|de vao tien|can dau tu)/.test(normalized)) {
+      return "Căn đầu tư giá tốt";
+    }
+
+    if (/(cho thue|khai thac)/.test(normalized)) {
+      return "Muốn sản phẩm cho thuê tốt";
+    }
+
+    if (/(tang gia|bien do|du dia)/.test(normalized)) {
+      return "Muốn sản phẩm dễ tăng giá";
+    }
+  }
+
+  if (assistantAskedForDeliveryMethod(lastAssistant) || /(zalo|email|goi|dien thoai|phone|call|mail)/.test(normalized)) {
+    if (/zalo/.test(normalized)) {
+      return "Gửi Zalo trước";
+    }
+
+    if (/(email|mail)/.test(normalized)) {
+      return "Nhận qua Email";
+    }
+
+    if (/(goi|dien thoai|phone|call|alo)/.test(normalized)) {
+      return "Gọi nhanh 2 phút";
+    }
+  }
+
+  if (/ngay bay gio|bay gio|goi ngay/.test(normalized)) {
+    return "Ngay bây giờ";
+  }
+
+  if (/30\s*phut/.test(normalized)) {
+    return "Trong 30 phút tới";
+  }
+
+  if (/buoi chieu|chieu nay/.test(normalized)) {
+    return "Buổi chiều";
+  }
+
+  if (/buoi toi|toi nay/.test(normalized)) {
+    return "Buổi tối";
+  }
+
+  if (/(gui gia|xin gia|xem gia|bang gia noi bo|nhan bang gia)/.test(normalized)) {
+    return "Nhận bảng giá nội bộ";
+  }
+
+  if (/(xem video|video thuc te|xem hinh|xem can dep|video can dep)/.test(normalized)) {
+    return "Xem video căn đẹp";
+  }
+
+  if (/(phap ly|so hong|giay to|hop dong)/.test(normalized)) {
+    return "Xem pháp lý";
+  }
+
+  return message;
 }
 
 function detectLeadSignals(message: string, history: ClientHistoryItem[]): LeadSignals {
@@ -461,7 +655,8 @@ function buildResponse(reply: string, suggestions: string[], leadSignals: LeadSi
 }
 
 function buildScriptedResponse(message: string, history: ClientHistoryItem[]): Omit<ChatbotPayload, "source" | "leadCaptured" | "leadId"> | null {
-  const normalized = normalizeVietnamese(message);
+  const canonicalMessage = canonicalizeUserReply(message, history);
+  const normalized = normalizeVietnamese(canonicalMessage);
   const conversation = buildConversationText(message, history);
   const leadSignals = detectLeadSignals(message, history);
   const hasContact = Boolean(extractPhone(conversation) || extractEmail(conversation));
@@ -474,7 +669,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (hasContact && visitTime) {
     const partyText = travelParty ? `, đi theo nhóm **${travelParty.toLowerCase()}**` : "";
     return buildResponse(
-      `Dạ em đã ghi nhận lịch **${visitTime}**${partyText}. Bên em sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và xác nhận lại vị trí hẹn qua SĐT/Zalo của anh/chị ạ.`,
+      `Dạ em đã ghi nhận lịch **${visitTime}**${partyText}. Đội ngũ tư vấn sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và xác nhận lại vị trí hẹn qua SĐT/Zalo của anh/chị ạ.`,
       ["Xem pháp lý", "Nhận bảng giá nội bộ", "Xem video căn đẹp"],
       {
         ...leadSignals,
@@ -490,6 +685,90 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
       {
         ...leadSignals,
         contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/gui zalo truoc/.test(normalized)) {
+    return buildResponse(
+      "Dạ anh/chị gửi giúp em **SĐT/Zalo** tại đây, em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và pháp lý trước qua Zalo rồi mới gọi nếu mình cần ạ.",
+      ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        contactPreference: "zalo",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/nhan qua email|gui email|email cho toi|nhan bang gia qua email/.test(normalized)) {
+    return buildResponse(
+      "Dạ anh/chị gửi giúp em **email** tại đây, em sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và tài liệu dự án. Nếu cần em mới hỗ trợ thêm qua SĐT/Zalo để tránh làm phiền ạ.",
+      ["Xem pháp lý", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        contactPreference: "email",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/goi nhanh 2 phut|goi nhanh|goi lai/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể sắp xếp **gọi nhanh 2 phút**. Anh/chị muốn em gọi **ngay bây giờ**, **trong 30 phút tới**, **buổi chiều** hay **buổi tối** ạ?",
+      CALLBACK_OPTIONS,
+      {
+        ...leadSignals,
+        contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (CALLBACK_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const callbackLabel = CALLBACK_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Buổi chiều";
+    return buildResponse(
+      `Dạ em ghi nhận khung **${callbackLabel}**. Anh/chị để lại **SĐT** giúp em, đội ngũ tư vấn sẽ gọi đúng giờ và gửi trước bảng giá nội bộ nếu mình muốn xem nhanh ạ.`,
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        contactPreference: "phone",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/dat lich xem du an|xem du an/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể hỗ trợ **đặt lịch xem dự án**. Anh/chị muốn đi **Hôm nay**, **Ngày mai** hay **Cuối tuần** ạ?",
+      VISIT_OPTIONS,
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (VISIT_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const visitLabel = VISIT_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Ngày mai";
+    return buildResponse(
+      `Dạ em ghi nhận lịch **${visitLabel}**. Anh/chị đi **1 mình** hay **cùng gia đình / bạn bè** để em sắp xếp sale tư vấn phù hợp ạ?`,
+      PARTY_OPTIONS,
+      {
+        ...leadSignals,
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (PARTY_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
+    const partyLabel = PARTY_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Đi 1 mình";
+    return buildResponse(
+      `Dạ em đã ghi nhận nhu cầu **${partyLabel.toLowerCase()}**. Anh/chị để lại **SĐT/Zalo**, em chốt lịch, gửi vị trí và bảng giá phù hợp trước khi mình đi xem ạ.`,
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
         hotness: "hot"
       }
     );
@@ -530,7 +809,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
 
   if (hasContact && hasName && hasBudget && leadSignals.contactPreference === "unknown") {
     return buildResponse(
-      `Dạ em đã ghi nhận **${leadSignals.name}** với tài chính **${leadSignals.budget}** rồi ạ. Anh/chị muốn bên em gửi thông tin theo cách nào trước?`,
+      `Dạ em đã ghi nhận **${leadSignals.name}** với tài chính **${leadSignals.budget}** rồi ạ. Anh/chị muốn nhận thông tin theo cách nào trước?`,
       CONTACT_DELIVERY_OPTIONS,
       {
         ...leadSignals,
@@ -542,7 +821,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (hasContact && hasName && hasBudget && leadSignals.intent !== "unknown") {
     const needLabel = mapNeed(leadSignals.intent);
     return buildResponse(
-      `Dạ em đã ghi nhận **${leadSignals.name}**, nhu cầu **${needLabel}** với tài chính **${leadSignals.budget}**. Anh/chị muốn bên em **gửi Zalo trước**, **gọi nhanh 2 phút** hay **đặt lịch xem dự án** ạ?`,
+      `Dạ em đã ghi nhận **${leadSignals.name}**, nhu cầu **${needLabel}** với tài chính **${leadSignals.budget}**. Anh/chị muốn nhận trước qua **Zalo**, **gọi nhanh 2 phút** hay **đặt lịch xem dự án** ạ?`,
       ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Đặt lịch xem dự án"],
       {
         ...leadSignals,
@@ -553,11 +832,22 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
 
   if (hasContact) {
     return buildResponse(
-      "Dạ em đã ghi nhận SĐT/Zalo của anh/chị rồi ạ. Trong ít phút nữa bên em sẽ gửi **bảng giá nội bộ**, **video căn đẹp** và nếu cần em sắp xếp **gọi nhanh 2 phút** hoặc **đặt lịch xem dự án** luôn cho mình.",
+      "Dạ em đã ghi nhận SĐT/Zalo của anh/chị rồi ạ. Trong ít phút nữa đội ngũ tư vấn sẽ gửi **bảng giá nội bộ**, **video căn đẹp** và nếu cần em sắp xếp **gọi nhanh 2 phút** hoặc **đặt lịch xem dự án** luôn cho mình.",
       ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Đặt lịch xem dự án"],
       {
         ...leadSignals,
         hotness: "hot"
+      }
+    );
+  }
+
+  if (/(can nao phu hop|phu hop tai chinh|hop tai chinh|nen chon can nao|tu van giup|minh muon xem can phu hop|goi y can|can nao hop)/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể lọc nhanh theo nhu cầu và khung tài chính của mình. Anh/chị đang ưu tiên **đầu tư sinh lời** hay **mua để ở / nghỉ dưỡng** ạ?",
+      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Tài chính 1-1,5 tỷ"],
+      {
+        ...leadSignals,
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
       }
     );
   }
@@ -581,6 +871,54 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
       {
         ...leadSignals,
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/can dau tu gia tot/.test(normalized)) {
+    return buildResponse(
+      "Dạ em sẽ lọc nhóm căn đầu tư giá tốt, dễ vào tiền và bám sát mức tài chính của mình. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi ngay danh sách căn phù hợp nhất hôm nay ạ.",
+      ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Nhận bảng giá nội bộ"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/can view dep nghi duong/.test(normalized)) {
+    return buildResponse(
+      "Dạ em sẽ ưu tiên nhóm căn view đẹp phù hợp nghỉ dưỡng hoặc ở lâu dài. Anh/chị để lại **SĐT/Zalo**, em gửi video và danh sách căn đẹp nhất đang còn ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Đặt lịch xem dự án"],
+      {
+        ...leadSignals,
+        intent: "resort",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/muon san pham de tang gia|de tang gia/.test(normalized)) {
+    return buildResponse(
+      "Dạ mức tăng giá là **kỳ vọng** theo vị trí, tiến độ và bảng căn từng thời điểm. Em có thể lọc nhóm căn có biên độ tốt hơn, anh/chị để lại **SĐT/Zalo** để em gửi đúng căn nội bộ ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
+      }
+    );
+  }
+
+  if (/muon san pham cho thue tot|de cho thue|cho thue tot/.test(normalized)) {
+    return buildResponse(
+      "Dạ em có thể lọc nhóm căn dễ khai thác cho thuê hơn tùy vị trí và diện tích. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi bảng giá nội bộ và nhóm căn phù hợp ngay ạ.",
+      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem video căn đẹp"],
+      {
+        ...leadSignals,
+        intent: "investment",
+        hotness: "hot"
       }
     );
   }
@@ -649,54 +987,6 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
-  if (/can dau tu gia tot/.test(normalized)) {
-    return buildResponse(
-      "Dạ em sẽ lọc nhóm căn đầu tư giá tốt, dễ vào tiền và bám sát mức tài chính của mình. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi ngay danh sách căn phù hợp nhất hôm nay ạ.",
-      ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Nhận bảng giá nội bộ"],
-      {
-        ...leadSignals,
-        intent: "investment",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (/can view dep nghi duong/.test(normalized)) {
-    return buildResponse(
-      "Dạ em sẽ ưu tiên nhóm căn view đẹp phù hợp nghỉ dưỡng hoặc ở lâu dài. Anh/chị để lại **SĐT/Zalo**, em gửi video và danh sách căn đẹp nhất đang còn ạ.",
-      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Đặt lịch xem dự án"],
-      {
-        ...leadSignals,
-        intent: "resort",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (/muon san pham de tang gia|de tang gia/.test(normalized)) {
-    return buildResponse(
-      "Dạ mức tăng giá là **kỳ vọng** theo vị trí, tiến độ và bảng căn từng thời điểm. Em có thể lọc nhóm căn có biên độ tốt hơn, anh/chị để lại **SĐT/Zalo** để em gửi đúng căn nội bộ ạ.",
-      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
-      {
-        ...leadSignals,
-        intent: "investment",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (/muon san pham cho thue tot|de cho thue|cho thue tot/.test(normalized)) {
-    return buildResponse(
-      "Dạ em có thể lọc nhóm căn dễ khai thác cho thuê hơn tùy vị trí và diện tích. Anh/chị gửi giúp em **SĐT/Zalo**, em gửi bảng giá nội bộ và nhóm căn phù hợp ngay ạ.",
-      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem video căn đẹp"],
-      {
-        ...leadSignals,
-        intent: "investment",
-        hotness: "hot"
-      }
-    );
-  }
-
   if (/xem phap ly|phap ly|so hong|giay to|chu dau tu/.test(normalized)) {
     return buildResponse(
       "Dạ em sẽ gửi anh/chị thông tin **pháp lý**, **chính sách bán hàng** và bộ tài liệu dự án để xem rõ hơn. Anh/chị để lại **Zalo/SĐT**, em gửi ngay ạ.",
@@ -709,91 +999,6 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
       }
     );
   }
-
-  if (/gui zalo truoc/.test(normalized)) {
-    return buildResponse(
-      "Dạ anh/chị gửi giúp em **SĐT/Zalo** tại đây, em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và pháp lý trước qua Zalo rồi mới gọi nếu mình cần ạ.",
-      ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
-      {
-        ...leadSignals,
-        contactPreference: "zalo",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (/nhan qua email|gui email|email cho toi|nhan bang gia qua email/.test(normalized)) {
-    return buildResponse(
-      "Dạ anh/chị gửi giúp em **email** tại đây, em sẽ gửi trước **bảng giá nội bộ**, **video căn đẹp** và tài liệu dự án. Nếu cần em mới hỗ trợ thêm qua SĐT/Zalo để tránh làm phiền ạ.",
-      ["Xem pháp lý", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
-      {
-        ...leadSignals,
-        contactPreference: "email",
-        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
-      }
-    );
-  }
-
-  if (/goi nhanh 2 phut|goi nhanh|goi lai/.test(normalized)) {
-    return buildResponse(
-      "Dạ em có thể sắp xếp **gọi nhanh 2 phút**. Anh/chị muốn em gọi **ngay bây giờ**, **trong 30 phút tới**, **buổi chiều** hay **buổi tối** ạ?",
-      CALLBACK_OPTIONS,
-      {
-        ...leadSignals,
-        contactPreference: "phone",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (CALLBACK_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
-    const callbackLabel = CALLBACK_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Buổi chiều";
-    return buildResponse(
-      `Dạ em ghi nhận khung **${callbackLabel}**. Anh/chị để lại **SĐT** giúp em, bên em sẽ gọi đúng giờ và gửi trước bảng giá nội bộ nếu mình muốn xem nhanh ạ.`,
-      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Xem pháp lý"],
-      {
-        ...leadSignals,
-        contactPreference: "phone",
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (/dat lich xem du an|xem du an/.test(normalized)) {
-    return buildResponse(
-      "Dạ em có thể hỗ trợ **đặt lịch xem dự án**. Anh/chị muốn đi **Hôm nay**, **Ngày mai** hay **Cuối tuần** ạ?",
-      VISIT_OPTIONS,
-      {
-        ...leadSignals,
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (VISIT_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
-    const visitLabel = VISIT_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Ngày mai";
-    return buildResponse(
-      `Dạ em ghi nhận lịch **${visitLabel}**. Anh/chị đi **1 mình** hay **cùng gia đình / bạn bè** để em sắp xếp sale tư vấn phù hợp ạ?`,
-      PARTY_OPTIONS,
-      {
-        ...leadSignals,
-        hotness: "hot"
-      }
-    );
-  }
-
-  if (PARTY_OPTIONS.some((option) => normalizeVietnamese(option) === normalized)) {
-    const partyLabel = PARTY_OPTIONS.find((option) => normalizeVietnamese(option) === normalized) ?? "Đi 1 mình";
-    return buildResponse(
-      `Dạ em đã ghi nhận nhu cầu **${partyLabel.toLowerCase()}**. Anh/chị để lại **SĐT/Zalo**, em chốt lịch, gửi vị trí và bảng giá phù hợp trước khi mình đi xem ạ.`,
-      ["Gửi Zalo trước", "Nhận bảng giá nội bộ", "Gọi nhanh 2 phút"],
-      {
-        ...leadSignals,
-        hotness: "hot"
-      }
-    );
-  }
-
 
   if (/gui gia/.test(normalized)) {
     return buildResponse(
@@ -808,7 +1013,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   }
   if (/(gia bao nhieu|gia|bao nhieu tien|tong tien|chi phi)/.test(normalized)) {
     return buildResponse(
-      `Dạ hiện bên em đang có các căn **${PROJECT_CONTEXT.priceAnchor.toLowerCase()}** tùy vị trí, tầng và thời điểm. Em có **bảng giá nội bộ** mới nhất, anh/chị để lại **SĐT/Zalo** em gửi đúng căn đẹp nhất hôm nay ạ.`,
+      `Dạ hiện dự án đang có các căn **${PROJECT_CONTEXT.priceAnchor.toLowerCase()}** tùy vị trí, tầng và thời điểm. Em có **bảng giá nội bộ** mới nhất, anh/chị để lại **SĐT/Zalo** em gửi đúng căn đẹp nhất hôm nay ạ.`,
       ["Nhận bảng giá nội bộ", "Đầu tư sinh lời", "Gửi Zalo trước"],
       {
         ...leadSignals,

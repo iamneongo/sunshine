@@ -347,8 +347,8 @@ export default async function DashboardPage() {
               <div className="text-[11px] font-black uppercase tracking-[0.22em] text-amber-300">Sales Script</div>
               <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">Kich Ban Goi Nhanh</h2>
               <div className="mt-6 space-y-4 text-sm leading-6 text-white/78">
-                <p>Em chào anh/chị, em bên dự án căn hộ biển mình đang quan tâm. Em thấy anh/chị đang xem dòng căn từ 1,2 tỷ nên em gọi để gửi đúng căn phù hợp nhất.</p>
-                <p>Hiện bên em có 2 nhóm dễ chốt là nhóm đầu tư dễ vào tiền và nhóm view đẹp nghỉ dưỡng. Em xin hỏi nhanh mình đang nghiêng về hướng nào ạ?</p>
+                <p>Em chào anh/chị, em gọi từ dự án căn hộ biển anh/chị đang quan tâm. Em thấy anh/chị đang xem dòng căn từ 1,2 tỷ nên em gọi để gửi đúng căn phù hợp nhất.</p>
+                <p>Hiện có 2 nhóm dễ chốt là nhóm đầu tư dễ vào tiền và nhóm view đẹp nghỉ dưỡng. Em xin hỏi nhanh mình đang nghiêng về hướng nào ạ?</p>
                 <p>Sau đó chốt tiếp 3 ý: tài chính khoảng bao nhiêu, muốn xem bảng giá hay pháp lý trước, và có tiện nhận Zalo hay nghe máy nhanh 2 phút không.</p>
               </div>
             </article>
@@ -373,4 +373,5 @@ export default async function DashboardPage() {
     </main>
   );
 }
+
 
