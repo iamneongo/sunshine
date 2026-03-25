@@ -5,8 +5,33 @@ import {
   NATIVE_LANDING_HEAD_STYLE,
   NATIVE_LANDING_HTML_CLASSNAME,
   NATIVE_LANDING_TAILWIND_CONFIG,
-  NATIVE_LANDING_TITLE
+  NATIVE_LANDING_TITLE,
+  NATIVE_LANDING_DESCRIPTION,
+  NATIVE_LANDING_OG_IMAGE
 } from "@/lib/native-original-head";
+import type { Metadata, Viewport } from "next";
+
+export const metadata: Metadata = {
+  title: NATIVE_LANDING_TITLE,
+  description: NATIVE_LANDING_DESCRIPTION,
+  openGraph: {
+    title: NATIVE_LANDING_TITLE,
+    description: NATIVE_LANDING_DESCRIPTION,
+    images: [{ url: NATIVE_LANDING_OG_IMAGE }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: NATIVE_LANDING_TITLE,
+    description: NATIVE_LANDING_DESCRIPTION,
+    images: [NATIVE_LANDING_OG_IMAGE],
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RootLayout({
   children
@@ -16,9 +41,6 @@ export default function RootLayout({
   return (
     <html lang="vi" className={NATIVE_LANDING_HTML_CLASSNAME}>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{NATIVE_LANDING_TITLE}</title>
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
