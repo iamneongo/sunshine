@@ -220,7 +220,7 @@ function detectBudget(text: string): string {
 function detectIntent(text: string): LeadSignals["intent"] {
   const normalized = normalizeVietnamese(text);
 
-  if (/(gia|bang gia|nhan bang gia|1[,.]?2\s*ty|tong tien|chi phi|thanh toan|gia bao nhieu|goi gia)/.test(normalized)) {
+  if (/(gia|bang gia|nhan bang gia|nhan gia\s*626|626\s*trieu|1[,.]?2\s*ty|tong tien|chi phi|thanh toan|gia bao nhieu|goi gia)/.test(normalized)) {
     return "pricing";
   }
 
@@ -485,7 +485,7 @@ function canonicalizeUserReply(message: string, history: ClientHistoryItem[]): s
     return "Nhận bảng giá nội bộ";
   }
 
-  if (/(xem video|video thuc te|xem hinh|xem can dep|video can dep)/.test(normalized)) {
+  if (/(xem video|video thuc te|xem hinh|xem can dep|video can dep|xem can thuc te|can thuc te gia tot)/.test(normalized)) {
     return "Xem video căn đẹp";
   }
 
@@ -514,7 +514,7 @@ function detectLeadSignals(message: string, history: ClientHistoryItem[]): LeadS
     )
   ) {
     hotness = "hot";
-  } else if (/(dau tu|video|view dep|1[,.]?2\s*ty|1[,.]?5\s*ty|cho thue|tang gia)/.test(normalized)) {
+  } else if (/(dau tu|video|view dep|626\s*trieu|1[,.]?2\s*ty|1[,.]?5\s*ty|cho thue|tang gia)/.test(normalized)) {
     hotness = "warm";
   }
 
@@ -852,7 +852,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
-  if (/nhan bang gia noi bo|nhan bang gia|bang gia noi bo/.test(normalized)) {
+  if (/nhan bang gia noi bo|nhan bang gia|bang gia noi bo|nhan gia\s*626|bang gia\s*626/.test(normalized)) {
     return buildResponse(
       "Dạ em gửi anh/chị ngay ạ. Trước khi gửi, anh/chị đang quan tâm theo hướng nào để em gửi đúng căn phù hợp?",
       ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Gửi Zalo trước"],
@@ -864,7 +864,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
-  if (/xem video can dep|video can dep|xem video/.test(normalized)) {
+  if (/xem video can dep|video can dep|xem video|xem can thuc te|can thuc te gia tot/.test(normalized)) {
     return buildResponse(
       "Dạ em có video ngắn và hình thực tế của các căn đang được quan tâm nhất. Anh/chị muốn xem theo hướng nào ạ?",
       ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Gửi Zalo trước"],
@@ -1000,7 +1000,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
-  if (/gui gia/.test(normalized)) {
+  if (/gui gia|nhan gia\s*626/.test(normalized)) {
     return buildResponse(
       "Dạ em vẫn giữ sẵn **bảng giá nội bộ** và **video căn đẹp** cho anh/chị ạ. Anh/chị để lại **SĐT/Zalo**, em gửi ngay trong ít phút tới.",
       ["Gửi Zalo trước", "Xem video căn đẹp", "Gọi nhanh 2 phút"],
@@ -1278,6 +1278,7 @@ export async function POST(request: Request) {
     );
   }
 }
+
 
 
 

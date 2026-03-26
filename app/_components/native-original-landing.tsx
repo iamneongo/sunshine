@@ -15,17 +15,38 @@ export default function NativeOriginalLanding() {
                     <i className="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-            <nav className="flex flex-col gap-5 text-base font-bold text-primary/80">
-                <a href="#vitri" data-onclick="toggleSidebar()"
-                    className="hover:text-primary-container transition-colors py-1">Vị trí</a>
-                <a href="#tienich" data-onclick="toggleSidebar()"
-                    className="hover:text-primary-container transition-colors py-1">Tiện ích</a>
-                <a href="#matbang" data-onclick="toggleSidebar()"
-                    className="hover:text-primary-container transition-colors py-1">Mặt bằng</a>
-                <a href="#tiendo" data-onclick="toggleSidebar()"
-                    className="hover:text-primary-container transition-colors py-1">Tiến độ</a>
-                <a href="#contact" data-onclick="toggleSidebar()"
-                    className="hover:text-primary-container transition-colors py-1">Nhận thông tin</a>
+            <nav className="flex flex-col gap-8">
+                <div>
+                    <div className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] text-primary-container/70">Khám phá</div>
+                    <div className="flex flex-col gap-3 text-base font-bold text-primary/80">
+                        <a href="#vitri" data-onclick="toggleSidebar()"
+                            className="hover:text-primary-container transition-colors py-1">Vị trí</a>
+                        <a href="#tienich" data-onclick="toggleSidebar()"
+                            className="hover:text-primary-container transition-colors py-1">Tiện ích</a>
+                        <a href="#matbang" data-onclick="toggleSidebar()"
+                            className="hover:text-primary-container transition-colors py-1">Mặt bằng</a>
+                    </div>
+                </div>
+                <div>
+                    <div className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] text-primary-container/70">Thông tin</div>
+                    <div className="flex flex-col gap-3 text-base font-bold text-primary/80">
+                        <button type="button" data-onclick="toggleSidebar(); startChatFromLanding('Nhận bảng giá nội bộ')"
+                            className="text-left hover:text-primary-container transition-colors py-1">Bảng giá</button>
+                        <button type="button" data-onclick="toggleSidebar(); startChatFromLanding('Xem pháp lý')"
+                            className="text-left hover:text-primary-container transition-colors py-1">Pháp lý</button>
+                        <a href="#tiendo" data-onclick="toggleSidebar()"
+                            className="hover:text-primary-container transition-colors py-1">Tiến độ</a>
+                    </div>
+                </div>
+                <div>
+                    <div className="mb-3 text-[11px] font-black uppercase tracking-[0.24em] text-primary-container/70">Liên hệ</div>
+                    <div className="flex flex-col gap-3 text-base font-bold text-primary/80">
+                        <a href="tel:0908345808" className="hover:text-primary-container transition-colors py-1">Gọi ngay</a>
+                        <a href="https://zalo.me/0908345808" target="_blank" className="hover:text-primary-container transition-colors py-1">Zalo</a>
+                        <a href="#tvc" data-onclick="toggleSidebar()"
+                            className="hover:text-primary-container transition-colors py-1">Xem video</a>
+                    </div>
+                </div>
             </nav>
             <div className="mt-auto">
                 <div className="flex justify-center gap-3 mb-6">
@@ -172,13 +193,12 @@ export default function NativeOriginalLanding() {
                         </h1>
 
                         <div className="hero-title-price-display mb-4 text-[2.45rem] font-light italic text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
-                            Chỉ Từ 1,2 Tỷ
+                            Chỉ Từ 626 Triệu
                         </div>
 
                         <p className="hero-subcopy max-w-xl mb-6 text-base font-medium leading-[1.7] text-white/70 sm:mb-8 md:text-lg">
-                            Dòng căn hộ biển dễ vào tiền cho cả nhu cầu <span className="text-primary-container font-black">đầu tư</span> lẫn
-                            <span className="text-primary-container font-black"> nghỉ dưỡng</span>. Anh/chị có thể xem ngay bảng giá nội bộ,
-                            video căn đẹp và chính sách mới nhất để chọn đúng căn trước khi nhóm view biển đẹp đi nhanh.
+                            Sunshine Bay Retreat đang mở mức giá từ <span className="text-primary-container font-black">626 triệu</span> cho
+                            nhóm khách muốn vào tiền sớm. Có thể xem nhanh bảng giá, căn thực tế giá tốt và pháp lý trước khi chốt bước tiếp theo.
                         </p>
 
                         <div className="hero-highlights mb-6 flex max-w-xl flex-wrap gap-3 sm:mb-8">
@@ -193,7 +213,29 @@ export default function NativeOriginalLanding() {
                         </div>
 
                         
-                        <div className="lg:hidden relative mb-6 sm:mb-10 w-full max-w-[360px] mx-auto sm:mx-0">
+                        <div
+                            className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-4 lg:w-auto lg:max-w-fit lg:gap-3 xl:gap-3.5">
+                            <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
+                                className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 lg:flex-none lg:px-5 lg:py-3.5 xl:px-6 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-3 lg:gap-2 hover:scale-[1.02] transition-transform">
+                                <i className="fa-solid fa-file-lines text-sm sm:text-base lg:text-sm"></i>
+                                <span
+                                    className="text-[11px] sm:text-sm lg:text-[11px] uppercase tracking-widest lg:tracking-[0.12em] whitespace-nowrap leading-none mt-0.5">Nhận
+                                    giá 626 triệu</span>
+                            </button>
+                            <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')"
+                                className="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 sm:px-6 lg:px-[1.125rem] lg:py-3.5 rounded-full transition-all hover:bg-white/20">
+                                <div
+                                    className="w-8 h-8 sm:w-10 sm:h-10 lg:w-9 lg:h-9 rounded-full bg-primary/40 border border-white/20 flex items-center justify-center text-white text-xs sm:text-base lg:text-sm group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
+                                    <i className="fa-solid fa-play ml-0.5"></i>
+                                </div>
+                                <span
+                                    className="text-white font-black text-[11px] sm:text-sm lg:text-[11px] uppercase tracking-widest lg:tracking-[0.12em] whitespace-nowrap leading-none mt-0.5">Xem
+                                    căn thực tế</span>
+                            </button>
+                        </div>
+
+                        
+                        <div className="lg:hidden relative mt-5 mb-6 sm:mt-6 sm:mb-8 w-full max-w-[340px] mx-auto sm:mx-0 sm:max-w-[360px]">
                             <div className="absolute -inset-1 bg-primary-container/20 blur-xl rounded-2xl"></div>
                             <div
                                 className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl shadow-2xl">
@@ -204,9 +246,9 @@ export default function NativeOriginalLanding() {
                                             Chỉ từ</div>
                                         <div
                                             className="text-2xl sm:text-3xl font-black text-white italic drop-shadow-md leading-none">
-                                            1,2 <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">tỷ/căn</span>
+                                            626 <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">triệu/căn</span>
                                         </div>
-                                        <div className="mt-1 text-[9px] sm:text-[10px] text-white/70 font-bold">Tương đương 6x triệu/m²</div>
+                                        <div className="mt-1 text-[9px] sm:text-[10px] text-white/70 font-bold">Mức mở đầu cho nhóm vào tiền sớm</div>
                                     </div>
                                     <div className="text-right pt-1">
                                         <div
@@ -232,28 +274,6 @@ export default function NativeOriginalLanding() {
                                 </div>
                             </div>
                         </div>
-
-                        
-                        <div
-                            className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-6">
-                            <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
-                                className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
-                                <i className="fa-solid fa-file-lines text-sm sm:text-base"></i>
-                                <span
-                                    className="text-[11px] sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Nhận
-                                    bảng giá nội bộ</span>
-                            </button>
-                            <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')"
-                                className="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 sm:px-6 rounded-full transition-all hover:bg-white/20">
-                                <div
-                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/40 border border-white/20 flex items-center justify-center text-white text-xs sm:text-base group-hover:bg-primary-container group-hover:border-primary-container transition-all shrink-0">
-                                    <i className="fa-solid fa-play ml-0.5"></i>
-                                </div>
-                                <span
-                                    className="text-white font-black text-[11px] sm:text-sm uppercase tracking-widest whitespace-nowrap leading-none mt-0.5">Xem
-                                    video căn đẹp nhất</span>
-                            </button>
-                        </div>
                     </div>
 
                     
@@ -267,8 +287,8 @@ export default function NativeOriginalLanding() {
                                 className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-primary/80 to-transparent">
                                 <div
                                     className="text-[10px] text-primary-container font-black uppercase tracking-widest mb-1">
-                                    Chỉ còn 27 căn view biển đẹp</div>
-                                <div className="text-xl text-white font-black italic">ƯU TIÊN NHẬN BẢNG GIÁ NỘI BỘ</div>
+                                    Chỉ từ 626 triệu/căn</div>
+                                <div className="text-xl text-white font-black italic">SỞ HỮU NGAY CĂN HỘ BIỂN VŨNG TÀU</div>
                             </div>
                         </div>
                     </div>
@@ -297,12 +317,21 @@ export default function NativeOriginalLanding() {
                 <div className="max-w-5xl mx-auto reveal">
                     <div
                         className="relative w-full border-4 border-white aspect-video rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,27,53,0.15)] bg-slate-900 group">
-                        <iframe width="100%" height="100%"
-                            src="https://www.youtube.com/embed/oum9PyUrZeg?si=ByhzBRYFkiMdQNtg&autoPlay=1&mute=1&loop=1&playlist=oum9PyUrZeg&controls=1&modestbranding=1"
-                            title="YouTube video player" frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin" allowFullScreen
-                            className="absolute inset-0 w-full h-full scale-[1.02]"></iframe>
+                        <video
+                            className="absolute inset-0 h-full w-full bg-slate-950"
+                            controls
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                        >
+                            <source
+                                src="https://res.cloudinary.com/du9pdutdd/video/upload/v1774488977/YTDown.com_YouTube_Sunshine-Bay-Retreat-Vung-Tau-Thanh-pho-_Media_oum9PyUrZeg_002_720p_duel4l.mp4"
+                                type="video/mp4"
+                            />
+                            Trình duyệt của anh/chị hiện chưa hỗ trợ phát video này.
+                        </video>
 
                         
                         <div
@@ -311,8 +340,7 @@ export default function NativeOriginalLanding() {
                                 className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center animate-pulse">
                                 <i className="fa-solid fa-volume-xmark text-xs"></i>
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest">Tương tác trực tiếp video để
-                                bật âm thanh</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">Video đang phát sẵn, có thể bật âm thanh nếu cần</span>
                         </div>
                     </div>
                 </div>
@@ -379,113 +407,79 @@ export default function NativeOriginalLanding() {
             </div>
 
             <div className="app-container relative z-10">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-                    <div className="reveal">
-                        <span
-                            className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block font-body">Công
-                            nghệ tương lai</span>
-                        <h2
-                            className="text-3xl md:text-5xl font-black text-white leading-tight mb-8 uppercase tracking-tighter">
-                            Khám Phá <span className="text-primary-container">VR 360</span> <br /> Thực Tế Ảo
-                        </h2>
-                        <p className="text-base opacity-60 mb-10 max-w-lg font-body leading-relaxed">
-                            Trải nghiệm không gian sống thượng lưu ngay tại nhà. Công nghệ VR 360 cho phép bạn tham quan
-                            từng góc ngách của Sunshine Bay Retreat với độ chân thực 100%.
-                        </p>
-
-                        <div className="space-y-6 mb-12">
-                            <div className="flex items-start gap-4">
-                                <div
-                                    className="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0">
-                                    <i className="fa-solid fa-expand"></i>
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-black uppercase tracking-widest mb-1">Toàn cảnh 360 độ</h4>
-                                    <p className="text-xs opacity-50 font-body">Tầm nhìn không giới hạn từ ban công căn hộ
-                                        Sky Villa.</p>
-                                </div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div
-                                    className="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0">
-                                    <i className="fa-solid fa-wand-magic-sparkles"></i>
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-black uppercase tracking-widest mb-1">Thiết kế tinh xảo</h4>
-                                    <p className="text-xs opacity-50 font-body">Cảm nhận chất lượng vật liệu bàn giao từ các
-                                        thương hiệu hàng đầu.</p>
-                                </div>
-                            </div>
+                <div className="reveal mx-auto max-w-6xl">
+                    <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                        <div className="max-w-2xl">
+                            <span
+                                className="inline-flex items-center rounded-full border border-primary-container/25 bg-primary-container/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.34em] text-primary-container">Tham
+                                quan không gian</span>
+                            <h2
+                                className="mt-5 text-[2rem] sm:text-[2.25rem] md:text-5xl font-black text-white leading-[1.08] md:leading-tight uppercase tracking-tighter">
+                                Xem <span className="text-primary-container">Không Gian Dự Án</span> <br /> Trực Tiếp Trên Trang
+                            </h2>
+                            <p className="mt-5 max-w-xl text-base leading-8 text-white/66 md:text-lg">
+                                Tham quan nhanh không gian căn hộ và các góc nhìn nổi bật ngay trên website trước khi xem thêm bảng giá hoặc sắp xếp lịch đi thực tế.
+                            </p>
                         </div>
 
-                        <div className="flex flex-wrap gap-4">
-                            <button type="button" data-onclick="openVRImage()"
-                                className="gold-button inline-flex items-center gap-4 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-[0.2em] shadow-2xl group transition-all">
-                                Tham quan VR 360°
-                                <i
-                                    className="fa-solid fa-vr-cardboard text-xl group-hover:rotate-12 transition-transform"></i>
-                            </button>
-                            <a href="https://www.youtube.com/watch?v=oum9PyUrZeg" target="_blank"
-                                className="bg-white/10 backdrop-blur-md border border-white/20 inline-flex items-center gap-4 text-white px-10 py-5 rounded-full font-black text-xs uppercase tracking-[0.2em] shadow-2xl group transition-all hover:bg-white/20">
-                                Xem TVC Quay Thực Tế
-                                <i className="fa-solid fa-play text-xl group-hover:scale-110 transition-transform"></i>
+                        <div className="flex flex-wrap gap-3">
+                            <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                id="vr-tour-start"
+                                target="vr-tour-frame"
+                                className="gold-button inline-flex items-center gap-3 rounded-full px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl">
+                                Bắt đầu tham quan
+                                <i className="fa-solid fa-vr-cardboard text-base"></i>
+                            </a>
+                            <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                id="vr-tour-open-current"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl backdrop-blur-md transition-all hover:bg-white/18">
+                                Mở toàn màn hình
+                                <i className="fa-solid fa-up-right-from-square text-sm"></i>
                             </a>
                         </div>
                     </div>
 
-                    <div className="reveal relative">
-                        <div className="aspect-square bg-slate-900 rounded-2xl overflow-hidden vr-container border-4 border-white/5 relative group cursor-pointer shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
-                            data-onclick="openVRImage()">
-                            <div id="panorama-preview" className="w-full h-full relative">
-                                <div id="panorama-overlay"
-                                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 z-10 group-hover:bg-black/30 transition-all pointer-events-none">
-                                    <div
-                                        className="w-20 h-20 rounded-full bg-primary-container/90 flex items-center justify-center text-white text-2xl animate-pulse shadow-2xl">
-                                        <i className="fa-solid fa-play ml-1"></i>
-                                    </div>
-                                    <p
-                                        className="mt-8 text-[10px] font-black uppercase tracking-[3px] drop-shadow-lg text-white">
-                                        Khám phá không gian 360°</p>
-                                </div>
-                                <img src="./sunshine-vung-tau-8.jpg"
-                                    className="w-full h-full object-cover blur-[0.5px] scale-105 group-hover:scale-110 transition-transform duration-[2000ms]"
-                                    alt="VR Preview" />
-                            </div>
+                    <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05))] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:p-5">
+                        <div className="flex flex-wrap gap-2">
+                            <button type="button"
+                                data-vr-tab="tour360"
+                                data-onclick="return switchVrTour('tour360')"
+                                className="inline-flex items-center justify-center rounded-full border border-primary-container/20 bg-primary-container px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-lg shadow-primary-container/20 transition-all hover:brightness-105">
+                                Tham quan 360
+                            </button>
+                            <button type="button"
+                                data-vr-tab="panorama"
+                                data-onclick="return switchVrTour('panorama')"
+                                className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                Toàn cảnh
+                            </button>
+                            <button type="button"
+                                data-vr-tab="interior"
+                                data-onclick="return switchVrTour('interior')"
+                                className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                Nội thất
+                            </button>
                         </div>
 
-                        
-                        <div
-                            className="absolute -bottom-6 -right-6 bg-white/10 backdrop-blur-2xl border border-white/20 p-6 rounded-2xl shadow-2xl z-20 max-w-[200px] hidden md:block">
-                            <div className="flex items-center gap-3 mb-2 text-primary-container">
-                                <i className="fa-solid fa-award"></i>
-                                <span className="text-[9px] font-black uppercase tracking-widest">Sky Villa Gold
-                                    Edition</span>
-                            </div>
-                            <p className="text-[10px] text-white/70 leading-relaxed font-bold">Trải nghiệm căn hộ thực tế ảo
-                                với đầy đủ nội thất bàn giao chuẩn 5 sao.</p>
+                        <div className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950 shadow-2xl">
+                            <iframe
+                                id="vr-tour-frame"
+                                name="vr-tour-frame"
+                                title="Tham quan không gian Sunshine Bay Retreat"
+                                src="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                className="h-[420px] w-full md:h-[620px]"
+                                loading="lazy"
+                                allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
+                                allowFullScreen
+                                referrerPolicy="strict-origin-when-cross-origin"
+                            ></iframe>
                         </div>
+
                     </div>
                 </div>
             </div>
-
-            
-            <style
-                dangerouslySetInnerHTML={{
-                    __html: `
-                #panorama {
-                    background-color: #000;
-                }
-
-                .pnlm-load-box {
-                    background-color: #C5A059 !important;
-                }
-
-                .pnlm-lbtn {
-                    background-color: #C5A059 !important;
-                }
-                    `
-                }}
-            />
         </section>
 
         
@@ -522,7 +516,7 @@ export default function NativeOriginalLanding() {
                             <h3 className="text-xl font-black text-primary uppercase mb-2">Căn Hộ Du Lịch</h3>
                             <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Dòng căn hộ biển phù hợp cho nhu cầu nghỉ dưỡng và khai thác lưu trú theo định hướng dự án.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
-                                <div className="text-primary-container font-black text-sm">Từ 1,2 tỷ/căn</div>
+                                <div className="text-primary-container font-black text-sm">Chỉ từ 626 triệu/căn</div>
                                 <div
                                     className="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">
                                     Chi tiết <i className="fa-solid fa-arrow-right"></i></div>
@@ -930,10 +924,9 @@ export default function NativeOriginalLanding() {
                             <i className="fa-solid fa-file-signature"></i>
                             Đăng ký ưu tiên
                         </span>
-                        <h2 className="mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight">
-                            Để Lại Thông Tin
-                            <br />
-                            Nhận Đúng Tài Liệu
+                        <h2 className="mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-[1.16] md:leading-[1.08]">
+                            <span className="block">Để Lại Thông Tin</span>
+                            <span className="block">Nhận Đúng Tài Liệu</span>
                             <span className="block text-primary-container">Phù Hợp Nhu Cầu</span>
                         </h2>
                         <p className="mt-6 max-w-2xl text-base md:text-lg leading-8 text-white/75">
@@ -1019,8 +1012,8 @@ export default function NativeOriginalLanding() {
                                             className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Mình muốn nhận</label>
                                         <select id="lead-need"
                                             className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
-                                            <option>Nhận bảng giá nội bộ</option>
-                                            <option>Xem video căn đẹp</option>
+                                            <option>Nhận bảng giá căn 626 triệu</option>
+                                            <option>Xem căn thực tế giá tốt</option>
                                             <option>Xem căn hợp tài chính</option>
                                             <option>Xem pháp lý và chính sách</option>
                                         </select>
@@ -1083,9 +1076,9 @@ export default function NativeOriginalLanding() {
     </main>
 
     
-    <footer className="bg-primary pt-24 pb-12 px-6 md:px-12 border-t border-white/5">
+    <footer className="bg-primary pt-16 pb-28 px-6 border-t border-white/5 md:px-12 md:pt-24 md:pb-12">
         <div className="app-container">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+            <div className="grid grid-cols-1 gap-10 mb-12 md:grid-cols-4 md:gap-16 md:mb-20">
                 <div className="md:col-span-1">
                     <div className="flex items-center gap-3 mb-8">
                         <i className="fa-solid fa-crown text-primary-container text-xl"></i>
@@ -1200,17 +1193,18 @@ export default function NativeOriginalLanding() {
             <div id="chat-messages" className="chat-scroll flex-1 p-5 overflow-y-auto bg-surface/30">
                 <div className="chat-message chat-message--bot">
                     <div className="chat-bubble">
-                        Chào anh/chị, em là **Sunshine AI** của dự án. Em có thể gửi ngay **bảng giá nội bộ**, **video căn đẹp**
-                        và **pháp lý** nếu mình cần xem nhanh trước ạ.
+                        Anh/chị đang tìm căn hộ biển giá tốt đúng không ạ? Hiện có căn chỉ từ **626 triệu**,
+                        phù hợp nhóm muốn vào tiền sớm và khai thác nghỉ dưỡng. Anh/chị muốn xem **bảng giá**,
+                        **căn thực tế giá tốt** hay **pháp lý** trước ạ?
                     </div>
                 </div>
             </div>
 
             
             <div id="chat-suggestions" className="chat-suggestions-strip px-4 sm:px-5 py-3 sm:py-4 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá</button>
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá 626 triệu</button>
 
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem video căn đẹp</button>
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem căn thực tế</button>
 
                 <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Tư vấn đầu tư')">Tư vấn đầu tư</button>
 
@@ -1246,11 +1240,11 @@ export default function NativeOriginalLanding() {
     </div>
 
     <button type="button" id="chatbot-mini-teaser" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
-        className="fixed bottom-28 right-4 z-[205] hidden max-w-[260px] rounded-2xl border border-primary/10 bg-white px-4 py-3 text-left shadow-2xl">
+        className="fixed bottom-28 right-4 z-[205] hidden max-w-[260px] rounded-2xl border border-primary/10 bg-white px-4 py-3 text-left shadow-2xl md:bottom-24 md:right-8 md:max-w-[280px]">
         <div className="text-[10px] font-black uppercase tracking-[0.24em] text-primary/40">Popup mini</div>
-        <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem căn phù hợp tài chính 1,2 tỷ không ạ?</p>
+        <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem căn hộ biển từ 626 triệu không ạ?</p>
         <span id="chatbot-mini-teaser-cta" className="mt-3 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-primary-container">
-            Nhận bảng giá <i className="fa-solid fa-arrow-right"></i>
+            Nhận giá 626 <i className="fa-solid fa-arrow-right"></i>
         </span>
     </button>
 
@@ -1284,6 +1278,32 @@ export default function NativeOriginalLanding() {
 
         .chat-input-field::placeholder {
             line-height: 1.5;
+        }
+
+        .chatbot-panel {
+            position: absolute;
+            right: 0;
+            bottom: calc(100% + 1rem);
+            width: min(23rem, calc(100vw - 2rem));
+            max-height: min(42rem, calc(100svh - 8.5rem));
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(219, 228, 240, 0.92);
+            border-radius: 1.75rem;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.985);
+            transform-origin: bottom right;
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .chatbot-panel.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
         }
 
         .hero-copy .hero-title--mobile {
@@ -1338,6 +1358,30 @@ export default function NativeOriginalLanding() {
                 padding-top: 0.14em;
                 padding-bottom: 0.16em;
                 margin-bottom: 1.4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-actions {
+                width: fit-content;
+                max-width: 100%;
+                align-items: center;
+                flex-wrap: wrap;
+                row-gap: 0.75rem;
+            }
+
+            .hero-actions .gold-button {
+                flex: 0 1 auto;
+                min-width: 14.5rem;
+            }
+
+            .hero-actions button:not(.gold-button) {
+                flex: 0 1 auto;
+                min-width: 0;
+            }
+
+            .hero-actions button {
+                min-height: 3.3rem;
             }
         }
 
@@ -1408,6 +1452,7 @@ export default function NativeOriginalLanding() {
             }
 
             .chatbot-panel {
+                position: fixed !important;
                 left: 0.75rem !important;
                 right: 0.75rem !important;
                 bottom: 5.25rem !important;
@@ -1498,6 +1543,9 @@ export default function NativeOriginalLanding() {
     </>
   );
 }
+
+
+
 
 
 

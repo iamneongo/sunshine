@@ -347,7 +347,7 @@ export default async function DashboardPage() {
               <div className="text-[11px] font-black uppercase tracking-[0.22em] text-amber-300">Sales Script</div>
               <h2 className="mt-2 text-2xl font-black uppercase tracking-tight">Kich Ban Goi Nhanh</h2>
               <div className="mt-6 space-y-4 text-sm leading-6 text-white/78">
-                <p>Em chào anh/chị, em gọi từ dự án căn hộ biển anh/chị đang quan tâm. Em thấy anh/chị đang xem dòng căn từ 1,2 tỷ nên em gọi để gửi đúng căn phù hợp nhất.</p>
+                <p>Em chào anh/chị, em gọi từ dự án căn hộ biển anh/chị đang quan tâm. Em thấy anh/chị đang xem nhóm căn từ 626 triệu nên em gọi để gửi nhanh đúng căn phù hợp nhất.</p>
                 <p>Hiện có 2 nhóm dễ chốt là nhóm đầu tư dễ vào tiền và nhóm view đẹp nghỉ dưỡng. Em xin hỏi nhanh mình đang nghiêng về hướng nào ạ?</p>
                 <p>Sau đó chốt tiếp 3 ý: tài chính khoảng bao nhiêu, muốn xem bảng giá hay pháp lý trước, và có tiện nhận Zalo hay nghe máy nhanh 2 phút không.</p>
               </div>
@@ -359,11 +359,11 @@ export default async function DashboardPage() {
               <div className="mt-6 space-y-4">
                 <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
                   <div className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Sau 10 phút</div>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Dạ em vẫn giữ sẵn bảng giá và video căn đẹp cho anh/chị ạ. Khi cần, anh/chị chỉ cần nhắn GỬI GIÁ là em gửi ngay.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Dạ em vẫn giữ sẵn bảng giá 626 triệu và căn thực tế giá tốt cho anh/chị ạ. Khi cần, anh/chị chỉ cần nhắn GỬI GIÁ 626 là em gửi ngay.</p>
                 </div>
                 <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4">
                   <div className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Sau 1 ngày</div>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Chào anh/chị, em vẫn giữ sẵn nhóm căn phù hợp tài chính 1,2 tỷ cùng bảng giá nội bộ mới nhất. Nếu cần, em gửi lại ngay qua Zalo cho mình ạ.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Chào anh/chị, em vẫn giữ sẵn bảng giá 626 triệu cùng nhóm căn thực tế giá tốt. Nếu cần, em gửi lại ngay qua Zalo cho mình ạ.</p>
                 </div>
               </div>
             </article>
@@ -373,5 +373,6 @@ export default async function DashboardPage() {
     </main>
   );
 }
+
 
 

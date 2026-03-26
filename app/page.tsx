@@ -16,10 +16,18 @@ import {
 } from "@/lib/native-original-scripts";
 
 const defaultSuggestions = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
-const initialMessages = [INITIAL_CHAT_MESSAGE, "Dự án hiện có căn từ 1,2 tỷ, phù hợp đầu tư và nghỉ dưỡng."];
-const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn em gửi bảng giá nội bộ hay video căn đẹp nhất hôm nay ạ?"];
-const followUpSuggestions = ["GỬI GIÁ", "Xem video căn đẹp", "Xem pháp lý"];
-const returningSuggestions = ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"];
+const initialMessages = [INITIAL_CHAT_MESSAGE, "Hiện có căn từ 626 triệu, phù hợp nhóm khách muốn vào tiền sớm và khai thác nghỉ dưỡng."];
+const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn xem bảng giá 626 triệu hay căn thực tế giá tốt trước ạ?"];
+const followUpSuggestions = ["GỬI GIÁ 626", "Xem căn thực tế", "Xem pháp lý"];
+const returningSuggestions = ["GỬI GIÁ 626", "Xem căn thực tế", "Xem pháp lý"];
+const suggestionDisplayMap = {
+  "Nhận bảng giá nội bộ": "Nhận giá 626",
+  "Nhận bảng giá": "Nhận giá 626",
+  "Nhận bảng giá 626 triệu": "Nhận giá 626",
+  "GỬI GIÁ 626": "Nhận giá 626",
+  "Xem video căn đẹp": "Xem căn thực tế",
+  "Xem căn thực tế giá tốt": "Xem căn thực tế"
+};
 
 const inlineEventBridgeScript = String.raw`
 (() => {
@@ -63,6 +71,71 @@ const inlineEventBridgeScript = String.raw`
   });
 })();
 `;
+const vrTourBridgeScript = `
+(() => {
+  const sources = {
+    tour360: "https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US",
+    panorama: "https://api2.enscape3d.com/v3/view/41cd2967-6eaa-409e-b46a-b8eaba9680ae",
+    interior: "https://www.coohom.com/pub/tool/panorama/viewer?obsPicId=3FO8VO266YX8&locale=vi"
+  };
+
+  const activeClasses = [
+    "border-primary-container/20",
+    "bg-primary-container",
+    "text-primary",
+    "shadow-lg",
+    "shadow-primary-container/20"
+  ];
+  const inactiveClasses = [
+    "border-white/12",
+    "bg-white/8",
+    "text-white"
+  ];
+
+  function setTabState(activeKey) {
+    document.querySelectorAll("[data-vr-tab]").forEach((element) => {
+      const isActive = element.getAttribute("data-vr-tab") === activeKey;
+      activeClasses.forEach((className) => element.classList.toggle(className, isActive));
+      inactiveClasses.forEach((className) => element.classList.toggle(className, !isActive));
+    });
+  }
+
+  window.switchVrTour = function switchVrTour(key) {
+    const nextKey = Object.prototype.hasOwnProperty.call(sources, key) ? key : "tour360";
+    const nextUrl = sources[nextKey];
+    const frame = document.getElementById("vr-tour-frame");
+    const startLink = document.getElementById("vr-tour-start");
+    const openCurrentLink = document.getElementById("vr-tour-open-current");
+
+    if (frame && frame.getAttribute("src") !== nextUrl) {
+      frame.setAttribute("src", nextUrl);
+    }
+
+    if (startLink) {
+      startLink.setAttribute("href", nextUrl);
+    }
+
+    if (openCurrentLink) {
+      openCurrentLink.setAttribute("href", nextUrl);
+    }
+
+    setTabState(nextKey);
+    return false;
+  };
+
+  const init = () => {
+    if (typeof window.switchVrTour === "function") {
+      window.switchVrTour("tour360");
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();
+`;
 
 const chatbotBridgeScript = `
 (() => {
@@ -78,6 +151,7 @@ const chatbotBridgeScript = `
   const returningMessage = ${JSON.stringify(CHATBOT_RETURNING_MESSAGE)};
   const followUpSuggestions = ${JSON.stringify(followUpSuggestions)};
   const returningSuggestions = ${JSON.stringify(returningSuggestions)};
+  const suggestionDisplayMap = ${JSON.stringify(suggestionDisplayMap)};
   const desktopWelcomeDelayMs = 6000;
   const idleFollowUpDelayMs = 10 * 60 * 1000;
   const returnVisitDelayMs = 24 * 60 * 60 * 1000;
@@ -95,6 +169,11 @@ const chatbotBridgeScript = `
 
   function normalizeText(value) {
     return typeof value === "string" ? value.trim() : "";
+  }
+
+  function resolveSuggestionDisplayLabel(value) {
+    const label = normalizeText(value);
+    return suggestionDisplayMap[label] || label;
   }
 
   function escapeHtml(value) {
@@ -284,10 +363,6 @@ const chatbotBridgeScript = `
   }
 
   function showMiniTeaser(message, ctaLabel) {
-    if (window.innerWidth >= 1024) {
-      return;
-    }
-
     const nodes = getMiniTeaserNodes();
     if (!nodes.wrapper) {
       return;
@@ -298,7 +373,7 @@ const chatbotBridgeScript = `
     }
 
     if (nodes.cta) {
-      nodes.cta.textContent = normalizeText(ctaLabel) || "Nhận bảng giá";
+      nodes.cta.textContent = normalizeText(ctaLabel) || "Nhận giá 626";
     }
 
     nodes.wrapper.classList.remove("hidden");
@@ -334,18 +409,13 @@ const chatbotBridgeScript = `
       console.warn("Unable to persist idle follow-up state", error);
     }
 
-    const state = getState();
     window.appendMessage("bot", followUp10MinuteMessage);
     renderSuggestionBar(followUpSuggestions);
     recordEvent("chatbot_follow_up_10m", {
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !state.isOpen) {
-      window.toggleChatbot();
-    } else {
-      showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá và video căn đẹp cho anh/chị ạ.", "GỬI GIÁ");
-    }
+    showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá 626 triệu và căn thực tế giá tốt cho anh/chị ạ.", "Nhận giá 626");
   }
 
   function scheduleIdleFollowUp() {
@@ -385,12 +455,22 @@ const chatbotBridgeScript = `
     }
 
     suggestions.innerHTML = "";
+    const seenDisplayLabels = new Set();
 
     dedupeSuggestions(items).forEach((label) => {
+      const displayLabel = resolveSuggestionDisplayLabel(label);
+      const displayKey = displayLabel.toLowerCase();
+
+      if (!displayLabel || seenDisplayLabels.has(displayKey)) {
+        return;
+      }
+
+      seenDisplayLabels.add(displayKey);
+
       const button = document.createElement("button");
       button.type = "button";
       button.className = "chat-suggestion";
-      button.textContent = label;
+      button.textContent = displayLabel;
       button.onclick = () => {
         window.pushSuggestion(label);
       };
@@ -660,18 +740,13 @@ const chatbotBridgeScript = `
       console.warn("Unable to persist chatbot welcome state", error);
     }
 
-    const state = getState();
     resetConversation(welcomeMessages);
     renderSuggestionBar(defaultSuggestions);
     recordEvent("chatbot_welcome_shown", {
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !state.isOpen) {
-      window.toggleChatbot();
-    } else {
-      showMiniTeaser(mobileTeaserMessage, "Nhận bảng giá");
-    }
+    showMiniTeaser(mobileTeaserMessage, "Nhận giá 626");
   }
 
   function maybeShowReturningPrompt() {
@@ -695,17 +770,13 @@ const chatbotBridgeScript = `
       console.warn("Unable to persist returning chatbot state", error);
     }
 
-    resetConversation([returningMessage, "Anh/chị muốn em gửi lại bảng giá nội bộ hay video căn đẹp nhất hôm nay ạ?"]);
+    resetConversation([returningMessage, "Anh/chị muốn em gửi lại bảng giá 626 triệu hay căn thực tế giá tốt trước ạ?"]);
     renderSuggestionBar(returningSuggestions);
     recordEvent("chatbot_follow_up_1d", {
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    if (window.innerWidth >= 1024 && typeof window.toggleChatbot === "function" && !getState().isOpen) {
-      window.toggleChatbot();
-    } else {
-      showMiniTeaser("Mình muốn nhận lại bảng giá hay video căn đẹp ạ?", "Nhận bảng giá");
-    }
+    showMiniTeaser("Mình muốn nhận lại giá 626 hay xem căn thực tế ạ?", "Nhận giá 626");
 
     return true;
   }
@@ -945,7 +1016,6 @@ const chatbotBridgeScript = `
   }
 })();
 `;
-
 export default function HomePage() {
   return (
     <>
@@ -953,18 +1023,27 @@ export default function HomePage() {
       <Script id="native-landing-config" strategy="afterInteractive">
         {NATIVE_LANDING_CONFIG_SCRIPT}
       </Script>
+      <Script id="chatbot-feedback-bridge" strategy="afterInteractive">
+        {chatbotBridgeScript}
+      </Script>
       <Script id="native-landing-main" strategy="afterInteractive">
         {NATIVE_LANDING_MAIN_SCRIPT}
       </Script>
       <Script id="native-inline-event-bridge" strategy="afterInteractive">
         {inlineEventBridgeScript}
       </Script>
-      <Script id="chatbot-feedback-bridge" strategy="afterInteractive">
-        {chatbotBridgeScript}
+      <Script id="vr-tour-bridge" strategy="afterInteractive">
+        {vrTourBridgeScript}
       </Script>
     </>
   );
 }
+
+
+
+
+
+
 
 
 
