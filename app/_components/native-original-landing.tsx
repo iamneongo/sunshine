@@ -434,6 +434,7 @@ export default function NativeOriginalLanding() {
                                 id="vr-tour-open-current"
                                 target="_blank"
                                 rel="noreferrer"
+                                data-onclick="return openVrFullscreen(event)"
                                 className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl backdrop-blur-md transition-all hover:bg-white/18">
                                 Mở toàn màn hình
                                 <i className="fa-solid fa-up-right-from-square text-sm"></i>
@@ -463,7 +464,10 @@ export default function NativeOriginalLanding() {
                             </button>
                         </div>
 
-                        <div className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950 shadow-2xl">
+                        <div
+                            id="vr-tour-viewer-shell"
+                            data-ondblclick="return openVrFullscreen(event)"
+                            className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950 shadow-2xl">
                             <iframe
                                 id="vr-tour-frame"
                                 name="vr-tour-frame"
@@ -474,8 +478,13 @@ export default function NativeOriginalLanding() {
                                 allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
                                 allowFullScreen
                                 referrerPolicy="strict-origin-when-cross-origin"
+                                data-ondblclick="return openVrFullscreen(event)"
                             ></iframe>
                         </div>
+
+                        <p className="mt-3 text-xs leading-6 text-white/55">
+                            Nhấp đúp vào khung tham quan để mở toàn màn hình, hoặc dùng nút bên trên khi cần xem rõ hơn.
+                        </p>
 
                     </div>
                 </div>

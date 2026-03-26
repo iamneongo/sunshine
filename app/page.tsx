@@ -39,6 +39,7 @@ const inlineEventBridgeScript = String.raw`
 
   const bindings = [
     ["click", "data-onclick"],
+    ["dblclick", "data-ondblclick"],
     ["submit", "data-onsubmit"],
     ["keypress", "data-onkeypress"],
     ["change", "data-onchange"],
@@ -100,6 +101,43 @@ const vrTourBridgeScript = `
     });
   }
 
+  function requestVrFullscreen(element) {
+    if (!element) {
+      return Promise.reject(new Error("missing-vr-shell"));
+    }
+
+    const requestMethod =
+      element.requestFullscreen ||
+      element.webkitRequestFullscreen ||
+      element.msRequestFullscreen;
+
+    if (typeof requestMethod !== "function") {
+      return Promise.reject(new Error("fullscreen-not-supported"));
+    }
+
+    const result = requestMethod.call(element);
+    if (result && typeof result.then === "function") {
+      return result;
+    }
+
+    return Promise.resolve();
+  }
+
+  function getCurrentVrUrl() {
+    const frame = document.getElementById("vr-tour-frame");
+    const openCurrentLink = document.getElementById("vr-tour-open-current");
+
+    if (frame && frame.getAttribute("src")) {
+      return frame.getAttribute("src");
+    }
+
+    if (openCurrentLink && openCurrentLink.getAttribute("href")) {
+      return openCurrentLink.getAttribute("href");
+    }
+
+    return sources.tour360;
+  }
+
   window.switchVrTour = function switchVrTour(key) {
     const nextKey = Object.prototype.hasOwnProperty.call(sources, key) ? key : "tour360";
     const nextUrl = sources[nextKey];
@@ -120,6 +158,23 @@ const vrTourBridgeScript = `
     }
 
     setTabState(nextKey);
+    return false;
+  };
+
+  window.openVrFullscreen = function openVrFullscreen(event) {
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+
+    const viewerShell = document.getElementById("vr-tour-viewer-shell");
+    const currentUrl = getCurrentVrUrl();
+
+    requestVrFullscreen(viewerShell).catch(() => {
+      if (currentUrl) {
+        window.open(currentUrl, "_blank", "noopener,noreferrer");
+      }
+    });
+
     return false;
   };
 
@@ -1038,6 +1093,8 @@ export default function HomePage() {
     </>
   );
 }
+
+
 
 
 
