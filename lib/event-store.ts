@@ -101,3 +101,22 @@ export async function listAnalyticsEvents(limit = 200): Promise<AnalyticsEventRe
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .slice(0, limit);
 }
+
+export async function deleteAnalyticsEventsByIds(ids: string[]): Promise<number> {
+  const idSet = new Set(ids.map((id) => normalizeWhitespace(id)).filter(Boolean));
+
+  if (idSet.size === 0) {
+    return 0;
+  }
+
+  const events = await readEventFile();
+  const nextEvents = events.filter((event) => !idSet.has(event.id));
+  const removed = events.length - nextEvents.length;
+
+  if (removed > 0) {
+    await writeEventFile(nextEvents);
+  }
+
+  return removed;
+}
+

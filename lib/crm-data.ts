@@ -4,8 +4,17 @@ import {
   type AnalyticsEventInput,
   type AnalyticsEventRecord
 } from "@/lib/event-store";
-import { listLeads, saveLead, type LeadRecord, type LeadUpsertInput } from "@/lib/lead-store";
 import {
+  getLeadById,
+  listLeads,
+  saveLead,
+  type LeadRecord,
+  type LeadUpsertInput,
+  updateLeadById,
+  upsertLeadRecord
+} from "@/lib/lead-store";
+import {
+  getSupabaseLeadById,
   isSupabaseConfigured,
   listSupabaseEvents,
   listSupabaseLeads,
@@ -39,6 +48,38 @@ export async function persistLead(input: LeadUpsertInput): Promise<LeadRecord> {
   }
 
   return lead;
+}
+
+export async function updatePersistedLeadById(leadId: string, input: LeadUpsertInput): Promise<LeadRecord | null> {
+  let existingLead = await getLeadById(leadId);
+
+  if (!existingLead && isSupabaseConfigured()) {
+    try {
+      const supabaseLead = await getSupabaseLeadById(leadId);
+
+      if (supabaseLead) {
+        existingLead = await upsertLeadRecord(supabaseLead);
+      }
+    } catch (error) {
+      console.error("Lead lookup in Supabase failed", error);
+    }
+  }
+
+  if (!existingLead) {
+    return null;
+  }
+
+  const updatedLead = await updateLeadById(leadId, input);
+
+  if (updatedLead && isSupabaseConfigured()) {
+    try {
+      await syncLeadToSupabase(updatedLead);
+    } catch (error) {
+      console.error("Lead update sync to Supabase failed", error);
+    }
+  }
+
+  return updatedLead;
 }
 
 export async function recordAnalyticsEvent(input: AnalyticsEventInput): Promise<AnalyticsEventRecord> {
@@ -100,3 +141,5 @@ export async function getAnalyticsEventDataset(limit = 200): Promise<AnalyticsEv
     events: await listAnalyticsEvents(limit)
   };
 }
+
+

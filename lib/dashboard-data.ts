@@ -13,6 +13,13 @@ type TrendItem = {
   value: number;
 };
 
+type DashboardSnapshotOptions = {
+  leadLimit?: number;
+  eventLimit?: number;
+  recentLeadLimit?: number;
+  recentEventLimit?: number;
+};
+
 function isValidDate(value: string): boolean {
   return !Number.isNaN(new Date(value).getTime());
 }
@@ -86,11 +93,22 @@ function summarizeEvent(event: AnalyticsEventRecord): string {
   return parts.join(" | ") || "Không có metadata bổ sung";
 }
 
-export async function getDashboardSnapshot() {
-  const [leadDataset, eventDataset] = await Promise.all([getLeadDataset(250), getAnalyticsEventDataset(400)]);
+async function buildDashboardSnapshot(options: DashboardSnapshotOptions = {}) {
+  const {
+    leadLimit = 250,
+    eventLimit = 400,
+    recentLeadLimit = 12,
+    recentEventLimit = 12
+  } = options;
+
+  const [leadDataset, eventDataset] = await Promise.all([getLeadDataset(leadLimit), getAnalyticsEventDataset(eventLimit)]);
 
   const leads = leadDataset.leads;
   const events = eventDataset.events;
+  const summarizedEvents = events.map((event) => ({
+    ...event,
+    summary: summarizeEvent(event)
+  }));
   const hotLeads = leads.filter((lead) => lead.hotness === "Nóng").length;
   const warmLeads = leads.filter((lead) => lead.hotness === "Ấm").length;
   const appointments = leads.filter((lead) => lead.status === "Đặt lịch").length;
@@ -121,10 +139,73 @@ export async function getDashboardSnapshot() {
     needBreakdown: buildBreakdown(leads.map((lead) => lead.need)),
     eventBreakdown: buildBreakdown(events.map((event) => event.name)),
     leadTrend: buildLeadTrend(leads),
-    recentLeads: leads.slice(0, 12),
-    recentEvents: events.slice(0, 12).map((event) => ({
-      ...event,
-      summary: summarizeEvent(event)
-    }))
+    allLeads: leads,
+    allEvents: summarizedEvents,
+    recentLeads: leads.slice(0, recentLeadLimit),
+    recentEvents: summarizedEvents.slice(0, recentEventLimit)
+  };
+}
+
+export async function getDashboardSnapshot(options?: DashboardSnapshotOptions) {
+  return buildDashboardSnapshot(options);
+}
+
+export async function getDashboardLeadDetail(leadId: string) {
+  const snapshot = await buildDashboardSnapshot({
+    leadLimit: 500,
+    eventLimit: 700,
+    recentLeadLimit: 16,
+    recentEventLimit: 16
+  });
+  const lead = snapshot.allLeads.find((item) => item.id === leadId);
+
+  if (!lead) {
+    return null;
+  }
+
+  const relatedEvents = snapshot.allEvents.filter((event) => event.leadId === lead.id).slice(0, 12);
+  const similarLeads = snapshot.allLeads
+    .filter(
+      (item) =>
+        item.id !== lead.id &&
+        (item.need === lead.need || item.budget === lead.budget || item.hotness === lead.hotness || item.status === lead.status)
+    )
+    .slice(0, 6);
+
+  return {
+    snapshot,
+    lead,
+    relatedEvents,
+    similarLeads
+  };
+}
+
+export async function getDashboardEventDetail(eventId: string) {
+  const snapshot = await buildDashboardSnapshot({
+    leadLimit: 500,
+    eventLimit: 700,
+    recentLeadLimit: 16,
+    recentEventLimit: 16
+  });
+  const event = snapshot.allEvents.find((item) => item.id === eventId);
+
+  if (!event) {
+    return null;
+  }
+
+  const relatedLead = event.leadId ? snapshot.allLeads.find((lead) => lead.id === event.leadId) ?? null : null;
+  const similarEvents = snapshot.allEvents
+    .filter(
+      (item) =>
+        item.id !== event.id &&
+        (item.name === event.name || (event.sessionId && item.sessionId === event.sessionId) || item.source === event.source)
+    )
+    .slice(0, 8);
+
+  return {
+    snapshot,
+    event,
+    relatedLead,
+    similarEvents
   };
 }

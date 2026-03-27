@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import type { getDashboardSnapshot } from "@/lib/dashboard-data";
 
 export type DashboardSnapshot = Awaited<ReturnType<typeof getDashboardSnapshot>>;
 export type DashboardLead = DashboardSnapshot["recentLeads"][number];
+export type DashboardEvent = DashboardSnapshot["recentEvents"][number];
 export type BreakdownItem = DashboardSnapshot["sourceBreakdown"][number];
 
 export const dashboardNavItems = [
@@ -25,6 +27,11 @@ export const dashboardNavItems = [
     href: "/dashboard/follow-up",
     label: "Follow-up",
     shortLabel: "Follow-up"
+  },
+  {
+    href: "/dashboard/maintenance",
+    label: "Maintenance",
+    shortLabel: "Maintenance"
   }
 ] as const;
 
@@ -51,6 +58,59 @@ export function formatDateTime(value: string): string {
 
 export function getLeadDisplayName(lead: DashboardLead): string {
   return lead.fullName || lead.phone || lead.zalo || "Lead mới";
+}
+
+const leadSourceLabels = {
+  form: "Form",
+  chatbot: "Chatbot",
+  unknown: "Khác"
+} satisfies Record<DashboardLead["source"], string>;
+
+export function getLeadSourceLabel(source: DashboardLead["source"]): string {
+  return leadSourceLabels[source] ?? source;
+}
+
+export function getLeadSourceTone(source: DashboardLead["source"]): string {
+  if (source === "chatbot") {
+    return "border-indigo-200 bg-indigo-50 text-indigo-700";
+  }
+
+  if (source === "form") {
+    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  }
+
+  return "border-slate-200 bg-slate-50 text-slate-600";
+}
+
+export function getLeadPrimaryContact(lead: DashboardLead): string {
+  return lead.phone || lead.zalo || lead.email || "Chưa có liên hệ";
+}
+
+function normalizePhone(value: string): string {
+  return value.replace(/[^\d+]/g, "");
+}
+
+export function buildLeadQuickActions(
+  lead: DashboardLead
+): Array<{ href: string; label: string; icon: string; external?: boolean }> {
+  const actions: Array<{ href: string; label: string; icon: string; external?: boolean }> = [];
+  const phone = normalizePhone(lead.phone);
+  const zalo = normalizePhone(lead.zalo || lead.phone);
+  const email = lead.email.trim();
+
+  if (phone) {
+    actions.push({ href: `tel:${phone}`, label: "Gọi", icon: "fa-phone" });
+  }
+
+  if (zalo) {
+    actions.push({ href: `https://zalo.me/${zalo}`, label: "Zalo", icon: "fa-comments", external: true });
+  }
+
+  if (email) {
+    actions.push({ href: `mailto:${email}`, label: "Email", icon: "fa-envelope" });
+  }
+
+  return actions;
 }
 
 export function getHotnessTone(hotness: string): string {
@@ -93,8 +153,7 @@ export function getSystemState(
     return {
       tone: "border-sky-200 bg-sky-50 text-sky-900",
       title: "Đang chạy local fallback",
-      message:
-        "Supabase chưa được cấu hình nên dashboard đang đọc local JSON để đội sale vẫn theo dõi được lead và touchpoint."
+      message: "Dashboard đang đọc local JSON."
     };
   }
 
@@ -102,16 +161,14 @@ export function getSystemState(
     return {
       tone: "border-amber-200 bg-amber-50 text-amber-900",
       title: "Có nguồn đang fallback",
-      message:
-        "Supabase đã được cấu hình nhưng vẫn có ít nhất một nguồn đang đọc local JSON. Nên kiểm tra lại bảng hoặc policy."
+      message: "Ít nhất một nguồn đang đọc local JSON."
     };
   }
 
   return {
     tone: "border-emerald-200 bg-emerald-50 text-emerald-900",
     title: "Đang đọc dữ liệu live",
-    message:
-      "Lead và event hiện đang đồng bộ từ Supabase. Có thể dùng trực tiếp cho theo dõi live của team sale."
+    message: "Lead và event đang đọc từ Supabase."
   };
 }
 
@@ -176,19 +233,17 @@ export function DashboardBadge({
 }
 
 type PageHeaderProps = {
-  eyebrow: string;
+  eyebrow?: ReactNode;
   title: ReactNode;
-  description: ReactNode;
+  description?: ReactNode;
   actions?: ReactNode;
 };
 
-export function DashboardPageHeader({ eyebrow, title, description, actions }: PageHeaderProps) {
+export function DashboardPageHeader({ title, actions }: PageHeaderProps) {
   return (
     <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
       <div className="max-w-3xl">
-        <div className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-500">{eyebrow}</div>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 md:text-4xl">{title}</h1>
-        <p className="mt-3 text-sm leading-7 text-slate-600 md:text-base">{description}</p>
+        <h1 className="text-3xl font-black tracking-tight text-slate-950 md:text-4xl">{title}</h1>
       </div>
       {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
     </div>
@@ -213,14 +268,21 @@ export function DashboardSurfaceCard({ className = "", children }: SurfaceCardPr
 type MetricCardProps = {
   label: string;
   value: number | string;
-  note: string;
+  note?: string;
   icon: string;
   tone: string;
+  href?: string;
+  actionLabel?: string;
 };
 
-export function DashboardMetricCard({ label, value, note, icon, tone }: MetricCardProps) {
-  return (
-    <DashboardSurfaceCard className="p-5">
+export function DashboardMetricCard({ label, value, icon, tone, href }: MetricCardProps) {
+  const content = (
+    <DashboardSurfaceCard
+      className={cn(
+        "p-5",
+        href ? "group h-full border-slate-200 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_14px_36px_rgba(15,23,42,0.09)]" : ""
+      )}
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">{label}</div>
@@ -230,8 +292,15 @@ export function DashboardMetricCard({ label, value, note, icon, tone }: MetricCa
           <i className={`fa-solid ${icon}`}></i>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-6 text-slate-600">{note}</p>
     </DashboardSurfaceCard>
+  );
+
+  return href ? (
+    <Link href={href} className="block">
+      {content}
+    </Link>
+  ) : (
+    content
   );
 }
 
@@ -240,26 +309,43 @@ type BreakdownCardProps = {
   title: string;
   items: BreakdownItem[];
   barClassName: string;
+  getHref?: (item: BreakdownItem) => string | undefined;
 };
 
-export function DashboardBreakdownCard({ eyebrow, title, items, barClassName }: BreakdownCardProps) {
+export function DashboardBreakdownCard({ title, items, barClassName, getHref }: BreakdownCardProps) {
   return (
     <DashboardSurfaceCard className="p-5 sm:p-6">
-      <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">{eyebrow}</div>
-      <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950">{title}</h2>
+      <h2 className="text-xl font-black tracking-tight text-slate-950">{title}</h2>
       <div className={cn("mt-5 space-y-3", dashboardScrollAreaClasses("card"))}>
-        {items.slice(0, 6).map((item) => (
-          <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
-            <div className="mb-2 flex items-start justify-between gap-4 text-sm">
-              <span className="font-semibold text-slate-600">{item.label}</span>
-              <span className="shrink-0 font-black text-slate-950">{item.count}</span>
+        {items.slice(0, 6).map((item) => {
+          const href = getHref?.(item);
+          const content = (
+            <>
+              <div className="mb-2 flex items-start justify-between gap-4 text-sm">
+                <span className="font-semibold text-slate-600">{item.label}</span>
+                <span className="shrink-0 font-black text-slate-950">{item.count}</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white">
+                <div className={`h-full rounded-full ${barClassName}`} style={{ width: `${item.share}%` }} />
+              </div>
+            </>
+          );
+
+          return href ? (
+            <Link
+              key={item.label}
+              href={href}
+              className="group block rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 transition hover:border-slate-300 hover:bg-white"
+            >
+              {content}
+            </Link>
+          ) : (
+            <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+              {content}
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white">
-              <div className={`h-full rounded-full ${barClassName}`} style={{ width: `${item.share}%` }} />
-            </div>
-          </div>
-        ))}
-        {items.length === 0 ? <DashboardEmptyState message="Chưa có dữ liệu để hiển thị cho nhóm này." /> : null}
+          );
+        })}
+        {items.length === 0 ? <DashboardEmptyState message="Không có dữ liệu." /> : null}
       </div>
     </DashboardSurfaceCard>
   );

@@ -38,6 +38,9 @@ const CALLBACK_OPTIONS = ["Ngay bây giờ", "Trong 30 phút tới", "Buổi chi
 const VISIT_OPTIONS = ["Hôm nay", "Ngày mai", "Cuối tuần"];
 const PARTY_OPTIONS = ["Đi 1 mình", "Đi cùng gia đình / bạn bè"];
 const CONTACT_DELIVERY_OPTIONS = ["Gửi Zalo trước", "Gọi nhanh 2 phút", "Nhận qua Email"];
+const PRIMARY_BUDGET_OPTIONS = ["Tài chính 1,5-2,5 tỷ", "Tài chính 2,5-5 tỷ", "Nhận bảng giá nội bộ"];
+const INVESTMENT_BUDGET_OPTIONS = ["Tài chính 1,5-2,5 tỷ", "Tài chính 2,5-5 tỷ", "Muốn sản phẩm dễ tăng giá"];
+const RESORT_BUDGET_OPTIONS = ["Tài chính 1,5-2,5 tỷ", "Tài chính 2,5-5 tỷ", "Căn view đẹp nghỉ dưỡng"];
 
 function normalizeVietnamese(text: string): string {
   return text
@@ -130,7 +133,7 @@ function looksLikePersonName(value: string): boolean {
 
 function extractNameFromText(text: string): string {
   const patterns = [
-    /(?:tôi tên là|toi ten la|tên tôi là|ten toi la|mình tên là|minh ten la|anh tên là|anh ten la|chị tên là|chi ten la|em tên là|em ten la)\s+([^,!.;\n]+)/iu,
+    /(?:tôi tên(?: là)?|toi ten(?: la)?|tên tôi(?: là)?|ten toi(?: la)?|mình tên(?: là)?|minh ten(?: la)?|anh tên(?: là)?|anh ten(?: la)?|chị tên(?: là)?|chi ten(?: la)?|em tên(?: là)?|em ten(?: la)?|tên là|ten la)\s+([^,!.;\n]+)/iu,
     /(?:tôi là|toi la|mình là|minh la|anh là|anh la|chị là|chi la|em là|em la)\s+([^,!.;\n]+)/iu
   ];
 
@@ -145,7 +148,7 @@ function extractNameFromText(text: string): string {
 
   const normalizedText = normalizeVietnamese(text);
   const fallbackMatch = normalizedText.match(
-    /(?:toi ten la|ten toi la|minh ten la|anh ten la|chi ten la|em ten la|toi la|minh la|anh la|chi la|em la)\s+([^,!.;\n]+)/
+    /(?:toi ten(?: la)?|ten toi(?: la)?|minh ten(?: la)?|anh ten(?: la)?|chi ten(?: la)?|em ten(?: la)?|ten la|toi la|minh la|anh la|chi la|em la)\s+([^,!.;\n]+)/
   );
   const fallbackCandidate = normalizePersonName(fallbackMatch?.[1] ?? "");
 
@@ -191,26 +194,42 @@ function detectBudget(text: string): string {
 
   if (amount !== null) {
     if (amount < 1.5) {
-      return "1-1,5 tỷ";
+      return "Dưới 1,5 tỷ";
     }
 
-    if (amount <= 2.05) {
-      return "1,5-2 tỷ";
+    if (Math.abs(amount - 1.5) < 0.01) {
+      return "Quanh 1,5 tỷ";
     }
 
-    return "Trên 2 tỷ";
+    if (amount <= 2.5) {
+      return "1,5-2,5 tỷ";
+    }
+
+    if (amount <= 5) {
+      return "2,5-5 tỷ";
+    }
+
+    return "Trên 5 tỷ";
   }
 
   if (/(1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty|duoi\s*1[,.]?5\s*ty|1-1,5\s*ty)/.test(normalized)) {
-    return "1-1,5 tỷ";
+    return "Dưới 1,5 tỷ";
   }
 
-  if (/(1[,.]?5\s*[-–]\s*2\s*ty|1,5-2\s*ty|tu\s*1[,.]?5\s*den\s*2\s*ty)/.test(normalized)) {
-    return "1,5-2 tỷ";
+  if (/(quanh\s*1[,.]?5\s*ty|tam\s*1[,.]?5\s*ty|muc\s*1[,.]?5\s*ty|1[,.]?5\s*ty(?!\s*[-–]))/.test(normalized)) {
+    return "Quanh 1,5 tỷ";
   }
 
-  if (/(tren\s*2\s*ty|hon\s*2\s*ty|2\s*ty\s*tro\s*len)/.test(normalized)) {
-    return "Trên 2 tỷ";
+  if (/(1[,.]?5\s*[-–]\s*2[,.]?5\s*ty|1,5-2,5\s*ty|tu\s*1[,.]?5\s*den\s*2[,.]?5\s*ty)/.test(normalized)) {
+    return "1,5-2,5 tỷ";
+  }
+
+  if (/(2[,.]?5\s*[-–]\s*5\s*ty|2,5-5\s*ty|tu\s*2[,.]?5\s*den\s*5\s*ty)/.test(normalized)) {
+    return "2,5-5 tỷ";
+  }
+
+  if (/(tren\s*5\s*ty|hon\s*5\s*ty|5\s*ty\s*tro\s*len)/.test(normalized)) {
+    return "Trên 5 tỷ";
   }
 
   const directMatch = text.match(/\d+[,.]?\d*\s*t(?:ỷ|y)/i);
@@ -313,6 +332,16 @@ function detectTravelParty(text: string): string {
   }
 
   return "";
+}
+
+function hasUsableGeminiApiKey(value: string | undefined): boolean {
+  const normalized = normalizeText(value);
+
+  if (!normalized) {
+    return false;
+  }
+
+  return !/^(your_|replace_|changeme|sample_|example_|test_)/i.test(normalized) && !/gemini_api_key/i.test(normalized);
 }
 
 function getLastAssistantMessage(history: ClientHistoryItem[]): string {
@@ -514,7 +543,7 @@ function detectLeadSignals(message: string, history: ClientHistoryItem[]): LeadS
     )
   ) {
     hotness = "hot";
-  } else if (/(dau tu|video|view dep|626\s*trieu|1[,.]?2\s*ty|1[,.]?5\s*ty|cho thue|tang gia)/.test(normalized)) {
+  } else if (/(dau tu|video|view dep|cho thue|tang gia|tai chinh|\d+[,.]?\d*\s*ty)/.test(normalized)) {
     hotness = "warm";
   }
 
@@ -799,7 +828,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (hasContact && hasName && !hasBudget) {
     return buildResponse(
       `Dạ em đã ghi nhận nhu cầu của **${leadSignals.name}**. Anh/chị đang quan tâm khung tài chính nào để em gửi đúng danh sách căn phù hợp hơn ạ?`,
-      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Trên 2 tỷ"],
+      PRIMARY_BUDGET_OPTIONS,
       {
         ...leadSignals,
         hotness: "hot"
@@ -844,7 +873,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (/(can nao phu hop|phu hop tai chinh|hop tai chinh|nen chon can nao|tu van giup|minh muon xem can phu hop|goi y can|can nao hop)/.test(normalized)) {
     return buildResponse(
       "Dạ em có thể lọc nhanh theo nhu cầu và khung tài chính của mình. Anh/chị đang ưu tiên **đầu tư sinh lời** hay **mua để ở / nghỉ dưỡng** ạ?",
-      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Tài chính 1-1,5 tỷ"],
+      ["Đầu tư sinh lời", "Mua để ở / nghỉ dưỡng", "Tài chính 1,5-2,5 tỷ"],
       {
         ...leadSignals,
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
@@ -926,7 +955,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (/tu van dau tu|dau tu sinh loi|toi muon dau tu/.test(normalized)) {
     return buildResponse(
       "Dạ với nhu cầu đầu tư, em sẽ lọc nhóm căn dễ vào tiền và dễ chốt hơn nếu biết khung tài chính của mình. Anh/chị đang quan tâm khoảng nào ạ?",
-      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Muốn sản phẩm dễ tăng giá"],
+      INVESTMENT_BUDGET_OPTIONS,
       {
         ...leadSignals,
         intent: "investment",
@@ -938,7 +967,7 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   if (/mua de o|mua de o \/ nghi duong|nghi duong|o \/ nghi duong/.test(normalized)) {
     return buildResponse(
       "Dạ em có thể lọc nhóm căn hợp nghỉ dưỡng hoặc ở lâu dài. Anh/chị đang nghiêng về tầm tài chính nào để em gửi đúng nhóm căn đẹp ạ?",
-      ["Tài chính 1-1,5 tỷ", "Tài chính 1,5-2 tỷ", "Căn view đẹp nghỉ dưỡng"],
+      RESORT_BUDGET_OPTIONS,
       {
         ...leadSignals,
         intent: /nghi duong|view dep|bien/.test(normalized) ? "resort" : "living",
@@ -947,41 +976,61 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
     );
   }
 
-  if (/tai chinh 1-1,5 ty|1-1,5 ty|1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty/.test(normalized)) {
-    const suggestions = leadSignals.intent === "living" || leadSignals.intent === "resort"
-      ? ["Căn view đẹp nghỉ dưỡng", "Nhận bảng giá nội bộ", "Gửi Zalo trước"]
-      : ["Căn đầu tư giá tốt", "Muốn sản phẩm dễ tăng giá", "Muốn sản phẩm cho thuê tốt"];
-
+  if (/tai chinh duoi 1,5 ty|duoi 1,5 ty|1-1,5 ty|1\s*[-–]\s*1[,.]?5\s*ty|1[,.]?2\s*ty|1[,.]?3\s*ty|1[,.]?4\s*ty/.test(normalized)) {
     return buildResponse(
-      "Dạ với tài chính **1-1,5 tỷ**, em đang ưu tiên nhóm căn vừa tầm và dễ vào tiền. Anh/chị muốn em lọc theo hướng nào trước ạ?",
-      suggestions,
+      "Dạ em ghi nhận mức tài chính mình đang dự tính. Để tránh báo sai mặt bằng giá hiện tại, em xin gửi **bảng giá cập nhật** và lọc lại nhóm căn phù hợp nhất cho mình nhé?",
+      ["Nhận bảng giá nội bộ", "Gửi Zalo trước", "Xem pháp lý"],
       {
         ...leadSignals,
-        budget: "1-1,5 tỷ",
+        budget: "Dưới 1,5 tỷ",
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
       }
     );
   }
 
-  if (/tai chinh 1,5-2 ty|1[,.]?5-2\s*ty|1[,.]?5\s*[-–]\s*2\s*ty|1[,.]?5\s*ty/.test(normalized)) {
+  if (/quanh 1,5 ty|tam 1,5 ty|muc 1,5 ty|1[,.]?5\s*ty(?!\s*[-–])/.test(normalized)) {
     return buildResponse(
-      "Dạ với tài chính **1,5-2 tỷ**, mình có biên lựa chọn thoải mái hơn về vị trí và view. Anh/chị muốn em lọc nhóm **giá tốt**, **view đẹp** hay **dễ cho thuê** trước ạ?",
+      "Dạ em ghi nhận mức tài chính quanh **1,5 tỷ**. Để tránh báo nhầm có căn đúng mốc này, em xin gửi **bảng giá cập nhật** và lọc các phương án đang phù hợp nhất cho mình nhé?",
+      ["Nhận bảng giá nội bộ", "Gửi Zalo trước", "Xem căn thực tế"],
+      {
+        ...leadSignals,
+        budget: "Quanh 1,5 tỷ",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/tai chinh 1,5-2,5 ty|1[,.]?5-2[,.]?5\s*ty|1[,.]?5\s*[-–]\s*2[,.]?5\s*ty|tu\s*1[,.]?5\s*den\s*2[,.]?5\s*ty/.test(normalized)) {
+    return buildResponse(
+      "Dạ với khung tài chính **1,5-2,5 tỷ**, em có thể lọc nhóm căn phù hợp theo vị trí, view và nhu cầu khai thác. Anh/chị muốn ưu tiên hướng nào trước ạ?",
       ["Căn đầu tư giá tốt", "Căn view đẹp nghỉ dưỡng", "Muốn sản phẩm cho thuê tốt"],
       {
         ...leadSignals,
-        budget: "1,5-2 tỷ",
+        budget: "1,5-2,5 tỷ",
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
       }
     );
   }
 
-  if (/tren 2 ty|2\s*ty tro len|hon 2 ty/.test(normalized)) {
+  if (/tai chinh 2,5-5 ty|2[,.]?5-5\s*ty|2[,.]?5\s*[-–]\s*5\s*ty|tu\s*2[,.]?5\s*den\s*5\s*ty/.test(normalized)) {
     return buildResponse(
-      "Dạ với ngân sách **trên 2 tỷ**, em có thể lọc nhóm căn view đẹp hơn và chính sách linh hoạt hơn. Anh/chị muốn em gửi **bảng giá**, **video căn đẹp** hay **pháp lý** trước ạ?",
+      "Dạ với khung tài chính **2,5-5 tỷ**, em có thể ưu tiên nhóm căn có vị trí đẹp hơn, tầm nhìn thoáng hơn và linh hoạt hơn về nhu cầu sử dụng. Anh/chị muốn xem theo hướng nào trước ạ?",
+      ["Căn view đẹp nghỉ dưỡng", "Muốn sản phẩm dễ tăng giá", "Xem pháp lý"],
+      {
+        ...leadSignals,
+        budget: "2,5-5 tỷ",
+        hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
+      }
+    );
+  }
+
+  if (/tren 5 ty|5\s*ty tro len|hon 5 ty/.test(normalized)) {
+    return buildResponse(
+      "Dạ với ngân sách **trên 5 tỷ**, em có thể ưu tiên nhóm sản phẩm vị trí đẹp, tầm nhìn tốt và phương án khai thác linh hoạt hơn. Anh/chị muốn nhận **bảng giá**, **video căn đẹp** hay **pháp lý** trước ạ?",
       ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
       {
         ...leadSignals,
-        budget: "Trên 2 tỷ",
+        budget: "Trên 5 tỷ",
         hotness: leadSignals.hotness === "cold" ? "warm" : leadSignals.hotness
       }
     );
@@ -1130,10 +1179,10 @@ async function requestGeminiReply(message: string, history: ClientHistoryItem[])
     return scripted;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = normalizeText(process.env.GEMINI_API_KEY);
   const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
-  if (!apiKey) {
+  if (!hasUsableGeminiApiKey(apiKey)) {
     return buildFallbackResponse(message, history);
   }
 
@@ -1231,7 +1280,7 @@ export async function POST(request: Request) {
     const payload = scripted ?? (await requestGeminiReply(message, history));
     const source: ChatbotPayload["source"] = scripted
       ? "scripted"
-      : process.env.GEMINI_API_KEY
+      : hasUsableGeminiApiKey(process.env.GEMINI_API_KEY)
         ? "gemini"
         : "fallback";
 

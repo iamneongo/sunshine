@@ -72,16 +72,12 @@ const STATUS_MAP: Record<string, LeadStatus> = {
 const SOURCE_MAP: Record<string, LeadSource> = {
   chatbot: "chatbot",
   webchat: "chatbot",
-  landing: "landing_form",
-  landing_form: "landing_form",
-  booking_modal: "booking_modal",
-  facebook: "facebook",
-  fb: "facebook",
-  tiktok: "tiktok",
-  "tik tok": "tiktok",
-  zalo: "zalo_oa",
-  zalo_oa: "zalo_oa",
-  "zalo oa": "zalo_oa"
+  chat: "chatbot",
+  landing: "form",
+  form: "form",
+  landing_form: "form",
+  booking: "form",
+  booking_modal: "form"
 };
 
 const TAG_ALLOWLIST = new Set<LeadTag>(["lead_nong", "lead_dau_tu", "lead_nghi_duong", "can_goi_ngay"]);
@@ -254,3 +250,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unable to save lead" }, { status: 500 });
   }
 }
+

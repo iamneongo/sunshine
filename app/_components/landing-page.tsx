@@ -76,7 +76,7 @@ const INITIAL_LEAD_FORM: LeadFormState = {
   fullName: "",
   phoneOrZalo: "",
   need: "Đầu tư sinh lời",
-  budget: "1-1,5 tỷ",
+  budget: "1,5-2,5 tỷ",
   contactPreference: "Zalo"
 };
 
@@ -314,7 +314,7 @@ export default function LandingPage() {
           className="relative flex min-h-screen items-center overflow-hidden bg-slate-950 pt-24 text-white"
           style={{
             backgroundImage:
-              "linear-gradient(180deg, rgba(2,8,23,0.35) 0%, rgba(2,8,23,0.88) 58%, rgba(2,8,23,0.96) 100%), url('/hero.png')",
+              "linear-gradient(180deg, rgba(2,8,23,0.35) 0%, rgba(2,8,23,0.88) 58%, rgba(2,8,23,0.96) 100%), url('/sunshine-bay-retreat-28.jpg')",
             backgroundPosition: "center",
             backgroundSize: "cover"
           }}
@@ -375,7 +375,7 @@ export default function LandingPage() {
                   <p className="mt-2 text-sm leading-6 text-slate-300">Nhóm căn được hỏi nhiều đang tập trung vào căn dễ vào tiền và căn có view thoáng.</p>
                 </div>
               </div>
-              <img src="/luxury_beachfront_condo_hero_1774060840570.png" alt="Phối cảnh dự án" className="mt-4 h-[280px] w-full rounded-[1.5rem] object-cover sm:h-[360px]" />
+              <img src="/sunshine-bay-retreat-28.jpg" alt="Phối cảnh dự án" className="mt-4 h-[280px] w-full rounded-[1.5rem] object-cover sm:h-[360px]" />
             </div>
           </div>
         </section>
@@ -450,9 +450,9 @@ export default function LandingPage() {
                     <option>Muốn xem pháp lý trước</option>
                   </select>
                   <select value={leadForm.budget} onChange={(event) => setLeadForm((prev) => ({ ...prev, budget: event.target.value }))} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-amber-400 focus:bg-white">
-                    <option>1-1,5 tỷ</option>
-                    <option>1,5-2 tỷ</option>
-                    <option>Trên 2 tỷ</option>
+                    <option>1,5-2,5 tỷ</option>
+                    <option>2,5-5 tỷ</option>
+                    <option>Trên 5 tỷ</option>
                   </select>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3">

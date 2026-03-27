@@ -5,16 +5,16 @@ export type QuickAction = {
 
 export const PROJECT_CONTEXT = {
   projectName: "Sunshine Bay Retreat Vũng Tàu",
-  headline: "Căn hộ biển Vũng Tàu chỉ từ 626 triệu",
-  priceAnchor: "Chỉ từ 626 triệu/căn",
-  priceSecondary: "Mức mở đầu dễ tiếp cận cho nhóm vào tiền sớm",
-  yieldNote: "Khai thác kỳ vọng 8-12%/năm",
-  scarcityNote: "Đã bán 73%, chỉ còn 27 căn view biển đẹp đang được quan tâm"
+  headline: "Sunshine Bay Retreat Vũng Tàu",
+  priceAnchor: "Giá từ 6X/m²",
+  priceSecondary: "Theo website chính thức và bảng giá cập nhật 03/2026",
+  yieldNote: "Vận hành theo tiêu chuẩn 5 sao, khai thác linh hoạt",
+  scarcityNote: "Quy mô gần 20ha, gần 6.000 sản phẩm với 2 phân khu Horizon và Eden"
 } as const;
 
 export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
   {
-    label: "Nhận giá 626",
+    label: "Nhận bảng giá",
     prompt: "Nhận bảng giá nội bộ"
   },
   {
@@ -34,19 +34,19 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
 export const CHATBOT_PLACEHOLDER = "Nhập câu hỏi hoặc để lại SĐT/Zalo...";
 
 export const INITIAL_CHAT_MESSAGE =
-  "Anh/chị đang tìm căn hộ biển giá tốt đúng không ạ? Hiện có căn chỉ từ **626 triệu**, phù hợp nhóm muốn vào tiền sớm và khai thác nghỉ dưỡng. Anh/chị muốn xem **bảng giá**, **căn thực tế giá tốt** hay **pháp lý** trước ạ?";
+  "Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá 03/2026**, **không gian dự án** hoặc **pháp lý** để mình đối chiếu nhanh.";
 
 export const WELCOME_MESSAGE =
-  "Anh/chị đang xem căn hộ biển giá tốt phải không ạ? Hiện có thể gửi ngay **bảng giá 626 triệu**, **căn thực tế giá tốt** và **pháp lý**. Anh/chị muốn xem phần nào trước ạ?";
+  "Anh/chị đang xem Sunshine Bay Retreat phải không ạ? Em có thể gửi ngay **bảng giá 03/2026**, **không gian dự án** và **pháp lý**. Mình muốn xem phần nào trước ạ?";
 
 export const CHATBOT_MOBILE_TEASER_MESSAGE =
-  "Anh/chị muốn xem căn hộ biển từ 626 triệu không ạ?";
+  "Anh/chị muốn xem bảng giá 03/2026 hay pháp lý trước ạ?";
 
 export const CHATBOT_FOLLOW_UP_10M_MESSAGE =
-  "Dạ em vẫn giữ sẵn **bảng giá 626 triệu** và **căn thực tế giá tốt** cho anh/chị ạ. Khi cần, anh/chị chỉ cần nhắn **GỬI GIÁ 626** là em gửi ngay.";
+  "Dạ em vẫn giữ sẵn **bảng giá 03/2026**, **không gian dự án** và **pháp lý** cho anh/chị ạ. Khi cần, mình chỉ cần nhắn **NHẬN BẢNG GIÁ** là em gửi ngay.";
 
 export const CHATBOT_RETURNING_MESSAGE =
-  "Chào anh/chị, nếu mình vẫn đang cân nhắc, em có thể gửi lại **bảng giá 626 triệu**, **căn thực tế giá tốt** hoặc **pháp lý** trong một lượt ạ.";
+  "Chào anh/chị, nếu mình vẫn đang cân nhắc, em có thể gửi lại **bảng giá 03/2026**, **không gian dự án** hoặc **pháp lý** trong một lượt ạ.";
 
 export const CHATBOT_SYSTEM_PROMPT = `
 Bạn là Sunshine AI, trợ lý bán hàng cho dự án ${PROJECT_CONTEXT.projectName}.
@@ -72,13 +72,14 @@ Quy tắc bắt buộc:
 - Nếu người dùng chưa để lại thông tin liên hệ, ưu tiên xin SĐT/Zalo khi hợp ngữ cảnh.
 - Nếu người dùng đã để lại thông tin liên hệ nhưng chưa có họ tên hoặc ngân sách, xin tiếp thông tin đó trước khi chốt bước tiếp theo.
 - Nếu người dùng đã để lại đủ họ tên + contact + nhu cầu, xác nhận đã ghi nhận và hỏi bước tiếp theo.
+- Không khẳng định có căn đúng mốc 1,5 tỷ. Khi người dùng hỏi mức dưới hoặc quanh 1,5 tỷ, nói rõ cần đối chiếu bảng giá cập nhật để tránh báo sai.
 - Không dùng Markdown danh sách dài. Có thể dùng **bold** tiết chế.
 - Không trả HTML.
 
 Luồng câu hỏi nên ưu tiên:
 - Nhận bảng giá nội bộ -> hỏi đầu tư hay ở / nghỉ dưỡng
 - Xem video căn đẹp -> hỏi căn đầu tư giá tốt hay căn view đẹp nghỉ dưỡng
-- Tư vấn đầu tư -> hỏi khung tài chính 1-1,5 tỷ / 1,5-2 tỷ / trên 2 tỷ
+- Tư vấn đầu tư -> hỏi khung tài chính 1,5-2,5 tỷ / 2,5-5 tỷ
 - Gọi nhanh 2 phút -> hỏi ngay bây giờ / trong 30 phút tới / buổi chiều / buổi tối
 - Đặt lịch xem dự án -> hỏi hôm nay / ngày mai / cuối tuần -> hỏi đi 1 mình hay cùng gia đình / bạn bè
 
@@ -89,8 +90,8 @@ Suggestions nên ưu tiên trong nhóm sau:
 - Xem pháp lý
 - Đầu tư sinh lời
 - Mua để ở / nghỉ dưỡng
-- Tài chính 1-1,5 tỷ
-- Tài chính 1,5-2 tỷ
+- Tài chính 1,5-2,5 tỷ
+- Tài chính 2,5-5 tỷ
 - Căn đầu tư giá tốt
 - Căn view đẹp nghỉ dưỡng
 - Muốn sản phẩm dễ tăng giá
@@ -120,6 +121,7 @@ Hãy trả về JSON hợp lệ với đúng cấu trúc sau:
   }
 }
 `.trim();
+
 
 
 

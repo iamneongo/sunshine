@@ -170,7 +170,7 @@ export default function NativeOriginalLanding() {
             
             <div className="absolute inset-0 z-0">
                 <img alt="Sunshine Bay Hero" className="w-full h-full object-cover hero-img opacity-90 scale-105"
-                    src="./luxury_beachfront_condo_hero_1774060840570.png" />
+                    src="./sunshine-bay-retreat-28.jpg" />
                 <div className="absolute inset-0 animated-gradient-overlay mix-blend-multiply"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent"></div>
             </div>
@@ -182,8 +182,8 @@ export default function NativeOriginalLanding() {
                         <div
                             className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary-container/30 bg-primary-container/20 px-4 py-2 backdrop-blur-md mb-4 sm:mb-6">
                             <i className="fa-solid fa-gem text-primary-container shadow-sm"></i>
-                            <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.24em] sm:tracking-[3px] text-white leading-tight">Căn hộ
-                                biển dòng tiền Vũng Tàu</span>
+                            <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.24em] sm:tracking-[3px] text-white leading-tight">Sunshine
+                                Bay Retreat Vũng Tàu</span>
                         </div>
 
                         <h1
@@ -193,22 +193,22 @@ export default function NativeOriginalLanding() {
                         </h1>
 
                         <div className="hero-title-price-display mb-4 text-[2.45rem] font-light italic text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
-                            Chỉ Từ 626 Triệu
+                            Giá Từ 6X/m²
                         </div>
 
                         <p className="hero-subcopy max-w-xl mb-6 text-base font-medium leading-[1.7] text-white/70 sm:mb-8 md:text-lg">
-                            Sunshine Bay Retreat đang mở mức giá từ <span className="text-primary-container font-black">626 triệu</span> cho
-                            nhóm khách muốn vào tiền sớm. Có thể xem nhanh bảng giá, căn thực tế giá tốt và pháp lý trước khi chốt bước tiếp theo.
+                            Website chính thức đang giới thiệu dự án với <span className="text-primary-container font-black">giá từ 6X/m²</span>, bảng giá cập nhật
+                            tháng 03/2026 và hệ tiện ích nghỉ dưỡng ven biển. Có thể xem nhanh bảng giá, không gian dự án và tài liệu pháp lý trước khi đi thực tế.
                         </p>
 
                         <div className="hero-highlights mb-6 flex max-w-xl flex-wrap gap-3 sm:mb-8">
                             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
-                                <i className="fa-solid fa-chart-line text-primary-container"></i>
-                                Khai thác kỳ vọng 8-12%/năm
+                                <i className="fa-solid fa-ruler-horizontal text-primary-container"></i>
+                                Bãi biển dài đến 320m
                             </div>
                             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
-                                <i className="fa-solid fa-fire text-primary-container"></i>
-                                Chỉ còn 27 căn view biển đẹp
+                                <i className="fa-solid fa-layer-group text-primary-container"></i>
+                                Gần 20ha - 2 phân khu
                             </div>
                         </div>
 
@@ -220,7 +220,7 @@ export default function NativeOriginalLanding() {
                                 <i className="fa-solid fa-file-lines text-sm sm:text-base lg:text-sm"></i>
                                 <span
                                     className="text-[11px] sm:text-sm lg:text-[11px] uppercase tracking-widest lg:tracking-[0.12em] whitespace-nowrap leading-none mt-0.5">Nhận
-                                    giá 626 triệu</span>
+                                    bảng giá</span>
                             </button>
                             <button type="button" data-onclick="startChatFromLanding('Xem video căn đẹp')"
                                 className="flex-none flex items-center justify-center gap-2 group bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 sm:px-6 lg:px-[1.125rem] lg:py-3.5 rounded-full transition-all hover:bg-white/20">
@@ -230,7 +230,7 @@ export default function NativeOriginalLanding() {
                                 </div>
                                 <span
                                     className="text-white font-black text-[11px] sm:text-sm lg:text-[11px] uppercase tracking-widest lg:tracking-[0.12em] whitespace-nowrap leading-none mt-0.5">Xem
-                                    căn thực tế</span>
+                                    không gian</span>
                             </button>
                         </div>
 
@@ -243,20 +243,20 @@ export default function NativeOriginalLanding() {
                                     <div>
                                         <div
                                             className="text-[8px] sm:text-[9px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">
-                                            Chỉ từ</div>
+                                            Giá từ</div>
                                         <div
                                             className="text-2xl sm:text-3xl font-black text-white italic drop-shadow-md leading-none">
-                                            626 <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">triệu/căn</span>
-                                        </div>
-                                        <div className="mt-1 text-[9px] sm:text-[10px] text-white/70 font-bold">Mức mở đầu cho nhóm vào tiền sớm</div>
+                                            6X <span className="text-xs sm:text-sm not-italic font-bold ml-0.5">/m²</span>
+                                         </div>
+                                        <div className="mt-1 text-[9px] sm:text-[10px] text-white/70 font-bold">Theo website chính thức</div>
                                     </div>
                                     <div className="text-right pt-1">
                                         <div
                                             className="text-[7px] sm:text-[8px] text-primary-container font-black uppercase tracking-widest mb-1 sm:mb-1.5 drop-shadow-sm">
-                                            Đã giữ chỗ</div>
+                                            Bảng giá</div>
                                         <div
                                             className="text-[10px] sm:text-xs font-black text-white drop-shadow-md bg-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-white/10 whitespace-nowrap">
-                                            73% quỹ căn</div>
+                                            03/2026</div>
                                     </div>
                                 </div>
                                 <div
@@ -268,9 +268,9 @@ export default function NativeOriginalLanding() {
                                         className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs sm:text-sm shrink-0 shadow-inner">
                                         <i className="fa-solid fa-bolt"></i>
                                     </div>
-                                    <div className="text-[9px] sm:text-[10px] text-white/90 font-medium leading-[1.4]">Khai
-                                        thác kỳ vọng: <br /> <span
-                                            className="text-primary-container font-black text-[10px] sm:text-[11px] tracking-wide">8-12% / NĂM</span></div>
+                                    <div className="text-[9px] sm:text-[10px] text-white/90 font-medium leading-[1.4]">Bãi biển
+                                        dài đến: <br /> <span
+                                            className="text-primary-container font-black text-[10px] sm:text-[11px] tracking-wide">320M</span></div>
                                 </div>
                             </div>
                         </div>
@@ -280,15 +280,15 @@ export default function NativeOriginalLanding() {
                     <div className="hidden lg:block relative reveal">
                         <div className="absolute -inset-2 bg-primary-container/20 blur-2xl rounded-2xl"></div>
                         <div className="relative rounded-2xl overflow-hidden border-4 border-white/10 shadow-3xl group">
-                            <img src="./sunshine_villa_interior_card_1774061099772.png"
+                            <img src="./sunshine-bay-retreat-9.jpg"
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
                                 alt="Sky Villa Interior" />
                             <div
                                 className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-primary/80 to-transparent">
                                 <div
                                     className="text-[10px] text-primary-container font-black uppercase tracking-widest mb-1">
-                                    Chỉ từ 626 triệu/căn</div>
-                                <div className="text-xl text-white font-black italic">SỞ HỮU NGAY CĂN HỘ BIỂN VŨNG TÀU</div>
+                                    Bảng giá 03/2026</div>
+                                <div className="text-xl text-white font-black italic">THAM KHẢO KHÔNG GIAN DỰ ÁN</div>
                             </div>
                         </div>
                     </div>
@@ -476,7 +476,6 @@ export default function NativeOriginalLanding() {
                                 className="h-[420px] w-full md:h-[620px]"
                                 loading="lazy"
                                 allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
-                                allowFullScreen
                                 referrerPolicy="strict-origin-when-cross-origin"
                                 data-ondblclick="return openVrFullscreen(event)"
                             ></iframe>
@@ -514,7 +513,7 @@ export default function NativeOriginalLanding() {
                     <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
                         data-onclick="openProductModal('skyvilla')">
                         <div className="aspect-[4/3] relative overflow-hidden">
-                            <img src="./interior.png"
+                            <img src="./can-ho-Sunshine-Bay-Retreat-8.jpg"
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 alt="Sky Villa" />
                             <div
@@ -525,7 +524,7 @@ export default function NativeOriginalLanding() {
                             <h3 className="text-xl font-black text-primary uppercase mb-2">Căn Hộ Du Lịch</h3>
                             <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Dòng căn hộ biển phù hợp cho nhu cầu nghỉ dưỡng và khai thác lưu trú theo định hướng dự án.</p>
                             <div className="flex justify-between items-center pt-4 border-t border-surface-container">
-                                <div className="text-primary-container font-black text-sm">Chỉ từ 626 triệu/căn</div>
+                                <div className="text-primary-container font-black text-sm">Bảng giá 03/2026</div>
                                 <div
                                     className="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">
                                     Chi tiết <i className="fa-solid fa-arrow-right"></i></div>
@@ -557,7 +556,7 @@ export default function NativeOriginalLanding() {
                     <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-surface-container group cursor-pointer hover:-translate-y-2 transition-transform duration-300"
                         data-onclick="openProductModal('shophouse')">
                         <div className="aspect-[4/3] relative overflow-hidden">
-                            <img src="./sunshine_villa_interior_card_1774061099772.png"
+                            <img src="./sunshine-vung-tau-8.jpg"
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 alt="Shophouse" />
                         </div>
@@ -638,9 +637,9 @@ export default function NativeOriginalLanding() {
                                     className="block text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">Tài chính</label>
                                 <select id="booking-budget"
                                     className="w-full bg-surface border-none rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-container transition-all font-bold text-primary">
-                                    <option>1-1,5 tỷ</option>
-                                    <option>1,5-2 tỷ</option>
-                                    <option>Trên 2 tỷ</option>
+                                    <option>1,5-2,5 tỷ</option>
+                                    <option>2,5-5 tỷ</option>
+                                    <option>Trên 5 tỷ</option>
                                     <option>Chưa rõ</option>
                                 </select>
                             </div>
@@ -689,7 +688,7 @@ export default function NativeOriginalLanding() {
                             <div
                                 className="absolute -top-10 -left-10 w-40 h-40 bg-primary-container/10 rounded-full blur-3xl">
                             </div>
-                            <img src="./hero.png" alt="" className="rounded-2xl shadow-2xl relative z-10" />
+                            <img src="./sunshine-bay-retreat-28.jpg" alt="" className="rounded-2xl shadow-2xl relative z-10" />
                             <div
                                 className="absolute -bottom-4 -right-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl z-20 border border-surface-container transform hover:scale-105 transition-transform duration-500">
                                 <div className="text-2xl font-black text-primary-container mb-1">Sunshine</div>
@@ -735,69 +734,70 @@ export default function NativeOriginalLanding() {
                         <div
                             className="bg-primary p-12 rounded-2xl text-white shadow-2xl h-full flex flex-col justify-center">
                             <span
-                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Thông
-                                tin bán hàng</span>
-                            <h3 className="text-3xl font-black uppercase tracking-tight mb-8 leading-tight">Các Mục <span
-                                    className="text-primary-container">Khách Thường Xem</span></h3>
+                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Tài
+                                liệu tham khảo</span>
+                            <h3 className="text-3xl font-black uppercase tracking-tight mb-8 leading-tight">Những Nội Dung <span
+                                    className="text-primary-container">Nên Xem Trước</span></h3>
                             <ul className="space-y-6">
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-percent"></i></div>
-                                    <span className="text-sm font-body opacity-80">Bảng giá 1PN, 2PN và 3PN đang được cập nhật theo từng đợt mở bán.</span>
+                                    <span className="text-sm font-body opacity-80">Bảng giá và quỹ căn được cập nhật theo từng dòng sản phẩm, vị trí và thời điểm công bố.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-gift"></i></div>
-                                    <span className="text-sm font-body opacity-80">Phương thức thanh toán và tài liệu tư vấn được gửi theo đúng loại hình anh/chị quan tâm.</span>
+                                    <span className="text-sm font-body opacity-80">Phương án thanh toán, mặt bằng và tài liệu tư vấn có thể xem theo đúng nhu cầu đang quan tâm.</span>
                                 </li>
                                 <li className="flex items-center gap-4">
                                     <div
                                         className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container text-xs shrink-0">
                                         <i className="fa-solid fa-building-columns"></i></div>
-                                    <span className="text-sm font-body opacity-80">Thông tin có thể được gửi qua Zalo, điện thoại hoặc email tùy cách anh/chị muốn nhận.</span>
+                                    <span className="text-sm font-body opacity-80">Thông tin có thể nhận qua Zalo, điện thoại hoặc email theo cách thuận tiện nhất để theo dõi.</span>
                                 </li>
                             </ul>
                             <button type="button" data-onclick="toggleChatbot()"
-                                className="gold-button mt-12 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest w-full">Nhận
-                                bảng giá và chính sách</button>
+                                className="gold-button mt-12 py-4 rounded-full text-white font-black text-[10px] uppercase tracking-widest w-full">Xem
+                                bảng giá cập nhật</button>
                         </div>
                     </div>
                     <div className="reveal">
                         <div className="bg-white p-12 rounded-2xl border border-surface-container shadow-xl h-full">
                             <span
-                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Pháp
-                                lý minh bạch</span>
-                            <h3 className="text-3xl font-black text-primary uppercase tracking-tight mb-8 leading-tight">Hồ
-                                Sơ <span className="text-primary-container">Hoàn Thiện</span></h3>
+                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Thông
+                                tin đối chiếu</span>
+                            <h3 className="text-3xl font-black text-primary uppercase tracking-tight mb-8 leading-tight">Một
+                                Số Dữ Liệu <span className="text-primary-container">Từ Website Chính Thức</span></h3>
                             <div className="space-y-6">
                                 <div className="flex justify-between items-center py-4 border-b border-surface-container">
-                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Giấy phép
-                                        xây dựng</span>
+                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Chuyên mục
+                                        pháp lý</span>
                                     <span
-                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Đã
-                                        cấp</span>
+                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Có
+                                        hiển thị</span>
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-b border-surface-container">
-                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Quy hoạch
-                                        1/500</span>
+                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Chủ đầu
+                                        tư</span>
                                     <span
-                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Hoàn
-                                        tất</span>
+                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Sunshine
+                                        Group</span>
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-b border-surface-container">
-                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Quyền sử
-                                        dụng đất</span>
+                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Quy mô công
+                                        bố</span>
                                     <span
-                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Sổ
-                                        tổng</span>
+                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">195.942
+                                        m2</span>
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-b border-surface-container">
-                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Chứng thư
-                                        bảo lãnh</span>
+                                    <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Giai đoạn
+                                        công bố</span>
                                     <span
-                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">Vietinbank</span>
+                                        className="text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase">2026
+                                        - 2030</span>
                                 </div>
                             </div>
                         </div>
@@ -809,7 +809,7 @@ export default function NativeOriginalLanding() {
         
         <section id="tienich" className="py-24 bg-primary text-white relative overflow-hidden">
             <div className="absolute inset-0 z-0">
-                <img alt="" className="w-full h-full object-cover opacity-10" src="./pool.png" />
+                <img alt="" className="w-full h-full object-cover opacity-10" src="./sunshine-bay-retreat-28.jpg" />
             </div>
 
             <div className="app-container relative z-10">
@@ -862,11 +862,9 @@ export default function NativeOriginalLanding() {
                                 className="text-primary-container">Thực Tế</span></h2>
                     </div>
                     <div className="flex flex-col items-end">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2 italic">Cập
-                            nhật tháng 03/2026</div>
-                        <div className="w-full h-1 bg-surface-container rounded-full overflow-hidden">
-                            <div className="w-[75%] h-full bg-primary-container"></div>
-                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2 italic">Theo
+                            nội dung website chính thức</div>
+                        <div className="text-xs font-bold text-primary/60">Mục tiến độ và tin tức đang được cập nhật riêng trên website dự án.</div>
                     </div>
                 </div>
 
@@ -878,11 +876,10 @@ export default function NativeOriginalLanding() {
                         </div>
                         <div className="absolute bottom-8 left-8 right-8 text-white">
                             <span
-                                className="bg-primary-container px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest mb-3 inline-block">Giai
-                                đoạn hạ tầng</span>
-                            <h4 className="text-xl font-black uppercase tracking-tight">Hoàn tất móng cọc & Hầm</h4>
-                            <p className="text-[10px] opacity-60 font-body mt-2">Đã hoàn thành 100% hạng mục móng cọc, đang
-                                triển khai sàn tầng 1.</p>
+                                className="bg-primary-container px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest mb-3 inline-block">Mốc
+                                công bố</span>
+                            <h4 className="text-xl font-black uppercase tracking-tight">Lễ động thổ ngày 25/06/2025</h4>
+                            <p className="text-[10px] opacity-60 font-body mt-2">Website chính thức có bài cập nhật về lễ động thổ và khu vực tiến độ xây dựng riêng để theo dõi các giai đoạn tiếp theo.</p>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 gap-8">
@@ -893,10 +890,9 @@ export default function NativeOriginalLanding() {
                                 <i className="fa-solid fa-hard-hat"></i>
                             </div>
                             <div>
-                                <h5 className="text-sm font-black uppercase tracking-widest text-primary mb-2">An toàn lao
-                                    động</h5>
-                                <p className="text-[10px] opacity-60 font-body">Đạt chứng chỉ an toàn thi công quốc tế, 500+
-                                    ngày làm việc không tai nạn.</p>
+                                <h5 className="text-sm font-black uppercase tracking-widest text-primary mb-2">Tiến độ dự
+                                    kiến</h5>
+                                <p className="text-[10px] opacity-60 font-body">Phần tổng quan trên website đang ghi mốc thực hiện dự kiến từ 2026 đến 2030.</p>
                             </div>
                         </div>
                         <div
@@ -906,10 +902,9 @@ export default function NativeOriginalLanding() {
                                 <i className="fa-solid fa-clock"></i>
                             </div>
                             <div>
-                                <h5 className="text-sm font-black uppercase tracking-widest text-primary mb-2">Cam kết tiến
-                                    độ</h5>
-                                <p className="text-[10px] opacity-60 font-body">Vận hành 3 ca liên tục, đảm bảo bàn giao
-                                    đúng thời hạn Quý IV/2026.</p>
+                                <h5 className="text-sm font-black uppercase tracking-widest text-primary mb-2">Nguồn đối
+                                    chiếu</h5>
+                                <p className="text-[10px] opacity-60 font-body">Có thể xem trực tiếp mục Pháp lý, Tiến độ và Tin tức trên website chính thức để đối chiếu theo từng thời điểm.</p>
                             </div>
                         </div>
                     </div>
@@ -1021,7 +1016,7 @@ export default function NativeOriginalLanding() {
                                             className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Mình muốn nhận</label>
                                         <select id="lead-need"
                                             className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
-                                            <option>Nhận bảng giá căn 626 triệu</option>
+                                            <option>Nhận bảng giá 03/2026</option>
                                             <option>Xem căn thực tế giá tốt</option>
                                             <option>Xem căn hợp tài chính</option>
                                             <option>Xem pháp lý và chính sách</option>
@@ -1032,9 +1027,9 @@ export default function NativeOriginalLanding() {
                                             className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Ngân sách dự kiến</label>
                                         <select id="lead-budget"
                                             className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
-                                            <option>1-1,5 tỷ</option>
-                                            <option>1,5-2 tỷ</option>
-                                            <option>Trên 2 tỷ</option>
+                                            <option>1,5-2,5 tỷ</option>
+                                            <option>2,5-5 tỷ</option>
+                                            <option>Trên 5 tỷ</option>
                                             <option>Chưa rõ</option>
                                         </select>
                                     </div>
@@ -1202,16 +1197,15 @@ export default function NativeOriginalLanding() {
             <div id="chat-messages" className="chat-scroll flex-1 p-5 overflow-y-auto bg-surface/30">
                 <div className="chat-message chat-message--bot">
                     <div className="chat-bubble">
-                        Anh/chị đang tìm căn hộ biển giá tốt đúng không ạ? Hiện có căn chỉ từ **626 triệu**,
-                        phù hợp nhóm muốn vào tiền sớm và khai thác nghỉ dưỡng. Anh/chị muốn xem **bảng giá**,
-                        **căn thực tế giá tốt** hay **pháp lý** trước ạ?
+                        Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá 03/2026**,
+                        **không gian dự án** hoặc **pháp lý** để mình đối chiếu nhanh ngay trên trang.
                     </div>
                 </div>
             </div>
 
             
             <div id="chat-suggestions" className="chat-suggestions-strip px-4 sm:px-5 py-3 sm:py-4 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
-                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá 626 triệu</button>
+                <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá 03/2026</button>
 
                 <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem căn thực tế</button>
 
@@ -1251,9 +1245,9 @@ export default function NativeOriginalLanding() {
     <button type="button" id="chatbot-mini-teaser" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
         className="fixed bottom-28 right-4 z-[205] hidden max-w-[260px] rounded-2xl border border-primary/10 bg-white px-4 py-3 text-left shadow-2xl md:bottom-24 md:right-8 md:max-w-[280px]">
         <div className="text-[10px] font-black uppercase tracking-[0.24em] text-primary/40">Popup mini</div>
-        <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem căn hộ biển từ 626 triệu không ạ?</p>
+        <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem bảng giá 03/2026 hay pháp lý dự án trước ạ?</p>
         <span id="chatbot-mini-teaser-cta" className="mt-3 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-primary-container">
-            Nhận giá 626 <i className="fa-solid fa-arrow-right"></i>
+            Nhận bảng giá <i className="fa-solid fa-arrow-right"></i>
         </span>
     </button>
 
@@ -1552,15 +1546,4 @@ export default function NativeOriginalLanding() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
 

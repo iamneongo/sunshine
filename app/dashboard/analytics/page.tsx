@@ -1,59 +1,113 @@
 import Link from "next/link";
 import { getDashboardSnapshot } from "@/lib/dashboard-data";
 import {
+  DashboardBadge,
   DashboardBreakdownCard,
   DashboardEmptyState,
   DashboardPageHeader,
   DashboardSurfaceCard,
+  dashboardButtonClasses,
   dashboardScrollAreaClasses,
-  dashboardButtonClasses
+  formatDateTime
 } from "../_components/dashboard-ui";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardAnalyticsPage() {
-  const snapshot = await getDashboardSnapshot();
+type DashboardAnalyticsPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function getSingleValue(value: string | string[] | undefined): string {
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
+function buildAnalyticsHref(filters: { event: string; source: string }, overrides: Partial<{ event: string; source: string }>) {
+  const next = { ...filters, ...overrides };
+  const params = new URLSearchParams();
+
+  if (next.event) {
+    params.set("event", next.event);
+  }
+
+  if (next.source) {
+    params.set("source", next.source);
+  }
+
+  const query = params.toString();
+  return query ? `/dashboard/analytics?${query}` : "/dashboard/analytics";
+}
+
+export default async function DashboardAnalyticsPage({ searchParams }: DashboardAnalyticsPageProps) {
+  const params = searchParams ? await searchParams : undefined;
+  const filters = {
+    event: getSingleValue(params?.event).trim(),
+    source: getSingleValue(params?.source).trim()
+  };
+
+  const snapshot = await getDashboardSnapshot({
+    leadLimit: 500,
+    eventLimit: 700,
+    recentLeadLimit: 20,
+    recentEventLimit: 20
+  });
   const maxTrend = Math.max(...snapshot.leadTrend.map((item) => item.value), 1);
+  const filteredEvents = snapshot.allEvents.filter((event) => {
+    if (filters.event && event.name !== filters.event) {
+      return false;
+    }
+
+    if (filters.source && event.source !== filters.source) {
+      return false;
+    }
+
+    return true;
+  });
+  const hasFilters = Boolean(filters.event || filters.source);
 
   const breakdownCards = [
     {
       eyebrow: "Kênh vào lead",
       title: "Theo nguồn",
       items: snapshot.sourceBreakdown,
-      barClassName: "bg-[linear-gradient(90deg,#f59e0b_0%,#f97316_100%)]"
+      barClassName: "bg-[linear-gradient(90deg,#f59e0b_0%,#f97316_100%)]",
+      getHref: (item: (typeof snapshot.sourceBreakdown)[number]) => `/dashboard/leads?source=${encodeURIComponent(item.label)}`
     },
     {
       eyebrow: "Ý định chính",
       title: "Theo nhu cầu",
       items: snapshot.needBreakdown,
-      barClassName: "bg-[linear-gradient(90deg,#0f172a_0%,#475569_100%)]"
+      barClassName: "bg-[linear-gradient(90deg,#0f172a_0%,#475569_100%)]",
+      getHref: (item: (typeof snapshot.needBreakdown)[number]) => `/dashboard/leads?need=${encodeURIComponent(item.label)}`
     },
     {
       eyebrow: "Khả năng tài chính",
       title: "Theo ngân sách",
       items: snapshot.budgetBreakdown,
-      barClassName: "bg-[linear-gradient(90deg,#2563eb_0%,#06b6d4_100%)]"
+      barClassName: "bg-[linear-gradient(90deg,#2563eb_0%,#06b6d4_100%)]",
+      getHref: (item: (typeof snapshot.budgetBreakdown)[number]) => `/dashboard/leads?budget=${encodeURIComponent(item.label)}`
     },
     {
       eyebrow: "Nhiệt độ lead",
       title: "Theo độ nóng",
       items: snapshot.hotnessBreakdown,
-      barClassName: "bg-[linear-gradient(90deg,#dc2626_0%,#f59e0b_100%)]"
+      barClassName: "bg-[linear-gradient(90deg,#dc2626_0%,#f59e0b_100%)]",
+      getHref: (item: (typeof snapshot.hotnessBreakdown)[number]) => `/dashboard/leads?hotness=${encodeURIComponent(item.label)}`
     },
     {
       eyebrow: "Mức độ xử lý",
       title: "Theo trạng thái",
       items: snapshot.statusBreakdown,
-      barClassName: "bg-[linear-gradient(90deg,#059669_0%,#84cc16_100%)]"
+      barClassName: "bg-[linear-gradient(90deg,#059669_0%,#84cc16_100%)]",
+      getHref: (item: (typeof snapshot.statusBreakdown)[number]) => `/dashboard/leads?status=${encodeURIComponent(item.label)}`
     }
   ];
 
   return (
     <div className="space-y-6 lg:space-y-8">
       <DashboardPageHeader
-        eyebrow="Analytics"
-        title="Trend và phân tích hành vi lead"
-        description="Trang này gom toàn bộ góc nhìn phân tích: lead trend, touchpoint analytics và breakdown theo nguồn, nhu cầu, ngân sách, độ nóng."
+
+        title="Analytics"
+
         actions={
           <>
             <Link href="/dashboard/overview" className={dashboardButtonClasses("outline")}>
@@ -66,15 +120,60 @@ export default async function DashboardAnalyticsPage() {
         }
       />
 
+      <DashboardSurfaceCard className="p-5 sm:p-6">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Lọc activity cần xem</h2>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <DashboardBadge>{filteredEvents.length} event</DashboardBadge>
+            {hasFilters ? <DashboardBadge variant="warning">Đang lọc analytics</DashboardBadge> : <DashboardBadge>Toàn bộ feed</DashboardBadge>}
+          </div>
+        </div>
+
+        <form method="get" className="mt-6 grid gap-4 md:grid-cols-3 xl:grid-cols-[1.3fr_1fr_auto]">
+          <label className="block">
+            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Tên event</div>
+            <select name="event" defaultValue={filters.event} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
+              <option value="">Tất cả event</option>
+              {snapshot.eventBreakdown.map((item) => (
+                <option key={item.label} value={item.label}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="block">
+            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Nguồn</div>
+            <select name="source" defaultValue={filters.source} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
+              <option value="">Tất cả nguồn</option>
+              {Array.from(new Set(snapshot.allEvents.map((event) => event.source))).map((source) => (
+                <option key={source} value={source}>
+                  {source}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="flex flex-wrap gap-3 md:items-end">
+            <button type="submit" className={dashboardButtonClasses()}>
+              Áp dụng
+            </button>
+            {hasFilters ? (
+              <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
+                Xóa lọc
+              </Link>
+            ) : null}
+          </div>
+        </form>
+      </DashboardSurfaceCard>
+
       <section className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr] xl:gap-6">
         <DashboardSurfaceCard className="p-5 sm:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">Lead trend</div>
               <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">7 ngày gần đây</h2>
-            </div>
-            <div className="inline-flex items-center self-start rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-slate-600 md:self-auto">
-              Nguồn lead: {snapshot.connection.leadSource}
             </div>
           </div>
 
@@ -116,11 +215,15 @@ export default async function DashboardAnalyticsPage() {
         </DashboardSurfaceCard>
 
         <DashboardSurfaceCard className="p-5 sm:p-6">
-          <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">Touchpoint analytics</div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Sự kiện nổi bật</h2>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Sự kiện nổi bật</h2>
+            </div>
+            {hasFilters ? <DashboardBadge variant="warning">Đang lọc</DashboardBadge> : null}
+          </div>
           <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
-            {snapshot.eventBreakdown.slice(0, 6).map((item) => (
-              <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+            {snapshot.eventBreakdown.slice(0, 8).map((item) => (
+              <Link key={item.label} href={buildAnalyticsHref(filters, { event: item.label })} className="block rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 transition hover:border-slate-300 hover:bg-white">
                 <div className="mb-2 flex items-start justify-between gap-4 text-sm">
                   <span className="font-semibold text-slate-600">{item.label}</span>
                   <span className="shrink-0 font-black text-slate-950">{item.count}</span>
@@ -128,7 +231,7 @@ export default async function DashboardAnalyticsPage() {
                 <div className="h-2 overflow-hidden rounded-full bg-white">
                   <div className="h-full rounded-full bg-[linear-gradient(90deg,#fbbf24_0%,#f97316_100%)]" style={{ width: `${item.share}%` }} />
                 </div>
-              </div>
+              </Link>
             ))}
 
             {snapshot.eventBreakdown.length === 0 ? (
@@ -146,42 +249,31 @@ export default async function DashboardAnalyticsPage() {
 
       <section className="grid gap-5 xl:grid-cols-[0.94fr_1.06fr] xl:gap-6">
         <DashboardSurfaceCard className="p-5 sm:p-6">
-          <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">Event feed</div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Hoạt động gần đây</h2>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Hoạt động gần đây</h2>
+            </div>
+            {hasFilters ? (
+              <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
+                Xóa lọc
+              </Link>
+            ) : null}
+          </div>
           <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
-            {snapshot.recentEvents.slice(0, 6).map((event) => (
-              <div key={event.id} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
+            {filteredEvents.slice(0, 12).map((event) => (
+              <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <div className="text-sm font-black text-slate-950">{event.name}</div>
                     <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{event.source}</div>
                   </div>
-                  <div className="shrink-0 text-xs text-slate-500">
-                    {new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(event.createdAt))}
-                  </div>
+                  <div className="shrink-0 text-xs text-slate-500">{formatDateTime(event.createdAt)}</div>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{event.summary}</p>
-              </div>
+              </Link>
             ))}
-          </div>
-        </DashboardSurfaceCard>
 
-        <DashboardSurfaceCard className="p-5 sm:p-6">
-          <div className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">Insights</div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Gợi ý đọc số liệu</h2>
-          <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="text-sm font-black text-slate-950">Nếu nguồn lead bị lệch mạnh</div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">Ưu tiên kiểm tra placement, traffic source và logic submit để tránh hụt lead ở một kênh cụ thể.</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="text-sm font-black text-slate-950">Nếu nhu cầu pháp lý tăng</div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">Nên đẩy tài liệu pháp lý và CTA nhận hồ sơ lên sớm hơn trong các kịch bản chat và follow-up.</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="text-sm font-black text-slate-950">Nếu lead nóng ít nhưng event cao</div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">Có thể khách đang tương tác tốt nhưng CTA chốt còn yếu. Nên kiểm tra quick actions, wording giá và flow chatbot.</p>
-            </div>
+            {filteredEvents.length === 0 ? <DashboardEmptyState message="Không có event phù hợp với bộ lọc hiện tại." /> : null}
           </div>
         </DashboardSurfaceCard>
       </section>

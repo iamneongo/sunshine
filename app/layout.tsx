@@ -12,25 +12,26 @@ import {
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: NATIVE_LANDING_TITLE,
   description: NATIVE_LANDING_DESCRIPTION,
   openGraph: {
     title: NATIVE_LANDING_TITLE,
     description: NATIVE_LANDING_DESCRIPTION,
     images: [{ url: NATIVE_LANDING_OG_IMAGE }],
-    type: "website",
+    type: "website"
   },
   twitter: {
     card: "summary_large_image",
     title: NATIVE_LANDING_TITLE,
     description: NATIVE_LANDING_DESCRIPTION,
-    images: [NATIVE_LANDING_OG_IMAGE],
-  },
+    images: [NATIVE_LANDING_OG_IMAGE]
+  }
 };
 
 export const viewport: Viewport = {
   width: "device-width",
-  initialScale: 1,
+  initialScale: 1
 };
 
 export default function RootLayout({
@@ -39,7 +40,12 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="vi" className={NATIVE_LANDING_HTML_CLASSNAME}>
+    <html
+      lang="vi"
+      className={NATIVE_LANDING_HTML_CLASSNAME}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,7 +74,9 @@ export default function RootLayout({
         />
         <style dangerouslySetInnerHTML={{ __html: NATIVE_LANDING_HEAD_STYLE }} />
       </head>
-      <body className={NATIVE_LANDING_BODY_CLASSNAME}>{children}</body>
+      <body className={NATIVE_LANDING_BODY_CLASSNAME} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

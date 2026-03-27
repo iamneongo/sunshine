@@ -1,5 +1,5 @@
 import type { AnalyticsEventRecord } from "@/lib/event-store";
-import type { LeadRecord } from "@/lib/lead-store";
+import { normalizeLeadBudget, normalizeLeadSource, type LeadRecord } from "@/lib/lead-store";
 
 type SupabaseConfig = {
   url: string;
@@ -122,13 +122,13 @@ function fromSupabaseLeadRow(row: SupabaseLeadRow): LeadRecord {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     projectName: row.project_name,
-    source: row.source as LeadRecord["source"],
+    source: normalizeLeadSource(row.source),
     fullName: row.full_name,
     phone: row.phone,
     zalo: row.zalo,
     email: row.email,
     need: row.need as LeadRecord["need"],
-    budget: row.budget,
+    budget: normalizeLeadBudget(row.budget),
     contactPreference: row.contact_preference as LeadRecord["contactPreference"],
     hotness: row.hotness as LeadRecord["hotness"],
     status: row.status as LeadRecord["status"],
@@ -210,6 +210,28 @@ export async function listSupabaseLeads(limit = 100): Promise<LeadRecord[]> {
   return Array.isArray(rows) ? rows.map(fromSupabaseLeadRow) : [];
 }
 
+export async function getSupabaseLeadById(leadId: string): Promise<LeadRecord | null> {
+  const config = getSupabaseConfig();
+
+  if (!config) {
+    return null;
+  }
+
+  const response = await supabaseRequest(
+    `/rest/v1/${config.leadsTable}?select=*&id=eq.${encodeURIComponent(leadId)}&limit=1`,
+    {
+      method: "GET"
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Supabase lead get failed with status ${response.status}`);
+  }
+
+  const rows = (await response.json()) as SupabaseLeadRow[];
+  return Array.isArray(rows) && rows[0] ? fromSupabaseLeadRow(rows[0]) : null;
+}
+
 export async function syncAnalyticsEventToSupabase(event: AnalyticsEventRecord): Promise<void> {
   const config = getSupabaseConfig();
 
@@ -250,4 +272,63 @@ export async function listSupabaseEvents(limit = 200): Promise<AnalyticsEventRec
 
   const rows = (await response.json()) as SupabaseEventRow[];
   return Array.isArray(rows) ? rows.map(fromSupabaseEventRow) : [];
+}
+
+
+function chunkIds(ids: string[], size = 100): string[][] {
+  const result: string[][] = [];
+  for (let index = 0; index < ids.length; index += size) {
+    result.push(ids.slice(index, index + size));
+  }
+  return result;
+}
+
+async function deleteSupabaseRowsByIds(table: string, ids: string[]): Promise<number> {
+  const normalizedIds = Array.from(new Set(ids.map((id) => id.trim()).filter(Boolean)));
+
+  if (normalizedIds.length === 0) {
+    return 0;
+  }
+
+  let removed = 0;
+
+  for (const group of chunkIds(normalizedIds)) {
+    const response = await supabaseRequest(
+      `/rest/v1/${table}?id=in.(${group.map((id) => encodeURIComponent(id)).join(",")})`,
+      {
+        method: "DELETE",
+        headers: {
+          Prefer: "return=minimal"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Supabase delete failed with status ${response.status}`);
+    }
+
+    removed += group.length;
+  }
+
+  return removed;
+}
+
+export async function deleteSupabaseLeadsByIds(ids: string[]): Promise<number> {
+  const config = getSupabaseConfig();
+
+  if (!config) {
+    return 0;
+  }
+
+  return deleteSupabaseRowsByIds(config.leadsTable, ids);
+}
+
+export async function deleteSupabaseEventsByIds(ids: string[]): Promise<number> {
+  const config = getSupabaseConfig();
+
+  if (!config) {
+    return 0;
+  }
+
+  return deleteSupabaseRowsByIds(config.eventsTable, ids);
 }

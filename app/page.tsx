@@ -16,15 +16,14 @@ import {
 } from "@/lib/native-original-scripts";
 
 const defaultSuggestions = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
-const initialMessages = [INITIAL_CHAT_MESSAGE, "Hiện có căn từ 626 triệu, phù hợp nhóm khách muốn vào tiền sớm và khai thác nghỉ dưỡng."];
-const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn xem bảng giá 626 triệu hay căn thực tế giá tốt trước ạ?"];
-const followUpSuggestions = ["GỬI GIÁ 626", "Xem căn thực tế", "Xem pháp lý"];
-const returningSuggestions = ["GỬI GIÁ 626", "Xem căn thực tế", "Xem pháp lý"];
+const initialMessages = [INITIAL_CHAT_MESSAGE, "Website chính thức đang thể hiện giá từ 6X/m² và bảng giá cập nhật 03/2026."];
+const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn xem bảng giá 03/2026 hay không gian dự án trước ạ?"];
+const followUpSuggestions = ["Nhận bảng giá nội bộ", "Xem căn thực tế", "Xem pháp lý"];
+const returningSuggestions = ["Nhận bảng giá nội bộ", "Xem căn thực tế", "Xem pháp lý"];
 const suggestionDisplayMap = {
-  "Nhận bảng giá nội bộ": "Nhận giá 626",
-  "Nhận bảng giá": "Nhận giá 626",
-  "Nhận bảng giá 626 triệu": "Nhận giá 626",
-  "GỬI GIÁ 626": "Nhận giá 626",
+  "Nhận bảng giá nội bộ": "Nhận bảng giá",
+  "Nhận bảng giá": "Nhận bảng giá",
+  "Nhận bảng giá 03/2026": "Nhận bảng giá",
   "Xem video căn đẹp": "Xem căn thực tế",
   "Xem căn thực tế giá tốt": "Xem căn thực tế"
 };
@@ -428,7 +427,7 @@ const chatbotBridgeScript = `
     }
 
     if (nodes.cta) {
-      nodes.cta.textContent = normalizeText(ctaLabel) || "Nhận giá 626";
+      nodes.cta.textContent = normalizeText(ctaLabel) || "Nhận bảng giá";
     }
 
     nodes.wrapper.classList.remove("hidden");
@@ -470,7 +469,7 @@ const chatbotBridgeScript = `
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá 626 triệu và căn thực tế giá tốt cho anh/chị ạ.", "Nhận giá 626");
+    showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá 03/2026, không gian dự án và pháp lý cho anh/chị ạ.", "Nhận bảng giá");
   }
 
   function scheduleIdleFollowUp() {
@@ -708,8 +707,17 @@ const chatbotBridgeScript = `
       return "hot";
     }
 
-    if (normalizedBudget.includes("1,5") || normalizedBudget.includes("trên 2")) {
+    if (
+      normalizedBudget.includes("1,5-2,5") ||
+      normalizedBudget.includes("2,5-5") ||
+      normalizedBudget.includes("trên 5") ||
+      normalizedBudget.includes("quanh 1,5")
+    ) {
       return "hot";
+    }
+
+    if (normalizedBudget.includes("dưới 1,5")) {
+      return "warm";
     }
 
     return "warm";
@@ -801,7 +809,7 @@ const chatbotBridgeScript = `
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    showMiniTeaser(mobileTeaserMessage, "Nhận giá 626");
+    showMiniTeaser(mobileTeaserMessage, "Nhận bảng giá");
   }
 
   function maybeShowReturningPrompt() {
@@ -825,13 +833,13 @@ const chatbotBridgeScript = `
       console.warn("Unable to persist returning chatbot state", error);
     }
 
-    resetConversation([returningMessage, "Anh/chị muốn em gửi lại bảng giá 626 triệu hay căn thực tế giá tốt trước ạ?"]);
+    resetConversation([returningMessage, "Anh/chị muốn em gửi lại bảng giá 03/2026 hay pháp lý trước ạ?"]);
     renderSuggestionBar(returningSuggestions);
     recordEvent("chatbot_follow_up_1d", {
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    showMiniTeaser("Mình muốn nhận lại giá 626 hay xem căn thực tế ạ?", "Nhận giá 626");
+    showMiniTeaser("Mình muốn nhận lại bảng giá hay pháp lý dự án ạ?", "Nhận bảng giá");
 
     return true;
   }
@@ -936,7 +944,7 @@ const chatbotBridgeScript = `
 
       try {
         const leadResponse = await persistLeadCapture({
-          source: "landing_form",
+          source: "form",
           fullName,
           phoneOrZalo,
           need,
@@ -949,7 +957,7 @@ const chatbotBridgeScript = `
           }
         });
 
-        markLeadCaptured("landing_form", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
+        markLeadCaptured("form", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
         recordEvent("landing_lead_form_submitted", {
           contactPreference,
           need,
@@ -995,7 +1003,7 @@ const chatbotBridgeScript = `
 
       try {
         const leadResponse = await persistLeadCapture({
-          source: "booking_modal",
+          source: "form",
           fullName,
           phoneOrZalo,
           need,
@@ -1010,7 +1018,7 @@ const chatbotBridgeScript = `
           }
         });
 
-        markLeadCaptured("booking_modal", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
+        markLeadCaptured("form", leadResponse && leadResponse.lead ? leadResponse.lead.id : "");
         recordEvent("product_modal_lead_submitted", {
           productId,
           productName,
@@ -1093,6 +1101,8 @@ export default function HomePage() {
     </>
   );
 }
+
+
 
 
 

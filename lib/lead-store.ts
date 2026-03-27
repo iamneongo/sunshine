@@ -3,12 +3,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 export type LeadSource =
-  | "landing_form"
-  | "booking_modal"
+  | "form"
   | "chatbot"
-  | "facebook"
-  | "tiktok"
-  | "zalo_oa"
   | "unknown";
 export type LeadStatus = "Chưa gọi" | "Đã gọi" | "Đã gửi thông tin" | "Đặt lịch" | "Đã xem dự án" | "Đang chốt";
 export type LeadHotness = "Nóng" | "Ấm" | "Lạnh";
@@ -62,6 +58,88 @@ function normalizeEmail(value: string): string {
 
 function normalizeWhitespace(value: string): string {
   return value.replace(/\s+/g, " ").trim();
+}
+
+function normalizeBudgetKey(value: string): string {
+  return normalizeWhitespace(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d");
+}
+
+export function normalizeLeadBudget(value: unknown): string {
+  const raw = typeof value === "string" ? normalizeWhitespace(value) : "";
+
+  if (!raw) {
+    return "Chưa rõ";
+  }
+
+  const normalized = normalizeBudgetKey(raw);
+
+  if (/(1\s*[-–]\s*1[,.]?5\s*ty|1-1,5\s*ty|duoi\s*1[,.]?5\s*ty|1[,.]?2\s*ty|1[,.]?3\s*ty|1[,.]?4\s*ty)/.test(normalized)) {
+    return "Dưới 1,5 tỷ";
+  }
+
+  if (/(quanh\s*1[,.]?5\s*ty|tam\s*1[,.]?5\s*ty|muc\s*1[,.]?5\s*ty|^1[,.]?5\s*ty$)/.test(normalized)) {
+    return "Quanh 1,5 tỷ";
+  }
+
+  if (/(1[,.]?5\s*[-–]\s*2\s*ty|1[,.]?5\s*[-–]\s*2[,.]?5\s*ty|1,5-2\s*ty|1,5-2,5\s*ty)/.test(normalized)) {
+    return "1,5-2,5 tỷ";
+  }
+
+  if (/(2[,.]?5\s*[-–]\s*5\s*ty|2,5-5\s*ty)/.test(normalized)) {
+    return "2,5-5 tỷ";
+  }
+
+  if (/(tren\s*2\s*ty|hon\s*2\s*ty|2\s*ty\s*tro\s*len)/.test(normalized)) {
+    return "Từ 2 tỷ trở lên";
+  }
+
+  if (/(tren\s*5\s*ty|hon\s*5\s*ty|5\s*ty\s*tro\s*len)/.test(normalized)) {
+    return "Trên 5 tỷ";
+  }
+
+  return raw;
+}
+
+
+const FORM_SOURCE_VALUES = new Set([
+  "form",
+  "landing",
+  "landing_form",
+  "booking",
+  "booking_modal",
+  "lead_form",
+  "web_form",
+  "website_form"
+]);
+
+const CHATBOT_SOURCE_VALUES = new Set(["chatbot", "webchat", "chat"]);
+
+export function normalizeLeadSource(value: unknown): LeadSource {
+  const normalized = normalizeWhitespace(typeof value === "string" ? value : "")
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_");
+
+  if (FORM_SOURCE_VALUES.has(normalized)) {
+    return "form";
+  }
+
+  if (CHATBOT_SOURCE_VALUES.has(normalized)) {
+    return "chatbot";
+  }
+
+  return "unknown";
+}
+
+function normalizeStoredLeadRecord(record: LeadRecord): LeadRecord {
+  return {
+    ...record,
+    source: normalizeLeadSource(record.source),
+    budget: normalizeLeadBudget(record.budget)
+  };
 }
 
 function appendNote(existing: string, incoming: string): string {
@@ -199,7 +277,7 @@ async function readLeadFile(): Promise<LeadRecord[]> {
 
   try {
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as LeadRecord[]) : [];
+    return Array.isArray(parsed) ? parsed.filter((item): item is LeadRecord => Boolean(item && typeof item === "object")).map((item) => normalizeStoredLeadRecord(item)) : [];
   } catch {
     return [];
   }
@@ -235,13 +313,13 @@ export async function saveLead(input: LeadUpsertInput): Promise<LeadRecord> {
 
   const baseLead = {
     projectName: normalizeWhitespace(input.projectName ?? existing?.projectName ?? "Sunshine Bay Retreat Vũng Tàu"),
-    source: input.source ?? existing?.source ?? "unknown",
+    source: normalizeLeadSource(input.source ?? existing?.source ?? "unknown"),
     fullName: normalizeWhitespace(input.fullName ?? existing?.fullName ?? ""),
     phone: normalizeWhitespace(input.phone ?? existing?.phone ?? ""),
     zalo: normalizeWhitespace(input.zalo ?? existing?.zalo ?? ""),
     email: normalizeWhitespace(input.email ?? existing?.email ?? ""),
     need: input.need ?? existing?.need ?? "Chưa rõ",
-    budget: normalizeWhitespace(input.budget ?? existing?.budget ?? "Chưa rõ"),
+    budget: normalizeLeadBudget(input.budget ?? existing?.budget ?? "Chưa rõ"),
     contactPreference: input.contactPreference ?? existing?.contactPreference ?? "Chưa rõ",
     status: resolveStatus(input, existing),
     notes: appendNote(existing?.notes ?? "", input.notes ?? ""),
@@ -287,3 +365,94 @@ export async function listLeads(limit = 50): Promise<LeadRecord[]> {
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, limit);
 }
+
+
+export async function deleteLeadsByIds(ids: string[]): Promise<number> {
+  const idSet = new Set(ids.map((id) => normalizeWhitespace(id)).filter(Boolean));
+
+  if (idSet.size === 0) {
+    return 0;
+  }
+
+  const leads = await readLeadFile();
+  const nextLeads = leads.filter((lead) => !idSet.has(lead.id));
+  const removed = leads.length - nextLeads.length;
+
+  if (removed > 0) {
+    await writeLeadFile(nextLeads);
+  }
+
+  return removed;
+}
+
+export async function upsertLeadRecord(record: LeadRecord): Promise<LeadRecord> {
+  const leads = await readLeadFile();
+  const normalizedRecord = normalizeStoredLeadRecord(record);
+  const nextLeads = leads.some((lead) => lead.id === record.id)
+    ? leads.map((lead) => (lead.id === record.id ? normalizedRecord : lead))
+    : [normalizedRecord, ...leads];
+
+  await writeLeadFile(nextLeads);
+  return normalizedRecord;
+}
+export async function getLeadById(leadId: string): Promise<LeadRecord | null> {
+  const leads = await readLeadFile();
+  return leads.find((lead) => lead.id === leadId) ?? null;
+}
+
+export async function updateLeadById(leadId: string, input: LeadUpsertInput): Promise<LeadRecord | null> {
+  const leads = await readLeadFile();
+  const existing = leads.find((lead) => lead.id === leadId);
+
+  if (!existing) {
+    return null;
+  }
+
+  const now = new Date().toISOString();
+  const baseLead = {
+    projectName: normalizeWhitespace(input.projectName ?? existing.projectName),
+    source: normalizeLeadSource(input.source ?? existing.source),
+    fullName: normalizeWhitespace(input.fullName ?? existing.fullName),
+    phone: normalizeWhitespace(input.phone ?? existing.phone),
+    zalo: normalizeWhitespace(input.zalo ?? existing.zalo),
+    email: normalizeWhitespace(input.email ?? existing.email),
+    need: input.need ?? existing.need,
+    budget: normalizeLeadBudget(input.budget ?? existing.budget),
+    contactPreference: input.contactPreference ?? existing.contactPreference,
+    status: resolveStatus(input, existing),
+    notes: appendNote(existing.notes, input.notes ?? ""),
+    preferredCallbackTime: normalizeWhitespace(input.preferredCallbackTime ?? existing.preferredCallbackTime),
+    preferredVisitTime: normalizeWhitespace(input.preferredVisitTime ?? existing.preferredVisitTime),
+    travelParty: normalizeWhitespace(input.travelParty ?? existing.travelParty),
+    lastMessage: normalizeWhitespace(input.lastMessage ?? existing.lastMessage),
+    metadata: {
+      ...existing.metadata,
+      ...sanitizeMetadata(input.metadata)
+    }
+  } satisfies Omit<LeadRecord, "id" | "createdAt" | "updatedAt" | "tags" | "hotness">;
+
+  const hotness = input.hotness ?? scoreLeadHotness(baseLead);
+  const record: LeadRecord = {
+    ...existing,
+    updatedAt: now,
+    ...baseLead,
+    hotness,
+    tags: buildLeadTags(
+      {
+        need: baseLead.need,
+        hotness,
+        status: baseLead.status
+      },
+      input.tags ?? existing.tags
+    )
+  };
+
+  const nextLeads = leads.map((lead) => (lead.id === leadId ? record : lead));
+  await writeLeadFile(nextLeads);
+
+  return record;
+}
+
+
+
+

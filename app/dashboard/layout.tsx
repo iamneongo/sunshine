@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { DashboardNav } from "./_components/dashboard-nav";
+import { dashboardButtonClasses } from "./_components/dashboard-ui";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Sunshine Bay Retreat"
+};
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -11,7 +17,6 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           <div className="sticky top-0 flex h-screen flex-col px-6 py-6">
             <div className="pb-8">
               <div className="text-lg font-black tracking-tight text-slate-950">Sunshine Bay Retreat</div>
-              <div className="mt-1 text-sm text-slate-500">Dashboard</div>
             </div>
 
             <div className="space-y-2">
@@ -25,13 +30,22 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
               <div className="min-w-0">
                 <div className="truncate text-base font-black tracking-tight text-slate-950 sm:text-lg">Sunshine Bay Retreat</div>
-                <div className="mt-0.5 text-xs text-slate-500">Dashboard</div>
               </div>
               <DashboardNav mobile />
             </div>
           </div>
 
-          <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
+          <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+            <div className="mb-5 flex justify-end">
+              <form action="/api/auth/logout" method="post">
+                <button type="submit" className={dashboardButtonClasses("outline")}>
+                  Đăng xuất
+                </button>
+              </form>
+            </div>
+
+            {children}
+          </div>
         </div>
       </div>
     </main>
