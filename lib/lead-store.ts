@@ -49,10 +49,33 @@ function isReadonlyServerlessRuntime(): boolean {
   return process.cwd().startsWith("/var/task") || Boolean(process.env.LAMBDA_TASK_ROOT) || Boolean(process.env.VERCEL);
 }
 
+function normalizePathForRuntime(filePath: string): string {
+  return path.resolve(filePath).replace(/\\/g, "/");
+}
+
+function isReadonlyBundlePath(filePath: string): boolean {
+  const normalizedFilePath = normalizePathForRuntime(filePath);
+  const normalizedCwd = normalizePathForRuntime(process.cwd());
+
+  return (
+    normalizedFilePath === normalizedCwd ||
+    normalizedFilePath.startsWith(`${normalizedCwd}/`) ||
+    normalizedFilePath.startsWith("/var/task/") ||
+    normalizedFilePath === "/var/task"
+  );
+}
+
 function getLeadFilePath(): string {
   const configuredPath = process.env.LEAD_STORE_FILE?.trim();
+
   if (configuredPath) {
-    return path.resolve(process.cwd(), configuredPath);
+    const resolvedConfiguredPath = path.isAbsolute(configuredPath)
+      ? configuredPath
+      : path.resolve(process.cwd(), configuredPath);
+
+    if (!isReadonlyServerlessRuntime() || !isReadonlyBundlePath(resolvedConfiguredPath)) {
+      return resolvedConfiguredPath;
+    }
   }
 
   return isReadonlyServerlessRuntime() ? SERVERLESS_LEAD_FILE : DEFAULT_LEAD_FILE;
