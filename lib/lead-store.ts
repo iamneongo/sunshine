@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 
@@ -42,10 +43,19 @@ export type LeadUpsertInput = Partial<Omit<LeadRecord, "id" | "createdAt" | "upd
 };
 
 const DEFAULT_LEAD_FILE = path.join(process.cwd(), "data", "leads.json");
+const SERVERLESS_LEAD_FILE = path.join(os.tmpdir(), "bds-data", "leads.json");
+
+function isReadonlyServerlessRuntime(): boolean {
+  return process.cwd().startsWith("/var/task") || Boolean(process.env.LAMBDA_TASK_ROOT) || Boolean(process.env.VERCEL);
+}
 
 function getLeadFilePath(): string {
   const configuredPath = process.env.LEAD_STORE_FILE?.trim();
-  return configuredPath ? path.resolve(process.cwd(), configuredPath) : DEFAULT_LEAD_FILE;
+  if (configuredPath) {
+    return path.resolve(process.cwd(), configuredPath);
+  }
+
+  return isReadonlyServerlessRuntime() ? SERVERLESS_LEAD_FILE : DEFAULT_LEAD_FILE;
 }
 
 function normalizeDigits(value: string): string {

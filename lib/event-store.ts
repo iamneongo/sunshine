@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import crypto from "node:crypto";
 
@@ -21,10 +22,19 @@ export type AnalyticsEventInput = Partial<Omit<AnalyticsEventRecord, "id" | "cre
 };
 
 const DEFAULT_EVENT_FILE = path.join(process.cwd(), "data", "events.json");
+const SERVERLESS_EVENT_FILE = path.join(os.tmpdir(), "bds-data", "events.json");
+
+function isReadonlyServerlessRuntime(): boolean {
+  return process.cwd().startsWith("/var/task") || Boolean(process.env.LAMBDA_TASK_ROOT) || Boolean(process.env.VERCEL);
+}
 
 function getEventFilePath(): string {
   const configuredPath = process.env.EVENT_STORE_FILE?.trim();
-  return configuredPath ? path.resolve(process.cwd(), configuredPath) : DEFAULT_EVENT_FILE;
+  if (configuredPath) {
+    return path.resolve(process.cwd(), configuredPath);
+  }
+
+  return isReadonlyServerlessRuntime() ? SERVERLESS_EVENT_FILE : DEFAULT_EVENT_FILE;
 }
 
 function normalizeWhitespace(value: string): string {
