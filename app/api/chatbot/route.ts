@@ -180,8 +180,11 @@ function extractLeadName(message: string, history: ClientHistoryItem[]): string 
     }
 
     const previousAssistant = timeline[index - 1];
-    if (previousAssistant?.role === "assistant" && assistantAskedForName(previousAssistant.text) && looksLikePersonName(item.text)) {
-      return normalizePersonName(item.text);
+    if (previousAssistant?.role === "assistant" && assistantAskedForName(previousAssistant.text)) {
+      const rawReplyName = normalizePersonName(item.text).replace(/^(?:tên|ten)\s+/iu, "").trim();
+      if (rawReplyName && looksLikePersonName(rawReplyName)) {
+        return titleCaseName(rawReplyName);
+      }
     }
   }
 
@@ -239,10 +242,6 @@ function detectBudget(text: string): string {
 function detectIntent(text: string): LeadSignals["intent"] {
   const normalized = normalizeVietnamese(text);
 
-  if (/(gia|bang gia|nhan bang gia|nhan gia\s*626|626\s*trieu|1[,.]?2\s*ty|tong tien|chi phi|thanh toan|gia bao nhieu|goi gia)/.test(normalized)) {
-    return "pricing";
-  }
-
   if (/(phap ly|so hong|giay to|chu dau tu|bao lanh|hop dong)/.test(normalized)) {
     return "legal";
   }
@@ -257,6 +256,10 @@ function detectIntent(text: string): LeadSignals["intent"] {
 
   if (/(de o|an cu|o lau dai|gia dinh|mua o)/.test(normalized)) {
     return "living";
+  }
+
+  if (/(gia|bang gia|nhan bang gia|nhan gia\s*626|626\s*trieu|1[,.]?2\s*ty|tong tien|chi phi|thanh toan|gia bao nhieu|goi gia)/.test(normalized)) {
+    return "pricing";
   }
 
   return "unknown";
@@ -720,6 +723,28 @@ function buildScriptedResponse(message: string, history: ClientHistoryItem[]): O
   }
 
   if (/gui zalo truoc/.test(normalized)) {
+    if (hasContact) {
+      const needLabel = leadSignals.intent !== "unknown" ? mapNeed(leadSignals.intent) : null;
+      const budgetLabel = leadSignals.budget !== "unknown" ? leadSignals.budget : "";
+      const detailText = needLabel && budgetLabel
+        ? ` với nhu cầu **${needLabel}** và tài chính **${budgetLabel}**`
+        : needLabel
+          ? ` với nhu cầu **${needLabel}**`
+          : budgetLabel
+            ? ` với tài chính **${budgetLabel}**`
+            : "";
+
+      return buildResponse(
+        `Dạ em đã ghi nhận kênh nhận thông tin qua **Zalo**${detailText}. Em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và phần thông tin phù hợp trong ít phút tới ạ.`,
+        ["Gọi nhanh 2 phút", "Đặt lịch xem dự án", "Xem pháp lý"],
+        {
+          ...leadSignals,
+          contactPreference: "zalo",
+          hotness: "hot"
+        }
+      );
+    }
+
     return buildResponse(
       "Dạ anh/chị gửi giúp em **SĐT/Zalo** tại đây, em sẽ ưu tiên gửi **bảng giá nội bộ**, **video căn đẹp** và pháp lý trước qua Zalo rồi mới gọi nếu mình cần ạ.",
       ["Nhận bảng giá nội bộ", "Xem video căn đẹp", "Xem pháp lý"],
