@@ -180,7 +180,7 @@ export default function NativeOriginalLanding() {
 
                             <div className="reveal animate-fade-in-up hero-copy">
                                 <div
-                                    className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary-container/30 bg-primary-container/20 px-4 py-2 backdrop-blur-md mb-4 sm:mb-6">
+                                    className="hero-kicker inline-flex max-w-full items-center gap-2 rounded-full border border-primary-container/30 bg-primary-container/20 px-4 py-2 backdrop-blur-md mb-4 sm:mb-6">
                                     <span className="text-[10px] sm:text-xs">🌏</span>
                                     <span className="text-[9px] sm:text-xs font-black uppercase tracking-[0.16em] sm:tracking-[2.4px] text-white leading-tight">Vũng
                                         Tàu – Điểm Đến Biển Hàng Đầu Châu Á 2025</span>
@@ -199,11 +199,11 @@ export default function NativeOriginalLanding() {
                                 </div>
 
                                 <div className="hero-highlights mb-6 flex max-w-xl flex-wrap gap-3 sm:mb-8">
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                                    <div className="hero-highlight-chip inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
                                         <span>📈</span>
                                         Chính sách lợi nhuận dự kiến 12–18%/năm*
                                     </div>
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
+                                    <div className="hero-highlight-chip inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
                                         <span>🌴</span>
                                         Vừa nghỉ dưỡng – vừa sinh lời bền vững
                                     </div>
@@ -232,7 +232,7 @@ export default function NativeOriginalLanding() {
                                 </div>
 
 
-                                <div className="lg:hidden relative mt-5 mb-6 sm:mt-6 sm:mb-8 w-full max-w-[340px] mx-auto sm:mx-0 sm:max-w-[360px]">
+                                <div className="hero-mobile-metric-card lg:hidden relative mt-5 mb-6 sm:mt-6 sm:mb-8 w-full max-w-[340px] mx-auto sm:mx-0 sm:max-w-[360px]">
                                     <div className="absolute -inset-1 bg-primary-container/20 blur-xl rounded-2xl"></div>
                                     <div
                                         className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl shadow-2xl">
@@ -274,7 +274,7 @@ export default function NativeOriginalLanding() {
                             </div>
 
 
-                            <div className="hidden lg:block relative reveal">
+                            <div className="hero-showcase hidden lg:block relative reveal">
                                 <div className="absolute -inset-2 bg-primary-container/20 blur-2xl rounded-2xl"></div>
                                 <div className="relative rounded-2xl overflow-hidden border-4 border-white/10 shadow-3xl group">
                                     <img src="./sunshine-bay-retreat-9.jpg"
@@ -295,17 +295,17 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section id="tvc" className="py-24 bg-surface-container relative overflow-hidden">
+                <section id="tvc" className="landing-section bg-surface-container relative overflow-hidden">
                     <div className="app-container">
-                        <div className="text-center max-w-2xl mx-auto mb-16 reveal">
+                        <div className="section-header section-header--center reveal">
                             <span
-                                className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Video
+                                className="section-kicker text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block font-body">Video
                                 Tổng Quan</span>
                             <h2
-                                className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
+                                className="section-title text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
                                 Xem Tổng Quan <span className="text-primary-container">Dự Án</span> Trước Khi Xem Chi Tiết
                             </h2>
-                            <p className="text-base opacity-60 font-body leading-relaxed">
+                            <p className="section-description text-base opacity-60 font-body leading-relaxed">
                                 Video này giúp nắm nhanh vị trí, tiện ích và không gian dự án trước khi xem tiếp bảng giá,
                                 video căn đẹp hoặc tài liệu pháp lý cần đối chiếu kỹ hơn.
                             </p>
@@ -344,18 +344,18 @@ export default function NativeOriginalLanding() {
                     </div>
                 </section>
 
-                <section id="vitri" className="py-16 bg-white">
+                <section id="vitri" className="landing-section landing-section--compact bg-white">
                     <div className="app-container">
-                        <div className="grid lg:grid-cols-2 gap-6 items-end mb-8 reveal">
+                        <div className="section-header grid lg:grid-cols-2 gap-6 items-end reveal">
                             <div>
                                 <span
-                                    className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Vị
+                                    className="section-kicker text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Vị
                                     trí dự án</span>
                                 <h2
-                                    className="text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">
+                                    className="section-title text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">
                                     Đường Ba Tháng Hai, <span className="text-primary-container">Phường 11</span>, TP. Vũng Tàu</h2>
                             </div>
-                            <p className="text-on-surface/50 text-base md:text-lg max-w-md lg:ml-auto">
+                            <p className="section-description text-on-surface/50 text-base md:text-lg max-w-md lg:ml-auto">
                                 Theo website chính thức, đây là trục đường kết nối thuận tiện về trung tâm thành phố, Bãi Sau và sân bay Long Thành.
                             </p>
                         </div>
@@ -398,7 +398,7 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section id="vr-tour" className="py-24 bg-primary text-white relative overflow-hidden">
+                <section id="vr-tour" className="landing-section bg-primary text-white relative overflow-hidden">
                     <div
                         className="absolute inset-0 z-0 opacity-40 bg-[url('./sunshine-bay-retreat-28.jpg')] bg-cover bg-center mix-blend-overlay">
                     </div>
@@ -406,20 +406,20 @@ export default function NativeOriginalLanding() {
                     <div className="app-container relative z-10">
                         <div className="reveal mx-auto max-w-6xl">
                             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                                <div className="max-w-2xl">
+                                <div className="section-header max-w-2xl">
                                     <span
-                                        className="inline-flex items-center rounded-full border border-primary-container/25 bg-primary-container/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.34em] text-primary-container">Tham
+                                        className="section-kicker inline-flex items-center rounded-full border border-primary-container/25 bg-primary-container/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.34em] text-primary-container">Tham
                                         quan không gian</span>
                                     <h2
-                                        className="mt-5 text-[2rem] sm:text-[2.25rem] md:text-5xl font-black text-white leading-[1.08] md:leading-tight uppercase tracking-tighter">
+                                        className="section-title mt-5 text-[2rem] sm:text-[2.25rem] md:text-5xl font-black text-white leading-[1.08] md:leading-tight uppercase tracking-tighter">
                                         Xem <span className="text-primary-container">Không Gian Dự Án</span> <br /> Trực Tiếp Trên Trang
                                     </h2>
-                                    <p className="mt-5 max-w-xl text-base leading-8 text-white/66 md:text-lg">
+                                    <p className="section-description mt-5 max-w-xl text-base leading-8 text-white/66 md:text-lg">
                                         Tham quan nhanh không gian căn hộ và các góc nhìn nổi bật ngay trên website trước khi xem thêm bảng giá hoặc sắp xếp lịch đi thực tế.
                                     </p>
                                 </div>
 
-                                <div className="flex flex-wrap gap-3">
+                                <div className="vr-tour-header-actions flex flex-wrap gap-3">
                                     <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
                                         id="vr-tour-start"
                                         target="vr-tour-frame"
@@ -440,23 +440,23 @@ export default function NativeOriginalLanding() {
                             </div>
 
                             <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05))] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:p-5">
-                                <div className="flex flex-wrap gap-2">
+                                <div className="vr-tour-tabs flex flex-wrap gap-2">
                                     <button type="button"
                                         data-vr-tab="tour360"
                                         data-onclick="return switchVrTour('tour360')"
-                                        className="inline-flex items-center justify-center rounded-full border border-primary-container/20 bg-primary-container px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-lg shadow-primary-container/20 transition-all hover:brightness-105">
+                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-primary-container/20 bg-primary-container px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-lg shadow-primary-container/20 transition-all hover:brightness-105">
                                         Tham quan 360
                                     </button>
                                     <button type="button"
                                         data-vr-tab="panorama"
                                         data-onclick="return switchVrTour('panorama')"
-                                        className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
                                         Toàn cảnh
                                     </button>
                                     <button type="button"
                                         data-vr-tab="interior"
                                         data-onclick="return switchVrTour('interior')"
-                                        className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
                                         Nội thất
                                     </button>
                                 </div>
@@ -470,7 +470,7 @@ export default function NativeOriginalLanding() {
                                         name="vr-tour-frame"
                                         title="Tham quan không gian Sunshine Bay Retreat"
                                         src="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
-                                        className="h-[420px] w-full md:h-[620px]"
+                                        className="vr-tour-frame h-[420px] w-full md:h-[620px]"
                                         loading="lazy"
                                         allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
                                         referrerPolicy="strict-origin-when-cross-origin"
@@ -489,7 +489,7 @@ export default function NativeOriginalLanding() {
 
 
 
-                <section id="matbang" className="py-24 bg-surface-container">
+                <section id="matbang" className="landing-section bg-surface-container">
                     <div className="app-container">
                         <div className="text-center max-w-2xl mx-auto mb-16 reveal">
                             <span
@@ -677,7 +677,7 @@ export default function NativeOriginalLanding() {
                     </div>
                 </section>
 
-                <section id="developer" className="py-24 bg-white relative overflow-hidden">
+                <section id="developer" className="landing-section bg-white relative overflow-hidden">
                     <div className="app-container">
                         <div className="flex flex-col lg:flex-row items-center gap-16">
                             <div className="w-full lg:w-1/2 reveal">
@@ -724,7 +724,7 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section className="py-24 bg-surface">
+                <section className="landing-section bg-surface">
                     <div className="app-container">
                         <div className="grid lg:grid-cols-2 gap-12">
                             <div className="reveal">
@@ -804,7 +804,7 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section id="tienich" className="py-24 bg-primary text-white relative overflow-hidden">
+                <section id="tienich" className="landing-section bg-primary text-white relative overflow-hidden">
                     <div className="absolute inset-0 z-0">
                         <img alt="" className="w-full h-full object-cover opacity-10" src="./sunshine-bay-retreat-28.jpg" />
                     </div>
@@ -848,7 +848,7 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section id="tiendo" className="py-24 bg-white">
+                <section id="tiendo" className="landing-section bg-white">
                     <div className="app-container">
                         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal">
                             <div className="max-w-xl">
@@ -910,7 +910,7 @@ export default function NativeOriginalLanding() {
                 </section>
 
 
-                <section id="contact" className="py-24 bg-primary relative overflow-hidden">
+                <section id="contact" className="landing-section bg-primary relative overflow-hidden">
                     <div className="absolute inset-0">
                         <div className="absolute -top-16 left-0 h-56 w-56 rounded-full bg-primary-container/15 blur-3xl"></div>
                         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
@@ -921,21 +921,21 @@ export default function NativeOriginalLanding() {
                         <div className="grid gap-10 xl:grid-cols-[1.05fr_0.95fr] items-start">
                             <div className="reveal text-white">
                                 <span
-                                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary-container">
+                                    className="section-kicker inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary-container">
                                     <i className="fa-solid fa-file-signature"></i>
                                     Đăng ký ưu tiên
                                 </span>
-                                <h2 className="mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-[1.16] md:leading-[1.08]">
+                                <h2 className="section-title mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-[1.16] md:leading-[1.08]">
                                     <span className="block">Để Lại Thông Tin</span>
                                     <span className="block">Nhận Đúng Tài Liệu</span>
                                     <span className="block text-primary-container">Phù Hợp Nhu Cầu</span>
                                 </h2>
-                                <p className="mt-6 max-w-2xl text-base md:text-lg leading-8 text-white/75">
+                                <p className="section-description mt-6 max-w-2xl text-base md:text-lg leading-8 text-white/75">
                                     Anh/chị chỉ cần để lại thông tin cơ bản, hệ thống sẽ lọc và gửi đúng phần mình đang cần như bảng giá nội bộ,
                                     video căn đẹp, chính sách mới hoặc quỹ căn phù hợp tài chính để tiết kiệm thời gian chọn lọc.
                                 </p>
 
-                                <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                                <div className="contact-benefits mt-8 grid gap-4 sm:grid-cols-3">
                                     <div className="rounded-[1.75rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
                                         <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-container/20 text-primary-container text-xl">
                                             <i className="fa-solid fa-bolt"></i>
@@ -966,7 +966,7 @@ export default function NativeOriginalLanding() {
                                         </div>
                                         <div>
                                             <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-container">Thường được gửi trước</div>
-                                            <div className="mt-3 flex flex-wrap gap-3">
+                                            <div className="contact-tags mt-3 flex flex-wrap gap-3">
                                                 <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Bảng giá nội bộ</span>
                                                 <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Video căn đẹp</span>
                                                 <span className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">Quỹ căn hợp tài chính</span>
@@ -978,7 +978,7 @@ export default function NativeOriginalLanding() {
                             </div>
 
                             <div className="reveal">
-                                <div className="rounded-[2rem] bg-white p-6 sm:p-8 shadow-2xl">
+                                <div className="contact-form-card rounded-[2rem] bg-white p-6 sm:p-8 shadow-2xl">
                                     <div className="text-center mb-8">
                                         <div
                                             className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/15 text-2xl text-primary-container">
@@ -1079,7 +1079,7 @@ export default function NativeOriginalLanding() {
 
             <footer className="bg-primary pt-16 pb-28 px-6 border-t border-white/5 md:px-12 md:pt-24 md:pb-12">
                 <div className="app-container">
-                    <div className="grid grid-cols-1 gap-10 mb-12 md:grid-cols-4 md:gap-16 md:mb-20">
+                    <div className="footer-grid grid grid-cols-1 gap-10 mb-12 md:grid-cols-4 md:gap-16 md:mb-20">
                         <div className="md:col-span-1">
                             <div className="flex items-center gap-3 mb-8">
                                 <i className="fa-solid fa-crown text-primary-container text-xl"></i>
@@ -1306,32 +1306,101 @@ export default function NativeOriginalLanding() {
             transform: translateY(0) scale(1);
         }
 
+        .landing-section {
+            padding-top: 6.5rem;
+            padding-bottom: 6.5rem;
+        }
+
+        .landing-section--compact {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-header--center {
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .section-kicker {
+            line-height: 1.28;
+        }
+
+        .section-title {
+            text-wrap: balance;
+        }
+
+        .section-description {
+            line-height: 1.75;
+        }
+
+        .hero-kicker {
+            width: fit-content;
+            max-width: min(100%, 37rem);
+        }
+
+        .hero-award-line {
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .hero-highlight-chip {
+            min-height: 2.85rem;
+        }
+
+        .hero-mobile-metric-card {
+            max-width: min(100%, 22rem);
+        }
+
+        .hero-showcase {
+            width: 100%;
+            max-width: 38rem;
+            margin-left: auto;
+        }
+
+        .vr-tour-header-actions > * {
+            min-height: 3.25rem;
+        }
+
+        .footer-grid {
+            align-items: start;
+        }
+
         .hero-copy .hero-title--mobile {
             display: flex;
             flex-direction: column;
-            row-gap: 0.04em;
-            line-height: 0.94;
-            padding-top: 0.22em;
-            padding-bottom: 0.2em;
+            row-gap: 0.06em;
+            line-height: 1;
+            padding-top: 0.28em;
+            padding-bottom: 0.24em;
             overflow: visible;
         }
 
         .hero-copy .hero-title-line {
             display: block;
-            line-height: 0.9;
+            line-height: 1.02;
+            padding-top: 0.04em;
+            padding-bottom: 0.02em;
             overflow: visible;
         }
 
         .hero-copy .hero-title-line--eyebrow {
             font-size: 0.48em;
-            line-height: 1.04;
+            line-height: 1.18;
             letter-spacing: 0.18em;
             color: rgba(255, 255, 255, 0.92);
         }
 
         .hero-copy .hero-title-line--accent {
             font-size: 1.18em;
-            line-height: 0.84;
+            line-height: 0.96;
+            padding-top: 0.08em;
+            padding-bottom: 0.08em;
             background: linear-gradient(90deg, #ffffff 0%, #F3DEB4 42%, #C5A059 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -1341,7 +1410,7 @@ export default function NativeOriginalLanding() {
 
         .hero-copy .hero-title-line--support {
             font-size: 0.42em;
-            line-height: 1.02;
+            line-height: 1.12;
             letter-spacing: 0.08em;
             color: rgba(255, 255, 255, 0.9);
         }
@@ -1355,39 +1424,93 @@ export default function NativeOriginalLanding() {
         }
 
         @media (min-width: 768px) {
+            .app-container {
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+
+            .landing-section {
+                padding-top: 5.75rem;
+                padding-bottom: 5.75rem;
+            }
+
+            .landing-section--compact {
+                padding-top: 4.75rem;
+                padding-bottom: 4.75rem;
+            }
+
+            .contact-benefits {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .contact-benefits > div:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-grid {
+                grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .footer-grid > :first-child {
+                grid-column: 1 / -1;
+            }
+
             .hero-banner-content {
                 padding-top: 6.5rem !important;
                 padding-bottom: 4.75rem !important;
             }
 
             .hero-copy {
-                max-width: 40rem;
+                max-width: 36rem;
             }
 
             .hero-copy .hero-title--mobile {
                 font-size: clamp(3.45rem, 4.95vw, 4.55rem);
-                row-gap: 0.06em;
-                line-height: 0.96;
-                padding-top: 0.28em;
-                padding-bottom: 0.24em;
+                row-gap: 0.08em;
+                line-height: 1.01;
+                padding-top: 0.34em;
+                padding-bottom: 0.28em;
             }
 
             .hero-copy .hero-title-line {
-                line-height: 0.95;
+                line-height: 1.02;
             }
 
             .hero-copy .hero-title-line--eyebrow {
                 font-size: 0.44em;
                 letter-spacing: 0.22em;
+                line-height: 1.16;
             }
 
             .hero-copy .hero-title-line--accent {
                 font-size: 1.22em;
+                line-height: 0.98;
+                padding-top: 0.09em;
+                padding-bottom: 0.09em;
             }
 
             .hero-copy .hero-title-line--support {
                 font-size: 0.38em;
                 letter-spacing: 0.1em;
+                line-height: 1.1;
+            }
+
+            .hero-kicker span:last-child {
+                letter-spacing: 0.15em !important;
+            }
+
+            .hero-award-line {
+                font-size: 0.68rem !important;
+                letter-spacing: 0.14em !important;
+            }
+
+            .hero-mobile-metric-card {
+                max-width: 24rem;
+            }
+
+            .vr-tour-header-actions {
+                width: 100%;
+                justify-content: flex-start;
             }
 
             .hero-copy .hero-title-price-display {
@@ -1400,6 +1523,32 @@ export default function NativeOriginalLanding() {
         }
 
         @media (min-width: 1024px) {
+            .landing-section {
+                padding-top: 6.5rem;
+                padding-bottom: 6.5rem;
+            }
+
+            .landing-section--compact {
+                padding-top: 5rem;
+                padding-bottom: 5rem;
+            }
+
+            .contact-benefits {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+
+            .contact-benefits > div:last-child {
+                grid-column: auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
+
+            .footer-grid > :first-child {
+                grid-column: auto;
+            }
+
             .hero-actions {
                 width: fit-content;
                 max-width: 100%;
@@ -1424,6 +1573,42 @@ export default function NativeOriginalLanding() {
         }
 
         @media (max-width: 767px) {
+            .app-container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .landing-section {
+                padding-top: 4.75rem !important;
+                padding-bottom: 4.75rem !important;
+            }
+
+            .landing-section--compact {
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
+            }
+
+            .section-header {
+                margin-bottom: 2rem !important;
+            }
+
+            .section-kicker {
+                margin-bottom: 0.9rem !important;
+                font-size: 0.6rem !important;
+                letter-spacing: 0.22em !important;
+            }
+
+            .section-title {
+                font-size: clamp(1.9rem, 8vw, 2.45rem) !important;
+                line-height: 1.08 !important;
+                margin-bottom: 0 !important;
+            }
+
+            .section-description {
+                font-size: 0.98rem !important;
+                line-height: 1.72 !important;
+            }
+
             .hero-banner-section {
                 align-items: flex-start;
             }
@@ -1442,32 +1627,57 @@ export default function NativeOriginalLanding() {
                 font-size: clamp(2.6rem, 12vw, 3.5rem);
                 display: flex;
                 flex-direction: column;
-                row-gap: 0.02em;
-                line-height: 1;
-                padding-top: 0.3em;
-                padding-bottom: 0.16em;
+                row-gap: 0.05em;
+                line-height: 1.04;
+                padding-top: 0.36em;
+                padding-bottom: 0.22em;
             }
 
             .hero-copy .hero-title-line {
                 display: block;
-                line-height: 0.98;
+                line-height: 1.04;
             }
 
             .hero-copy .hero-title-line--eyebrow {
                 font-size: 0.42em;
                 letter-spacing: 0.16em;
-                line-height: 1.08;
+                line-height: 1.2;
             }
 
             .hero-copy .hero-title-line--accent {
                 font-size: 1.08em;
-                line-height: 0.88;
+                line-height: 0.98;
+                padding-top: 0.08em;
+                padding-bottom: 0.09em;
             }
 
             .hero-copy .hero-title-line--support {
                 font-size: 0.4em;
-                line-height: 1.04;
+                line-height: 1.12;
                 letter-spacing: 0.06em;
+            }
+
+            .hero-kicker {
+                width: 100%;
+                max-width: none;
+                padding: 0.62rem 0.85rem !important;
+                border-radius: 1rem !important;
+            }
+
+            .hero-kicker span:last-child {
+                font-size: 0.56rem !important;
+                letter-spacing: 0.11em !important;
+                line-height: 1.26 !important;
+            }
+
+            .hero-award-line {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 0.72rem 0.9rem !important;
+                border-radius: 1rem !important;
+                font-size: 0.62rem !important;
+                letter-spacing: 0.12em !important;
+                line-height: 1.35;
             }
 
             .hero-copy .hero-title-price-display {
@@ -1494,16 +1704,145 @@ export default function NativeOriginalLanding() {
             .hero-highlights > div {
                 width: 100%;
                 min-width: 0;
-                justify-content: center;
+                justify-content: flex-start;
+            }
+
+            .hero-highlight-chip {
+                min-height: 3rem;
+                padding: 0.8rem 0.9rem !important;
+                font-size: 0.58rem !important;
+                letter-spacing: 0.14em !important;
+                line-height: 1.35;
+            }
+
+            .hero-mobile-metric-card {
+                max-width: none !important;
+                margin-top: 1.25rem !important;
+                margin-bottom: 1.75rem !important;
+            }
+
+            .hero-mobile-metric-card > .relative {
+                border-radius: 1.5rem !important;
+                padding: 1rem !important;
+            }
+
+            .hero-showcase {
+                max-width: none;
             }
 
             .hero-actions button {
                 min-height: 3.4rem;
+                width: 100%;
             }
 
             .hero-actions button span {
                 white-space: normal !important;
                 text-align: center;
+            }
+
+            .hero-actions .gold-button span {
+                font-size: 0.72rem !important;
+                letter-spacing: 0.08em !important;
+            }
+
+            .hero-actions button:not(.gold-button) {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            #tvc .max-w-5xl {
+                max-width: none !important;
+            }
+
+            #tvc .aspect-video {
+                border-width: 3px !important;
+                border-radius: 1.25rem !important;
+            }
+
+            #vitri .amenity-card {
+                padding: 1.35rem !important;
+                border-radius: 1.4rem !important;
+            }
+
+            #vitri .amenity-card h3 {
+                font-size: 1.1rem !important;
+                line-height: 1.15 !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .vr-tour-header-actions {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                width: 100%;
+            }
+
+            .vr-tour-header-actions > * {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .vr-tour-tabs {
+                display: grid !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.5rem !important;
+            }
+
+            .vr-tour-tab {
+                min-height: 3rem;
+                padding: 0.75rem 0.5rem !important;
+                font-size: 0.56rem !important;
+                letter-spacing: 0.1em !important;
+                white-space: normal;
+                line-height: 1.25;
+            }
+
+            .vr-tour-frame {
+                height: 19.5rem !important;
+            }
+
+            #vr-tour-viewer-shell {
+                border-radius: 1.25rem !important;
+            }
+
+            .contact-benefits {
+                grid-template-columns: 1fr !important;
+            }
+
+            .contact-benefits > div {
+                padding: 1.1rem !important;
+                border-radius: 1.35rem !important;
+            }
+
+            .contact-tags {
+                gap: 0.5rem !important;
+            }
+
+            .contact-tags > span {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .contact-form-card {
+                border-radius: 1.5rem !important;
+                padding: 1.25rem !important;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 2rem 1.25rem !important;
+            }
+
+            .footer-grid > :first-child,
+            .footer-grid > :last-child {
+                grid-column: 1 / -1;
+            }
+
+            footer .app-container > p {
+                max-width: 18rem;
+                margin-left: auto;
+                margin-right: auto;
+                line-height: 1.6;
             }
 
             .chatbot-panel {
@@ -1581,6 +1920,8 @@ export default function NativeOriginalLanding() {
         @media (max-width: 389px) {
             .hero-copy .hero-title--mobile {
                 font-size: clamp(2.35rem, 12vw, 3rem);
+                line-height: 1.06;
+                padding-top: 0.4em;
             }
 
             .hero-copy .hero-title-price-display {
@@ -1598,4 +1939,3 @@ export default function NativeOriginalLanding() {
         </>
     );
 }
-
