@@ -165,7 +165,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
         }
       />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 min-[460px]:grid-cols-2 2xl:grid-cols-4">
         <DashboardMetricCard
           label="Lead đang hiển thị"
           value={filteredLeads.length}
@@ -201,9 +201,10 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
         />
       </section>
 
-      <DashboardSurfaceCard className="p-5 sm:p-6">
+      <DashboardSurfaceCard className="p-4 sm:p-5 xl:p-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div>            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Tìm đúng nhóm khách cần xử lý</h2>
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Tìm đúng nhóm khách cần xử lý</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             <DashboardBadge>{filteredLeads.length} lead</DashboardBadge>
@@ -211,8 +212,8 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
           </div>
         </div>
 
-        <form method="get" className="mt-6 grid gap-4 lg:grid-cols-6">
-          <label className="block lg:col-span-2">
+        <form method="get" className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-12">
+          <label className="block sm:col-span-2 xl:col-span-4">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Tìm kiếm</div>
             <input
               type="text"
@@ -223,7 +224,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             />
           </label>
 
-          <label className="block">
+          <label className="block xl:col-span-2">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Nguồn</div>
             <select name="source" defaultValue={filters.source} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
               <option value="">Tất cả</option>
@@ -235,7 +236,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </select>
           </label>
 
-          <label className="block">
+          <label className="block xl:col-span-2">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Độ nóng</div>
             <select name="hotness" defaultValue={filters.hotness} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
               <option value="">Tất cả</option>
@@ -247,7 +248,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </select>
           </label>
 
-          <label className="block">
+          <label className="block xl:col-span-2">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Trạng thái</div>
             <select name="status" defaultValue={filters.status} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
               <option value="">Tất cả</option>
@@ -259,7 +260,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </select>
           </label>
 
-          <label className="block">
+          <label className="block xl:col-span-2">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Nhu cầu</div>
             <select name="need" defaultValue={filters.need} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
               <option value="">Tất cả</option>
@@ -271,7 +272,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </select>
           </label>
 
-          <label className="block lg:col-span-2">
+          <label className="block sm:col-span-2 xl:col-span-4">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Ngân sách</div>
             <select name="budget" defaultValue={filters.budget} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
               <option value="">Tất cả</option>
@@ -283,7 +284,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </select>
           </label>
 
-          <div className="flex flex-wrap gap-3 lg:col-span-4 lg:items-end">
+          <div className="flex flex-wrap gap-3 sm:col-span-2 xl:col-span-12 xl:items-end">
             <button type="submit" className={dashboardButtonClasses()}>
               Áp dụng bộ lọc
             </button>
@@ -296,11 +297,11 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
         </form>
       </DashboardSurfaceCard>
 
-      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.24fr)_340px]">
+      <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)]">
         <DashboardSurfaceCard className="overflow-hidden">
-          <div className="flex flex-col gap-4 border-b border-slate-200/80 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+          <div className="flex flex-col gap-4 border-b border-slate-200/80 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5 xl:px-6">
             <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Danh sách lead</h2>
+              <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Danh sách lead</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               <DashboardBadge>{snapshot.connection.leadSource}</DashboardBadge>
@@ -311,7 +312,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
 
           {filteredLeads.length > 0 ? (
             <>
-              <div className={`grid gap-4 border-t border-slate-200/80 p-4 md:hidden ${dashboardScrollAreaClasses("card")}`}>
+              <div className={`grid gap-4 border-t border-slate-200/80 p-4 sm:grid-cols-2 md:hidden ${dashboardScrollAreaClasses("card")}`}>
                 {filteredLeads.map((lead) => {
                   const quickActions = buildLeadQuickActions(lead);
 
@@ -330,7 +331,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                         </div>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-2">
+                      <div className="mt-4 grid grid-cols-2 gap-2 min-[480px]:flex min-[480px]:flex-wrap">
                         <DashboardBadge className={getLeadSourceTone(lead.source)}>{getLeadSourceLabel(lead.source)}</DashboardBadge>
                         <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getHotnessTone(lead.hotness)}`}>
                           {lead.hotness}
@@ -374,7 +375,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                             href={action.href}
                             target={action.external ? "_blank" : undefined}
                             rel={action.external ? "noreferrer" : undefined}
-                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 sm:text-xs"
                           >
                             <i className={`fa-solid ${action.icon}`}></i>
                             {action.label}
@@ -387,7 +388,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
               </div>
 
               <div className={`hidden md:block ${dashboardScrollAreaClasses("table")}`}>
-                <table className="min-w-[1260px] w-full border-separate border-spacing-0 text-left text-sm">
+                <table className="min-w-[1040px] w-full border-separate border-spacing-0 text-left text-sm xl:min-w-[1200px]">
                   <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
                     <tr>
                       <th className="sticky left-0 top-0 z-20 bg-slate-50 px-6 py-4 shadow-[1px_0_0_0_rgb(226_232_240)]">Khách</th>
@@ -475,10 +476,11 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
           )}
         </DashboardSurfaceCard>
 
-        <div className="grid gap-6">
-          <DashboardSurfaceCard className="p-6">
+        <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-1">
+          <DashboardSurfaceCard className="p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
-              <div>                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Lead nóng gần đây</h2>
+              <div>
+                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lead nóng gần đây</h2>
               </div>
               <Link href={buildLeadFilterHref(filters, { hotness: "Nóng" })} className={dashboardButtonClasses("outline")}>
                 Mở nhóm nóng
@@ -506,7 +508,8 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
             </div>
           </DashboardSurfaceCard>
 
-          <DashboardSurfaceCard className="p-6">            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Trạng thái xử lý</h2>
+          <DashboardSurfaceCard className="p-5 sm:p-6">
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Trạng thái xử lý</h2>
             <div className={`mt-5 space-y-4 ${dashboardScrollAreaClasses("card")}`}>
               {snapshot.statusBreakdown.slice(0, 6).map((item) => (
                 <Link key={item.label} href={buildLeadFilterHref(filters, { status: item.label })} className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">

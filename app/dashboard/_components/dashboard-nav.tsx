@@ -44,7 +44,7 @@ export function DashboardNav({ mobile = false }: DashboardNavProps) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-black uppercase tracking-[0.16em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 text-[10px] font-black uppercase tracking-[0.16em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
           aria-expanded={open}
           aria-controls="dashboard-mobile-drawer"
         >
@@ -66,14 +66,13 @@ export function DashboardNav({ mobile = false }: DashboardNavProps) {
           <aside
             id="dashboard-mobile-drawer"
             className={cn(
-              "absolute inset-y-0 left-0 flex w-[86vw] max-w-[320px] flex-col border-r border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.18)] transition-transform duration-300",
+              "absolute inset-y-0 left-0 flex w-[84vw] max-w-[296px] flex-col border-r border-slate-200 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.18)] transition-transform duration-300",
               open ? "translate-x-0" : "-translate-x-full"
             )}
           >
             <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-5">
               <div className="min-w-0">
                 <div className="truncate text-base font-black tracking-tight text-slate-950">Sunshine Bay Retreat</div>
-                <div className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">Dashboard</div>
               </div>
               <button
                 type="button"
@@ -85,7 +84,7 @@ export function DashboardNav({ mobile = false }: DashboardNavProps) {
               </button>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-4 py-4">
+            <nav className="flex-1 overflow-y-auto px-4 py-5">
               <div className="grid gap-2">
                 {dashboardNavItems.map((item) => {
                   const isActive = pathname === item.href;
@@ -95,7 +94,7 @@ export function DashboardNav({ mobile = false }: DashboardNavProps) {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        "rounded-xl border px-4 py-3 text-sm font-black transition",
+                        "rounded-2xl border px-4 py-3.5 text-sm font-black transition",
                         isActive
                           ? "border-slate-900 bg-slate-950 text-white shadow-sm"
                           : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
@@ -122,13 +121,13 @@ export function DashboardNav({ mobile = false }: DashboardNavProps) {
           <Link
             key={item.href}
             href={item.href}
-            className={`rounded-xl border px-4 py-3 transition ${
+            className={`rounded-2xl border px-4 py-3.5 transition ${
               isActive
                 ? "border-slate-900 bg-slate-950 text-white shadow-sm"
                 : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
             }`}
           >
-            <span className="block text-sm font-black">{item.label}</span>
+            <span className="block text-[15px] font-black">{item.label}</span>
           </Link>
         );
       })}

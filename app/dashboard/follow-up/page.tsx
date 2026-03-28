@@ -69,7 +69,7 @@ export default async function DashboardFollowUpPage() {
         }
       />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 min-[460px]:grid-cols-2 2xl:grid-cols-4">
         <DashboardMetricCard
           label="Lead ưu tiên"
           value={priorityLeads.length}
@@ -104,13 +104,13 @@ export default async function DashboardFollowUpPage() {
         />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
-        <DashboardSurfaceCard className="p-6">
+      <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.04fr)_minmax(320px,0.96fr)]">
+        <DashboardSurfaceCard className="p-5 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Lead nên xử lý trước</h2>
+              <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lead nên xử lý trước</h2>
             </div>
-            <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-slate-600">
+            <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-bold text-slate-600">
               {priorityLeads.length} lead ưu tiên
             </div>
           </div>
@@ -141,7 +141,7 @@ export default async function DashboardFollowUpPage() {
                       </div>
                     </div>
                     <p className="mt-3 text-sm leading-6 text-slate-600">{getRecommendedFollowUp(lead)}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-4 grid grid-cols-2 gap-2 min-[480px]:flex min-[480px]:flex-wrap">
                       <Link href={`/dashboard/leads/${lead.id}`} className={dashboardButtonClasses()}>
                         Xem detail
                       </Link>
@@ -166,8 +166,9 @@ export default async function DashboardFollowUpPage() {
           </div>
         </DashboardSurfaceCard>
 
-        <div className="grid gap-6">
-          <DashboardSurfaceCard className="p-6">            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Đi tới đúng nhóm việc</h2>
+        <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-1">
+          <DashboardSurfaceCard className="p-5 sm:p-6">
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Đi tới đúng nhóm việc</h2>
             <div className="mt-6 space-y-3">
               {actionBuckets.map((item) => (
                 <Link key={item.label} href={item.href} className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
@@ -180,7 +181,8 @@ export default async function DashboardFollowUpPage() {
             </div>
           </DashboardSurfaceCard>
 
-          <DashboardSurfaceCard className="p-6">            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Hoạt động gần đây</h2>
+          <DashboardSurfaceCard className="p-5 sm:p-6">
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Hoạt động gần đây</h2>
             <div className={`mt-6 space-y-4 ${dashboardScrollAreaClasses("card")}`}>
               {snapshot.recentEvents.slice(0, 10).map((event) => (
                 <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">

@@ -74,16 +74,16 @@ export default async function DashboardOverviewPage() {
         }
       />
 
-      <section className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+      <section className="grid gap-4 min-[460px]:grid-cols-2 2xl:grid-cols-4">
         {metricCards.map((card) => (
           <DashboardMetricCard key={card.label} {...card} />
         ))}
       </section>
 
-      <section className="grid items-start gap-6 xl:grid-cols-[1fr_0.92fr]">
-        <DashboardSurfaceCard className="self-start p-6">
+      <section className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.02fr)_minmax(320px,0.98fr)]">
+        <DashboardSurfaceCard className="self-start p-5 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-2xl font-black tracking-tight text-slate-950">Lead nên xử lý trước</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lead nên xử lý trước</h2>
             <Link href="/dashboard/follow-up" className={dashboardButtonClasses("outline")}>
               Follow-up
             </Link>
@@ -116,9 +116,9 @@ export default async function DashboardOverviewPage() {
           </div>
         </DashboardSurfaceCard>
 
-        <DashboardSurfaceCard className="p-6">
+        <DashboardSurfaceCard className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-black tracking-tight text-slate-950">Event mới nhất</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Event mới nhất</h2>
             <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
               Analytics
             </Link>

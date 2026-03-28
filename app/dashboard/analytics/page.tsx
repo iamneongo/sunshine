@@ -120,10 +120,10 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
         }
       />
 
-      <DashboardSurfaceCard className="p-5 sm:p-6">
+      <DashboardSurfaceCard className="p-4 sm:p-5 xl:p-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Lọc activity cần xem</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lọc activity cần xem</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             <DashboardBadge>{filteredEvents.length} event</DashboardBadge>
@@ -131,7 +131,7 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
           </div>
         </div>
 
-        <form method="get" className="mt-6 grid gap-4 md:grid-cols-3 xl:grid-cols-[1.3fr_1fr_auto]">
+        <form method="get" className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,0.95fr)_auto]">
           <label className="block">
             <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Tên event</div>
             <select name="event" defaultValue={filters.event} className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400">
@@ -169,11 +169,11 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
         </form>
       </DashboardSurfaceCard>
 
-      <section className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr] xl:gap-6">
+      <section className="grid gap-5 2xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] xl:gap-6">
         <DashboardSurfaceCard className="p-5 sm:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">7 ngày gần đây</h2>
+              <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">7 ngày gần đây</h2>
             </div>
           </div>
 
@@ -217,7 +217,7 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
         <DashboardSurfaceCard className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Sự kiện nổi bật</h2>
+              <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Sự kiện nổi bật</h2>
             </div>
             {hasFilters ? <DashboardBadge variant="warning">Đang lọc</DashboardBadge> : null}
           </div>
@@ -241,42 +241,40 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
         </DashboardSurfaceCard>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2 2xl:grid-cols-3 xl:gap-6">
+      <section className="grid gap-5 sm:grid-cols-2 2xl:grid-cols-3 xl:gap-6">
         {breakdownCards.map((group) => (
           <DashboardBreakdownCard key={group.title} {...group} />
         ))}
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-[0.94fr_1.06fr] xl:gap-6">
-        <DashboardSurfaceCard className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Hoạt động gần đây</h2>
-            </div>
-            {hasFilters ? (
-              <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
-                Xóa lọc
-              </Link>
-            ) : null}
+      <DashboardSurfaceCard className="p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Hoạt động gần đây</h2>
           </div>
-          <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
-            {filteredEvents.slice(0, 12).map((event) => (
-              <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <div className="text-sm font-black text-slate-950">{event.name}</div>
-                    <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{event.source}</div>
-                  </div>
-                  <div className="shrink-0 text-xs text-slate-500">{formatDateTime(event.createdAt)}</div>
+          {hasFilters ? (
+            <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
+              Xóa lọc
+            </Link>
+          ) : null}
+        </div>
+        <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+          {filteredEvents.slice(0, 12).map((event) => (
+            <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-lg border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <div className="text-sm font-black text-slate-950">{event.name}</div>
+                  <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{event.source}</div>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{event.summary}</p>
-              </Link>
-            ))}
+                <div className="shrink-0 text-xs text-slate-500">{formatDateTime(event.createdAt)}</div>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{event.summary}</p>
+            </Link>
+          ))}
 
-            {filteredEvents.length === 0 ? <DashboardEmptyState message="Không có event phù hợp với bộ lọc hiện tại." /> : null}
-          </div>
-        </DashboardSurfaceCard>
-      </section>
+          {filteredEvents.length === 0 ? <DashboardEmptyState message="Không có event phù hợp với bộ lọc hiện tại." /> : null}
+        </div>
+      </DashboardSurfaceCard>
     </div>
   );
 }

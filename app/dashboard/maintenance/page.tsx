@@ -159,9 +159,9 @@ export default async function DashboardMaintenancePage({ searchParams }: Dashboa
         }
       />
 
-      <DashboardSurfaceCard className="border border-rose-200/80 bg-rose-50/60 p-6">
+      <DashboardSurfaceCard className="border border-rose-200/80 bg-rose-50/60 p-5 sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <h2 className="text-2xl font-black tracking-tight text-slate-950">Clear data test</h2>
+          <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Clear data test</h2>
           <div className="flex flex-wrap gap-2">
             <DashboardBadge variant="warning">{testDataAudit.leadCount} lead test</DashboardBadge>
             <DashboardBadge variant="warning">{testDataAudit.eventCount} event test</DashboardBadge>
@@ -177,8 +177,8 @@ export default async function DashboardMaintenancePage({ searchParams }: Dashboa
           </div>
         ) : null}
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
-          <div className="space-y-4">
+        <div className="mt-6 grid gap-6 2xl:grid-cols-[minmax(0,1.06fr)_minmax(320px,0.94fr)]">
+          <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-1">
             <div className="rounded-xl border border-white/80 bg-white/80 p-4">
               <div className="flex items-center justify-between gap-4">
                 <h3 className="text-lg font-black tracking-tight text-slate-950">Lead test</h3>
@@ -283,9 +283,9 @@ export default async function DashboardMaintenancePage({ searchParams }: Dashboa
         </div>
       </DashboardSurfaceCard>
 
-      <DashboardSurfaceCard className="border border-slate-300/80 bg-slate-100/70 p-6">
+      <DashboardSurfaceCard className="border border-slate-300/80 bg-slate-100/70 p-5 sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <h2 className="text-2xl font-black tracking-tight text-slate-950">Xóa data người dùng</h2>
+          <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Xóa data người dùng</h2>
           <div className="flex flex-wrap gap-2">
             <DashboardBadge className="border-slate-300 bg-white text-slate-700">{userDataAudit.leadCount} lead</DashboardBadge>
             <DashboardBadge className="border-slate-300 bg-white text-slate-700">{userDataAudit.eventCount} event</DashboardBadge>
@@ -301,8 +301,8 @@ export default async function DashboardMaintenancePage({ searchParams }: Dashboa
           </div>
         ) : null}
 
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1.06fr_0.94fr]">
-          <div className="space-y-4">
+        <div className="mt-6 grid gap-6 2xl:grid-cols-[minmax(0,1.06fr)_minmax(320px,0.94fr)]">
+          <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-1">
             <div className="rounded-xl border border-white/80 bg-white/80 p-4">
               <div className="flex items-center justify-between gap-4">
                 <h3 className="text-lg font-black tracking-tight text-slate-950">Lead người dùng</h3>

@@ -62,7 +62,7 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
       />
 
       <DashboardSurfaceCard className="p-5 sm:p-6">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex flex-col gap-5 2xl:flex-row 2xl:items-start 2xl:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap gap-2">
               <DashboardBadge className="border-slate-200 bg-slate-100 text-slate-700">{event.source}</DashboardBadge>
@@ -73,7 +73,7 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
             <p className="mt-3 text-sm leading-7 text-slate-600">{event.summary}</p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 xl:w-[420px] xl:grid-cols-1">
+          <div className="grid gap-3 sm:grid-cols-3 2xl:w-[420px] 2xl:grid-cols-1">
             <InfoField label="Thời gian" value={formatDateTime(event.createdAt)} />
             <InfoField label="Session" value={event.sessionId || "Chưa có"} />
             <InfoField label="Lead ID" value={event.leadId || "Chưa gắn"} />
@@ -84,7 +84,7 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
       <section className="grid gap-6 2xl:grid-cols-[minmax(0,0.94fr)_minmax(340px,1.06fr)]">
         <div className="space-y-6">
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Thông tin đi kèm event</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Thông tin đi kèm event</h2>
             <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
               {metadataEntries.length > 0 ? (
                 metadataEntries.map(([key, value]) => (
@@ -102,7 +102,7 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
           <DashboardSurfaceCard className="p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Mở nhanh event tương tự</h2>
+                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Mở nhanh event tương tự</h2>
               </div>
               <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
                 Xem hết analytics
@@ -135,7 +135,7 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
 
         <div className="space-y-6">
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Kết nối với hồ sơ khách</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Kết nối với hồ sơ khách</h2>
             {relatedLead ? (
               <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex flex-wrap gap-2">

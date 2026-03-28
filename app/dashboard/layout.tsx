@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <main className="min-h-screen bg-slate-100 text-slate-950">
-      <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-[272px_minmax(0,1fr)] xl:grid-cols-[288px_minmax(0,1fr)]">
         <aside className="hidden border-r border-slate-200 bg-white lg:block">
-          <div className="sticky top-0 flex h-screen flex-col px-6 py-6">
-            <div className="pb-8">
+          <div className="sticky top-0 flex h-screen flex-col px-5 py-5 xl:px-6 xl:py-6">
+            <div className="pb-7">
               <div className="text-lg font-black tracking-tight text-slate-950">Sunshine Bay Retreat</div>
             </div>
 
@@ -26,17 +26,27 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         </aside>
 
         <div className="min-w-0 bg-slate-50">
-          <div className="border-b border-slate-200 bg-white lg:hidden">
-            <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
-              <div className="min-w-0">
+          <div className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/95 backdrop-blur lg:hidden">
+            <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
+              <div className="min-w-0 flex-1">
                 <div className="truncate text-base font-black tracking-tight text-slate-950 sm:text-lg">Sunshine Bay Retreat</div>
               </div>
-              <DashboardNav mobile />
+              <div className="flex items-center gap-2">
+                <form action="/api/auth/logout" method="post" className="lg:hidden">
+                  <button
+                    type="submit"
+                    className={`${dashboardButtonClasses("outline")} px-3 py-2 text-[10px] tracking-[0.14em]`}
+                  >
+                    Đăng xuất
+                  </button>
+                </form>
+                <DashboardNav mobile />
+              </div>
             </div>
           </div>
 
-          <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-            <div className="mb-5 flex justify-end">
+          <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+            <div className="mb-5 hidden justify-end lg:flex">
               <form action="/api/auth/logout" method="post">
                 <button type="submit" className={dashboardButtonClasses("outline")}>
                   Đăng xuất

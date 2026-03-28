@@ -117,7 +117,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
       ) : null}
 
       <DashboardSurfaceCard className="p-5 sm:p-6">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap gap-2">
               <DashboardBadge className={getLeadSourceTone(lead.source)}>{getLeadSourceLabel(lead.source)}</DashboardBadge>
@@ -139,7 +139,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
             </div>
           </div>
 
-          <div className="xl:w-[320px]">
+          <div className="2xl:w-[320px]">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="mt-4 flex flex-wrap gap-2">
                 {quickActions.length > 0 ? (
@@ -177,7 +177,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
       <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
         <div className="space-y-6">
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Hồ sơ và ngữ cảnh</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Hồ sơ và ngữ cảnh</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <InfoField label="Điện thoại" value={lead.phone} />
               <InfoField label="Zalo" value={lead.zalo} />
@@ -209,7 +209,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
           <DashboardSurfaceCard className="p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Lịch sử tương tác</h2>
+                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lịch sử tương tác</h2>
               </div>
               <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
                 Mở analytics
@@ -242,7 +242,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
 
         <div className="space-y-6">
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Điều chỉnh trạng thái xử lý</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Điều chỉnh trạng thái xử lý</h2>
             <form action={`/api/dashboard/leads/${lead.id}`} method="post" className="mt-6 space-y-4">
               <input type="hidden" name="returnTo" value={`/dashboard/leads/${lead.id}`} />
 
@@ -357,7 +357,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
           </DashboardSurfaceCard>
 
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Checklist follow-up</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Checklist follow-up</h2>
             <div className="mt-6 space-y-3">
               {nextSteps.map((step) => (
                 <div key={step} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-7 text-slate-600">
@@ -370,7 +370,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
           <DashboardSurfaceCard className="p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Mở nhanh lead liên quan</h2>
+                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Mở nhanh lead liên quan</h2>
               </div>
               <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
                 Mở danh sách
@@ -402,7 +402,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
           </DashboardSurfaceCard>
 
           <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-950">Thông tin kỹ thuật đi kèm</h2>
+            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Thông tin kỹ thuật đi kèm</h2>
             <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
               {metadataEntries.length > 0 ? (
                 metadataEntries.map(([key, value]) => (
