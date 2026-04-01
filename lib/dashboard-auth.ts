@@ -48,11 +48,29 @@ export function getSafeDashboardRedirectPath(next: string | null | undefined): s
   return normalized;
 }
 
-export function getDashboardSessionCookieOptions() {
+function shouldUseSecureDashboardCookie(request?: Request): boolean {
+  if (request) {
+    const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim().toLowerCase();
+
+    if (forwardedProto) {
+      return forwardedProto === "https";
+    }
+
+    try {
+      return new URL(request.url).protocol === "https:";
+    } catch {
+      return process.env.NODE_ENV === "production";
+    }
+  }
+
+  return process.env.NODE_ENV === "production";
+}
+
+export function getDashboardSessionCookieOptions(request?: Request) {
   return {
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureDashboardCookie(request),
     path: "/",
     maxAge: DASHBOARD_SESSION_MAX_AGE
   };

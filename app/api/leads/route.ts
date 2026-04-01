@@ -41,7 +41,11 @@ const NEED_MAP: Record<string, LeadNeed> = {
   "muon xem gia truoc": "Xem giá",
   "xem phap ly": "Xem pháp lý",
   "muon xem phap ly": "Xem pháp lý",
-  "muon xem phap ly truoc": "Xem pháp lý"
+  "muon xem phap ly truoc": "Xem pháp lý",
+  "nhan bang gia 03/2026": "Xem giá",
+  "xem can thuc te gia tot": "Ở / nghỉ dưỡng",
+  "xem can hop tai chinh": "Đầu tư",
+  "xem phap ly va chinh sach": "Xem pháp lý"
 };
 
 const CONTACT_MAP: Record<string, LeadContactPreference> = {
@@ -164,15 +168,10 @@ function resolveContact(body: LeadRequestBody, contactPreference: LeadContactPre
   let email = rawEmail || (combinedLooksLikeEmail ? rawPhoneOrZalo : "");
 
   if (rawPhoneOrZalo && !combinedLooksLikeEmail) {
+    phone ||= rawPhoneOrZalo;
+
     if (contactPreference === "Zalo") {
       zalo ||= rawPhoneOrZalo;
-      phone ||= rawPhoneOrZalo;
-    } else if (contactPreference === "Điện thoại") {
-      phone ||= rawPhoneOrZalo;
-    } else if (contactPreference === "Email") {
-      email ||= rawPhoneOrZalo;
-    } else {
-      phone ||= rawPhoneOrZalo;
     }
   }
 

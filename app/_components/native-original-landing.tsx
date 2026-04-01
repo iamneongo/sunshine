@@ -1013,10 +1013,10 @@ export default function NativeOriginalLanding() {
                                                     className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Mình muốn nhận</label>
                                                 <select id="lead-need"
                                                     className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
-                                                    <option>Nhận bảng giá 03/2026</option>
-                                                    <option>Xem căn thực tế giá tốt</option>
-                                                    <option>Xem căn hợp tài chính</option>
-                                                    <option>Xem pháp lý và chính sách</option>
+                                                    <option value="Xem giá">Nhận bảng giá 03/2026</option>
+                                                    <option value="Ở / nghỉ dưỡng">Xem căn thực tế giá tốt</option>
+                                                    <option value="Đầu tư">Xem căn hợp tài chính</option>
+                                                    <option value="Xem pháp lý">Xem pháp lý và chính sách</option>
                                                 </select>
                                             </div>
                                             <div>

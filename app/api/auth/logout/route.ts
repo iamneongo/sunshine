@@ -4,7 +4,7 @@ import { DASHBOARD_SESSION_COOKIE_NAME, getDashboardSessionCookieOptions } from 
 function buildLogoutResponse(request: Request) {
   const response = NextResponse.redirect(new URL("/login", request.url), 303);
   response.cookies.set(DASHBOARD_SESSION_COOKIE_NAME, "", {
-    ...getDashboardSessionCookieOptions(),
+    ...getDashboardSessionCookieOptions(request),
     maxAge: 0
   });
   return response;

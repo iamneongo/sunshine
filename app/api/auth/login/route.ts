@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   response.cookies.set(
     DASHBOARD_SESSION_COOKIE_NAME,
     await createDashboardSessionToken(),
-    getDashboardSessionCookieOptions()
+    getDashboardSessionCookieOptions(request)
   );
   return response;
 }
