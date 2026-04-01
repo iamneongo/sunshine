@@ -39,9 +39,41 @@ export function isUcallCallBotConfigured(): boolean {
   return Boolean(getUcallConfig());
 }
 
-function getLeadDialablePhone(lead: LeadRecord): string {
+function normalizeDigitsOnlyPhone(rawPhone: string): string {
+  return rawPhone.replace(/[^\d]/g, "");
+}
+
+export function normalizeUcallPhoneNumber(rawPhone: string): string {
+  const compact = rawPhone.trim();
+
+  if (!compact) {
+    return "";
+  }
+
+  if (/^\+[1-9]\d{7,14}$/.test(compact)) {
+    if (/^\+84(?:3|5|7|8|9)\d{8}$/.test(compact) || /^\+842\d{8,9}$/.test(compact)) {
+      return compact;
+    }
+
+    return "";
+  }
+
+  const digits = normalizeDigitsOnlyPhone(compact);
+
+  if (/^0(?:3|5|7|8|9)\d{8}$/.test(digits) || /^02\d{8,9}$/.test(digits)) {
+    return `+84${digits.slice(1)}`;
+  }
+
+  if (/^84(?:3|5|7|8|9)\d{8}$/.test(digits) || /^842\d{8,9}$/.test(digits)) {
+    return `+${digits}`;
+  }
+
+  return "";
+}
+
+export function getLeadDialablePhone(lead: LeadRecord): string {
   const primary = lead.phone || lead.zalo || "";
-  return primary.replace(/[^\d]/g, "");
+  return normalizeUcallPhoneNumber(primary);
 }
 
 async function ucallRequest(pathname: string, init: RequestInit = {}): Promise<Response> {
@@ -140,7 +172,7 @@ export function getUcallCallBotStateForLead(lead: LeadRecord): { enabled: boolea
   if (!getLeadDialablePhone(lead)) {
     return {
       enabled: false,
-      reason: "Lead chưa có số gọi được"
+      reason: "Lead chưa có số điện thoại hợp lệ cho UCall"
     };
   }
 
@@ -160,7 +192,7 @@ export async function triggerUcallCallBotForLead(lead: LeadRecord): Promise<Trig
   const phoneNumber = getLeadDialablePhone(lead);
 
   if (!phoneNumber) {
-    throw new Error("Lead does not have a dialable phone number");
+    throw new Error("Lead does not have a valid UCall phone number");
   }
 
   const response = await ucallRequest(

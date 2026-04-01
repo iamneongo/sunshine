@@ -6,7 +6,7 @@ import {
   getSafeDashboardRedirectPath,
   isAuthenticatedDashboardSession
 } from "@/lib/dashboard-auth";
-import { triggerUcallCallBotForLead, isUcallCallBotConfigured } from "@/lib/ucall";
+import { getLeadDialablePhone, isUcallCallBotConfigured, triggerUcallCallBotForLead } from "@/lib/ucall";
 
 function buildReturnUrl(request: NextRequest, leadId: string, returnTo: string, state: "success" | "error", reason = "") {
   const safePath = getSafeDashboardRedirectPath(returnTo || `/dashboard/leads/${leadId}`);
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ le
     return NextResponse.redirect(buildReturnUrl(request, leadId, returnTo, "error", "not-found"), 303);
   }
 
-  const dialablePhone = (lead.phone || lead.zalo || "").replace(/[^\d]/g, "");
+  const dialablePhone = getLeadDialablePhone(lead);
 
   if (!dialablePhone) {
     return NextResponse.redirect(buildReturnUrl(request, leadId, returnTo, "error", "contact"), 303);

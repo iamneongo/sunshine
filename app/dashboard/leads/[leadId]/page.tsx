@@ -45,7 +45,7 @@ function getCallBotErrorMessage(reason: string): string | null {
   }
 
   if (reason === "contact") {
-    return "Lead này chưa có số điện thoại hoặc Zalo có thể dùng để gọi bot.";
+    return "Lead này chưa có số điện thoại hợp lệ để gọi bot qua UCall.";
   }
 
   if (reason === "not-found") {
@@ -469,4 +469,5 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
     </div>
   );
 }
+
 
