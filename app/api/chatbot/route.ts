@@ -4,11 +4,12 @@ import {
   DEFAULT_QUICK_ACTIONS,
   PROJECT_CONTEXT
 } from "@/lib/chatbot-config";
-import { persistLead } from "@/lib/crm-data";
+import { persistLead, updatePersistedLeadById } from "@/lib/crm-data";
 import {
   type LeadContactPreference,
   type LeadHotness,
-  type LeadNeed
+  type LeadNeed,
+  type LeadUpsertInput
 } from "@/lib/lead-store";
 
 type ClientHistoryItem = {
@@ -185,6 +186,23 @@ function extractLeadName(message: string, history: ClientHistoryItem[]): string 
       if (rawReplyName && looksLikePersonName(rawReplyName)) {
         return titleCaseName(rawReplyName);
       }
+    }
+  }
+
+  return "";
+}
+
+function extractCurrentTurnLeadName(message: string, history: ClientHistoryItem[]): string {
+  const taggedName = extractNameFromText(message);
+  if (taggedName) {
+    return taggedName;
+  }
+
+  const previousAssistant = history[history.length - 1];
+  if (previousAssistant?.role === "assistant" && assistantAskedForName(previousAssistant.text)) {
+    const rawReplyName = normalizePersonName(message).replace(/^(?:tên|ten)\s+/iu, "").trim();
+    if (rawReplyName && looksLikePersonName(rawReplyName)) {
+      return titleCaseName(rawReplyName);
     }
   }
 
@@ -647,7 +665,15 @@ function buildLeadNotes(message: string, leadSignals: LeadSignals, preferredCall
   return parts.join(" | ");
 }
 
-function buildLeadInput(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals) {
+function buildLeadMetadata(message: string) {
+  return {
+    channel: "website_chatbot",
+    price_anchor: PROJECT_CONTEXT.priceAnchor,
+    last_user_turn: normalizeText(message)
+  };
+}
+
+function buildLeadInput(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals): LeadUpsertInput {
   const conversation = buildConversationText(message, history);
   const preferredCallbackTime = detectCallbackTime(conversation);
   const preferredVisitTime = detectVisitTime(conversation);
@@ -670,12 +696,99 @@ function buildLeadInput(message: string, history: ClientHistoryItem[], leadSigna
     preferredVisitTime,
     travelParty,
     lastMessage: normalizeText(message),
-    metadata: {
-      channel: "website_chatbot",
-      price_anchor: PROJECT_CONTEXT.priceAnchor,
-      last_user_turn: normalizeText(message)
-    }
+    metadata: buildLeadMetadata(message)
   };
+}
+
+function buildLeadPatchInput(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals): LeadUpsertInput {
+  const canonicalMessage = canonicalizeUserReply(message, history);
+  const currentName = extractCurrentTurnLeadName(message, history);
+  const currentIntent = detectIntent(canonicalMessage);
+  const currentBudget = detectBudget(canonicalMessage);
+  const currentContactPreference = detectContactPreference(canonicalMessage);
+  const currentCallbackTime = detectCallbackTime(canonicalMessage);
+  const currentVisitTime = detectVisitTime(canonicalMessage);
+  const currentTravelParty = detectTravelParty(canonicalMessage);
+  const { phone, zalo, email } = resolveContactFields(canonicalMessage, currentContactPreference);
+
+  const patch: LeadUpsertInput = {
+    source: "chatbot",
+    notes: buildLeadNotes(message, leadSignals, currentCallbackTime, currentVisitTime, currentTravelParty),
+    lastMessage: normalizeText(message),
+    metadata: buildLeadMetadata(message)
+  };
+
+  if (currentName) {
+    patch.fullName = currentName;
+  }
+
+  if (phone) {
+    patch.phone = phone;
+  }
+
+  if (zalo) {
+    patch.zalo = zalo;
+  }
+
+  if (email) {
+    patch.email = email;
+  }
+
+  if (currentIntent !== "unknown") {
+    patch.need = mapNeed(currentIntent);
+  }
+
+  if (currentBudget !== "unknown") {
+    patch.budget = currentBudget;
+  }
+
+  if (currentContactPreference !== "unknown") {
+    patch.contactPreference = mapContactPreference(currentContactPreference);
+  }
+
+  if (currentCallbackTime) {
+    patch.preferredCallbackTime = currentCallbackTime;
+  }
+
+  if (currentVisitTime) {
+    patch.preferredVisitTime = currentVisitTime;
+    patch.status = "Đặt lịch";
+  }
+
+  if (currentTravelParty) {
+    patch.travelParty = currentTravelParty;
+  }
+
+  if (leadSignals.hotness === "hot" || leadSignals.hotness === "warm") {
+    patch.hotness = mapHotness(leadSignals.hotness);
+  }
+
+  return patch;
+}
+
+function hasCurrentTurnLeadSignal(message: string, history: ClientHistoryItem[]): boolean {
+  const canonicalMessage = canonicalizeUserReply(message, history);
+  const currentName = extractCurrentTurnLeadName(message, history);
+  const currentBudget = detectBudget(canonicalMessage);
+  const currentIntent = detectIntent(canonicalMessage);
+  const currentContactPreference = detectContactPreference(canonicalMessage);
+  const currentCallbackTime = detectCallbackTime(canonicalMessage);
+  const currentVisitTime = detectVisitTime(canonicalMessage);
+  const currentTravelParty = detectTravelParty(canonicalMessage);
+  const { phone, zalo, email } = resolveContactFields(canonicalMessage, currentContactPreference);
+
+  return Boolean(
+    currentName ||
+      phone ||
+      zalo ||
+      email ||
+      currentBudget !== "unknown" ||
+      currentIntent !== "unknown" ||
+      currentContactPreference !== "unknown" ||
+      currentCallbackTime ||
+      currentVisitTime ||
+      currentTravelParty
+  );
 }
 
 function buildResponse(reply: string, suggestions: string[], leadSignals: LeadSignals) {
@@ -1272,10 +1385,35 @@ async function requestGeminiReply(message: string, history: ClientHistoryItem[])
   return fallback;
 }
 
-async function persistLeadIfPossible(message: string, history: ClientHistoryItem[], leadSignals: LeadSignals) {
+async function persistLeadIfPossible(
+  message: string,
+  history: ClientHistoryItem[],
+  leadSignals: LeadSignals,
+  existingLeadId?: string
+) {
   const leadInput = buildLeadInput(message, history, leadSignals);
+  const leadPatchInput = buildLeadPatchInput(message, history, leadSignals);
+  const hasConversationContact = Boolean(leadInput.phone || leadInput.zalo || leadInput.email);
+  const hasCurrentTurnSignal = hasCurrentTurnLeadSignal(message, history);
 
-  if (!leadInput.phone && !leadInput.zalo && !leadInput.email) {
+  if (existingLeadId) {
+    if (!hasCurrentTurnSignal) {
+      return null;
+    }
+
+    const updatedLead = await updatePersistedLeadById(existingLeadId, leadPatchInput);
+    if (updatedLead) {
+      return updatedLead;
+    }
+
+    if (!hasConversationContact) {
+      return null;
+    }
+
+    return persistLead(leadInput);
+  }
+
+  if (!hasConversationContact || !hasCurrentTurnSignal) {
     return null;
   }
 
@@ -1288,6 +1426,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     message = typeof body?.message === "string" ? body.message.trim() : "";
+    const existingLeadId = typeof body?.leadId === "string" ? body.leadId.trim() : "";
     const history = Array.isArray(body?.history)
       ? body.history.filter(
           (item: unknown): item is ClientHistoryItem =>
@@ -1313,7 +1452,7 @@ export async function POST(request: Request) {
     let leadId: string | undefined;
 
     try {
-      const lead = await persistLeadIfPossible(message, history, payload.leadSignals);
+      const lead = await persistLeadIfPossible(message, history, payload.leadSignals, existingLeadId);
       if (lead) {
         leadCaptured = true;
         leadId = lead.id;

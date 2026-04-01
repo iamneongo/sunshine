@@ -1163,9 +1163,9 @@ export default function NativeOriginalLanding() {
             </footer>
 
 
-            <div className="fixed bottom-8 right-8 z-[200] flex flex-col gap-4 items-end">
+            <div className="fixed bottom-8 right-8 z-[200] isolate flex flex-col gap-4 items-end">
 
-                <aside id="chatbot-panel" className="chatbot-panel">
+                <aside id="chatbot-panel" className="chatbot-panel z-[220]">
 
                     <div className="bg-primary p-5 flex justify-between items-center text-white border-b border-white/5">
                         <div className="flex items-center gap-4">
@@ -1292,6 +1292,7 @@ export default function NativeOriginalLanding() {
             border: 1px solid rgba(219, 228, 240, 0.92);
             border-radius: 1.75rem;
             background: rgba(255, 255, 255, 0.98);
+            z-index: 220;
             box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
             opacity: 0;
             pointer-events: none;
@@ -1939,3 +1940,5 @@ export default function NativeOriginalLanding() {
         </>
     );
 }
+
+

@@ -212,6 +212,7 @@ const chatbotBridgeScript = `
   const feedbackSessionIdKey = "sunshine_feedback_chat_session_v1";
   const feedbackLastActivityKey = "sunshine_feedback_last_chat_activity_v1";
   const feedbackLeadCapturedKey = "sunshine_feedback_lead_captured_v1";
+  const feedbackLeadIdKey = "sunshine_feedback_lead_id_v1";
   const feedbackReturnFollowUpKey = "sunshine_feedback_return_follow_up_v1";
   const feedbackIdleShownKey = "sunshine_feedback_idle_follow_up_v1";
 
@@ -352,19 +353,31 @@ const chatbotBridgeScript = `
     }
   }
 
+  function getCapturedLeadId() {
+    try {
+      return normalizeText(sessionStorage.getItem(feedbackLeadIdKey) || "");
+    } catch (error) {
+      return "";
+    }
+  }
+
   function markLeadCaptured(source, leadId) {
     clearIdleFollowUpTimer();
     hideMiniTeaser();
+    const normalizedLeadId = normalizeText(leadId);
 
     try {
       localStorage.setItem(feedbackLeadCapturedKey, "true");
+      if (normalizedLeadId) {
+        sessionStorage.setItem(feedbackLeadIdKey, normalizedLeadId);
+      }
     } catch (error) {
       console.warn("Unable to persist chatbot lead captured state", error);
     }
 
     recordEvent("chatbot_lead_captured", {
       source: normalizeText(source) || "unknown",
-      leadId: normalizeText(leadId)
+      leadId: normalizedLeadId
     });
   }
 
@@ -419,6 +432,13 @@ const chatbotBridgeScript = `
   function showMiniTeaser(message, ctaLabel) {
     const nodes = getMiniTeaserNodes();
     if (!nodes.wrapper) {
+      return;
+    }
+
+    const state = getState();
+    const panelOpen = nodes.panel ? nodes.panel.classList.contains("open") : false;
+    if ((state && state.isOpen) || panelOpen) {
+      hideMiniTeaser();
       return;
     }
 
@@ -619,7 +639,8 @@ const chatbotBridgeScript = `
       },
       body: JSON.stringify({
         message,
-        history: getApiHistory(message)
+        history: getApiHistory(message),
+        leadId: getCapturedLeadId()
       }),
       cache: "no-store"
     });
@@ -864,6 +885,15 @@ const chatbotBridgeScript = `
 
     window.__nativeLandingChatBridgeReady = true;
 
+    nodes.input.addEventListener("focus", hideMiniTeaser);
+    nodes.input.addEventListener("input", hideMiniTeaser);
+
+    const initialState = getState();
+    const panelInitiallyOpen = Boolean((initialState && initialState.isOpen) || (nodes.panel && nodes.panel.classList.contains("open")));
+    if (panelInitiallyOpen) {
+      hideMiniTeaser();
+    }
+
     const nativeToggleChatbot = window.toggleChatbot;
     window.toggleChatbot = function toggleChatbotWithFeedback() {
       const stateBefore = getState();
@@ -1101,6 +1131,11 @@ export default function HomePage() {
     </>
   );
 }
+
+
+
+
+
 
 
 
