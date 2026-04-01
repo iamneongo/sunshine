@@ -405,8 +405,9 @@ export default function NativeOriginalLanding() {
 
                     <div className="app-container relative z-10">
                         <div className="reveal mx-auto max-w-6xl">
-                            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                                <div className="section-header max-w-2xl">
+                            <div className="vr-tour-layout flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-start lg:gap-10 xl:gap-12">
+                                <div className="vr-tour-copy">
+                                    <div className="section-header max-w-2xl lg:max-w-[34rem]">
                                     <span
                                         className="section-kicker inline-flex items-center rounded-full border border-primary-container/25 bg-primary-container/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.34em] text-primary-container">Tham
                                         quan không gian</span>
@@ -417,71 +418,71 @@ export default function NativeOriginalLanding() {
                                     <p className="section-description mt-5 max-w-xl text-base leading-8 text-white/66 md:text-lg">
                                         Tham quan nhanh không gian căn hộ và các góc nhìn nổi bật ngay trên website trước khi xem thêm bảng giá hoặc sắp xếp lịch đi thực tế.
                                     </p>
+                                    </div>
+
+                                    <div className="vr-tour-header-actions mt-6 flex flex-wrap gap-3">
+                                        <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                            id="vr-tour-start"
+                                            target="vr-tour-frame"
+                                            className="gold-button inline-flex items-center gap-3 rounded-full px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl">
+                                            Bắt đầu tham quan
+                                            <i className="fa-solid fa-vr-cardboard text-base"></i>
+                                        </a>
+                                        <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                            id="vr-tour-open-current"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            data-onclick="return openVrFullscreen(event)"
+                                            className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl backdrop-blur-md transition-all hover:bg-white/18">
+                                            Mở toàn màn hình
+                                            <i className="fa-solid fa-up-right-from-square text-sm"></i>
+                                        </a>
+                                    </div>
                                 </div>
 
-                                <div className="vr-tour-header-actions flex flex-wrap gap-3">
-                                    <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
-                                        id="vr-tour-start"
-                                        target="vr-tour-frame"
-                                        className="gold-button inline-flex items-center gap-3 rounded-full px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl">
-                                        Bắt đầu tham quan
-                                        <i className="fa-solid fa-vr-cardboard text-base"></i>
-                                    </a>
-                                    <a href="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
-                                        id="vr-tour-open-current"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        data-onclick="return openVrFullscreen(event)"
-                                        className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-7 py-4 text-white font-black text-[11px] uppercase tracking-[0.18em] shadow-2xl backdrop-blur-md transition-all hover:bg-white/18">
-                                        Mở toàn màn hình
-                                        <i className="fa-solid fa-up-right-from-square text-sm"></i>
-                                    </a>
-                                </div>
-                            </div>
+                                <div className="vr-tour-panel mt-1 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05))] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:p-5 lg:mt-0">
+                                    <div className="vr-tour-tabs flex flex-wrap gap-2">
+                                        <button type="button"
+                                            data-vr-tab="tour360"
+                                            data-onclick="return switchVrTour('tour360')"
+                                            className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-primary-container/20 bg-primary-container px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-lg shadow-primary-container/20 transition-all hover:brightness-105">
+                                            Tham quan 360
+                                        </button>
+                                        <button type="button"
+                                            data-vr-tab="panorama"
+                                            data-onclick="return switchVrTour('panorama')"
+                                            className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                            Toàn cảnh
+                                        </button>
+                                        <button type="button"
+                                            data-vr-tab="interior"
+                                            data-onclick="return switchVrTour('interior')"
+                                            className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
+                                            Nội thất
+                                        </button>
+                                    </div>
 
-                            <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.05))] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl md:p-5">
-                                <div className="vr-tour-tabs flex flex-wrap gap-2">
-                                    <button type="button"
-                                        data-vr-tab="tour360"
-                                        data-onclick="return switchVrTour('tour360')"
-                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-primary-container/20 bg-primary-container px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-primary shadow-lg shadow-primary-container/20 transition-all hover:brightness-105">
-                                        Tham quan 360
-                                    </button>
-                                    <button type="button"
-                                        data-vr-tab="panorama"
-                                        data-onclick="return switchVrTour('panorama')"
-                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
-                                        Toàn cảnh
-                                    </button>
-                                    <button type="button"
-                                        data-vr-tab="interior"
-                                        data-onclick="return switchVrTour('interior')"
-                                        className="vr-tour-tab inline-flex items-center justify-center rounded-full border border-white/12 bg-white/8 px-4 py-2.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-white/16">
-                                        Nội thất
-                                    </button>
-                                </div>
-
-                                <div
-                                    id="vr-tour-viewer-shell"
-                                    data-ondblclick="return openVrFullscreen(event)"
-                                    className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950 shadow-2xl">
-                                    <iframe
-                                        id="vr-tour-frame"
-                                        name="vr-tour-frame"
-                                        title="Tham quan không gian Sunshine Bay Retreat"
-                                        src="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
-                                        className="vr-tour-frame h-[420px] w-full md:h-[620px]"
-                                        loading="lazy"
-                                        allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
-                                        referrerPolicy="strict-origin-when-cross-origin"
+                                    <div
+                                        id="vr-tour-viewer-shell"
                                         data-ondblclick="return openVrFullscreen(event)"
-                                    ></iframe>
+                                        className="mt-4 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950 shadow-2xl">
+                                        <iframe
+                                            id="vr-tour-frame"
+                                            name="vr-tour-frame"
+                                            title="Tham quan không gian Sunshine Bay Retreat"
+                                            src="https://www.coohom.com/pub/tool/panorama/aiwalking?obsPlanId=3FO3LAKC7E1M&uri=%2Fpub%2Fsaas%2Fapps%2Fproject%2Fdetail%2F3FO3LAKC7E1M%3Fuid%3D3FO4LFQWLUM9&locale=en_US"
+                                            className="vr-tour-frame h-[420px] w-full md:h-[620px]"
+                                            loading="lazy"
+                                            allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
+                                            referrerPolicy="strict-origin-when-cross-origin"
+                                            data-ondblclick="return openVrFullscreen(event)"
+                                        ></iframe>
+                                    </div>
+
+                                    <p className="mt-3 text-xs leading-6 text-white/55">
+                                        Nhấp đúp vào khung tham quan để mở toàn màn hình, hoặc dùng nút bên trên khi cần xem rõ hơn.
+                                    </p>
                                 </div>
-
-                                <p className="mt-3 text-xs leading-6 text-white/55">
-                                    Nhấp đúp vào khung tham quan để mở toàn màn hình, hoặc dùng nút bên trên khi cần xem rõ hơn.
-                                </p>
-
                             </div>
                         </div>
                     </div>
