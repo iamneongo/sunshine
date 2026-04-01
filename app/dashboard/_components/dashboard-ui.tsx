@@ -218,7 +218,7 @@ export function DashboardBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] sm:px-3 sm:text-[11px] sm:tracking-[0.16em]",
+        "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-black uppercase leading-none tracking-[0.14em] sm:px-3 sm:text-[11px] sm:tracking-[0.16em]",
         variant === "default" && "border-slate-300 bg-white text-slate-700",
         variant === "muted" && "border-slate-200 bg-slate-50 text-slate-600",
         variant === "positive" && "border-emerald-200 bg-emerald-50 text-emerald-700",

@@ -388,18 +388,18 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
               </div>
 
               <div className={`hidden md:block ${dashboardScrollAreaClasses("table")}`}>
-                <table className="min-w-[1040px] w-full border-separate border-spacing-0 text-left text-sm xl:min-w-[1200px]">
-                  <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+                <table className="min-w-[1180px] w-full border-separate border-spacing-0 text-left text-sm xl:min-w-[1260px]">
+                  <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 xl:text-[11px] xl:tracking-[0.18em]">
                     <tr>
-                      <th className="sticky left-0 top-0 z-20 bg-slate-50 px-6 py-4 shadow-[1px_0_0_0_rgb(226_232_240)]">Khách</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Nguồn</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Nhu cầu</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Ngân sách</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Độ nóng</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Trạng thái</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Cập nhật</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Chi tiết</th>
-                      <th className="sticky top-0 bg-slate-50 px-6 py-4">Liên hệ nhanh</th>
+                      <th className="sticky left-0 top-0 z-20 min-w-[220px] whitespace-nowrap bg-slate-50 px-4 py-4 shadow-[1px_0_0_0_rgb(226_232_240)] xl:px-6">Khách</th>
+                      <th className="sticky top-0 min-w-[132px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Nguồn</th>
+                      <th className="sticky top-0 min-w-[120px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Nhu cầu</th>
+                      <th className="sticky top-0 min-w-[120px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Ngân sách</th>
+                      <th className="sticky top-0 min-w-[116px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Độ nóng</th>
+                      <th className="sticky top-0 min-w-[150px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Trạng thái</th>
+                      <th className="sticky top-0 min-w-[228px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Cập nhật</th>
+                      <th className="sticky top-0 min-w-[108px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Chi tiết</th>
+                      <th className="sticky top-0 min-w-[132px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Liên hệ nhanh</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -408,7 +408,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
 
                       return (
                         <tr key={lead.id} className="group border-t border-slate-100 align-top transition hover:bg-slate-50/80">
-                          <td className="sticky left-0 z-10 bg-white px-6 py-4 transition group-hover:bg-slate-50/80">
+                          <td className="sticky left-0 z-10 bg-white px-4 py-4 transition group-hover:bg-slate-50/80 xl:px-6">
                             <Link href={`/dashboard/leads/${lead.id}`} className="font-black text-slate-950 hover:text-slate-700">
                               {getLeadDisplayName(lead)}
                             </Link>
@@ -417,31 +417,31 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                               {lead.contactPreference}
                             </div>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4 xl:px-6">
                             <DashboardBadge className={getLeadSourceTone(lead.source)}>{getLeadSourceLabel(lead.source)}</DashboardBadge>
                           </td>
-                          <td className="px-6 py-4 text-slate-600">{lead.need}</td>
-                          <td className="px-6 py-4 text-slate-600">{lead.budget}</td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-black ${getHotnessTone(lead.hotness)}`}>
+                          <td className="px-4 py-4 text-slate-600 xl:px-6">{lead.need}</td>
+                          <td className="px-4 py-4 text-slate-600 xl:px-6">{lead.budget}</td>
+                          <td className="px-4 py-4 xl:px-6">
+                            <span className={`inline-flex min-h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-black leading-none ${getHotnessTone(lead.hotness)}`}>
                               {lead.hotness}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-black ${getStatusTone(lead.status)}`}>
+                          <td className="px-4 py-4 xl:px-6">
+                            <span className={`inline-flex min-h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-black leading-none ${getStatusTone(lead.status)}`}>
                               {lead.status}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4 xl:px-6">
                             <div className="text-slate-500">{formatDateTime(lead.updatedAt)}</div>
                             <div className="mt-2 max-w-[220px] text-xs leading-5 text-slate-400">{getLeadContextNote(lead)}</div>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4 xl:px-6">
                             <Link href={`/dashboard/leads/${lead.id}`} className={dashboardButtonClasses("outline")}>
                               Detail
                             </Link>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4 xl:px-6">
                             <div className="flex flex-wrap gap-2">
                               {quickActions.length > 0 ? (
                                 quickActions.map((action) => (
