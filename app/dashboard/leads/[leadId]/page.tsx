@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDashboardLeadDetail } from "@/lib/dashboard-data";
+import { getUcallCallBotStateForLead } from "@/lib/ucall";
 import {
   DashboardBadge,
   DashboardEmptyState,
@@ -18,6 +19,7 @@ import {
   getRecommendedFollowUp,
   getStatusTone
 } from "../../_components/dashboard-ui";
+import { DashboardCallBotButton } from "../../_components/dashboard-call-bot-button";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +37,26 @@ const tagLabels: Record<string, string> = {
 
 function getSingleValue(value: string | string[] | undefined): string {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
+function getCallBotErrorMessage(reason: string): string | null {
+  if (reason === "config") {
+    return "Thiếu cấu hình UCall để gọi bot tự động. Cần thêm API key, company slug và call campaign id.";
+  }
+
+  if (reason === "contact") {
+    return "Lead này chưa có số điện thoại hoặc Zalo có thể dùng để gọi bot.";
+  }
+
+  if (reason === "not-found") {
+    return "Không tìm thấy lead để đẩy sang call bot. Vui lòng tải lại trang.";
+  }
+
+  if (reason === "failed") {
+    return "Không thể đẩy lead sang call bot ở lần này. Vui lòng kiểm tra cấu hình campaign hoặc thử lại.";
+  }
+
+  return null;
 }
 
 type LeadDetailRecord = NonNullable<Awaited<ReturnType<typeof getDashboardLeadDetail>>>["lead"];
@@ -84,6 +106,10 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
   const nextSteps = buildNextSteps(lead);
   const saved = getSingleValue(query?.saved) === "1";
   const updateError = getSingleValue(query?.error) === "not-found";
+  const callBotSuccess = getSingleValue(query?.callBot) === "1";
+  const callBotErrorReason = getSingleValue(query?.callBotError);
+  const callBotErrorMessage = getCallBotErrorMessage(callBotErrorReason);
+  const callBotState = getUcallCallBotStateForLead(lead);
   const metadataEntries = Object.entries(lead.metadata ?? {});
 
   return (
@@ -113,6 +139,18 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
       {updateError ? (
         <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm font-semibold text-rose-700 sm:px-5">
           Không tìm thấy lead cần cập nhật. Vui lòng tải lại danh sách lead.
+        </div>
+      ) : null}
+
+      {callBotSuccess ? (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm font-semibold text-emerald-700 sm:px-5">
+          Lead đã được đẩy sang call bot tự động của UCall.
+        </div>
+      ) : null}
+
+      {callBotErrorMessage ? (
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm font-semibold text-rose-700 sm:px-5">
+          {callBotErrorMessage}
         </div>
       ) : null}
 
@@ -158,7 +196,17 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
                 ) : (
                   <span className="text-sm text-slate-500">Lead này chưa có kênh liên hệ nhanh.</span>
                 )}
+                <DashboardCallBotButton
+                  leadId={lead.id}
+                  returnTo={`/dashboard/leads/${lead.id}`}
+                  disabled={!callBotState.enabled}
+                  disabledReason={callBotState.reason}
+                  className={`${dashboardButtonClasses("outline")} ${!callBotState.enabled ? "cursor-not-allowed opacity-50" : ""}`}
+                />
               </div>
+              {!callBotState.enabled ? (
+                <div className="mt-3 text-xs font-semibold text-slate-500">{callBotState.reason}</div>
+              ) : null}
               <div className="mt-4 grid gap-3 text-sm text-slate-600">
                 <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3">
                   <span>Tạo lúc</span>

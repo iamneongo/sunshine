@@ -50,7 +50,7 @@ export async function persistLead(input: LeadUpsertInput): Promise<LeadRecord> {
   return lead;
 }
 
-export async function updatePersistedLeadById(leadId: string, input: LeadUpsertInput): Promise<LeadRecord | null> {
+export async function getPersistedLeadById(leadId: string): Promise<LeadRecord | null> {
   let existingLead = await getLeadById(leadId);
 
   if (!existingLead && isSupabaseConfigured()) {
@@ -64,6 +64,12 @@ export async function updatePersistedLeadById(leadId: string, input: LeadUpsertI
       console.error("Lead lookup in Supabase failed", error);
     }
   }
+
+  return existingLead;
+}
+
+export async function updatePersistedLeadById(leadId: string, input: LeadUpsertInput): Promise<LeadRecord | null> {
+  const existingLead = await getPersistedLeadById(leadId);
 
   if (!existingLead) {
     return null;
