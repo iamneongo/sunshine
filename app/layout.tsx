@@ -9,16 +9,42 @@ import {
   NATIVE_LANDING_DESCRIPTION,
   NATIVE_LANDING_OG_IMAGE
 } from "@/lib/native-original-head";
+import {
+  NATIVE_LANDING_CANONICAL_PATH,
+  NATIVE_LANDING_KEYWORDS,
+  NATIVE_LANDING_SITE_NAME
+} from "@/lib/native-original-seo";
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: NATIVE_LANDING_TITLE,
   description: NATIVE_LANDING_DESCRIPTION,
+  keywords: [...NATIVE_LANDING_KEYWORDS],
+  alternates: {
+    canonical: NATIVE_LANDING_CANONICAL_PATH
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1
+    }
+  },
   openGraph: {
     title: NATIVE_LANDING_TITLE,
     description: NATIVE_LANDING_DESCRIPTION,
-    images: [{ url: NATIVE_LANDING_OG_IMAGE }],
+    url: NATIVE_LANDING_CANONICAL_PATH,
+    siteName: NATIVE_LANDING_SITE_NAME,
+    locale: "vi_VN",
+    images: [{
+      url: NATIVE_LANDING_OG_IMAGE,
+      alt: NATIVE_LANDING_TITLE
+    }],
     type: "website"
   },
   twitter: {
@@ -80,3 +106,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+

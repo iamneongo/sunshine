@@ -14,6 +14,16 @@ import {
   NATIVE_LANDING_CONFIG_SCRIPT,
   NATIVE_LANDING_MAIN_SCRIPT
 } from "@/lib/native-original-scripts";
+import {
+  NATIVE_LANDING_DESCRIPTION,
+  NATIVE_LANDING_OG_IMAGE,
+  NATIVE_LANDING_TITLE
+} from "@/lib/native-original-head";
+import {
+  NATIVE_LANDING_CANONICAL_PATH,
+  NATIVE_LANDING_FAQS,
+  NATIVE_LANDING_SITE_NAME
+} from "@/lib/native-original-seo";
 
 const defaultSuggestions = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
 const initialMessages = [INITIAL_CHAT_MESSAGE, "Website chính thức đang thể hiện giá từ 6X/m² và bảng giá cập nhật 03/2026."];
@@ -1109,9 +1119,63 @@ const chatbotBridgeScript = `
   }
 })();
 `;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const canonicalUrl = new URL(NATIVE_LANDING_CANONICAL_PATH, siteUrl).toString();
+const ogImageUrl = new URL(NATIVE_LANDING_OG_IMAGE, siteUrl).toString();
+const landingSeoSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${canonicalUrl}#website`,
+      url: canonicalUrl,
+      name: NATIVE_LANDING_SITE_NAME,
+      inLanguage: "vi-VN"
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: NATIVE_LANDING_TITLE,
+      description: NATIVE_LANDING_DESCRIPTION,
+      inLanguage: "vi-VN",
+      isPartOf: {
+        "@id": `${canonicalUrl}#website`
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: ogImageUrl
+      },
+      about: [
+        "Sunshine Bay Retreat Vũng Tàu",
+        "Bảng giá Sunshine Bay Retreat 03/2026",
+        "Vị trí Sunshine Bay Retreat đường Ba Tháng Hai",
+        "Mặt bằng Sunshine Bay Retreat",
+        "Pháp lý Sunshine Bay Retreat",
+        "Tiến độ Sunshine Bay Retreat"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalUrl}#faq`,
+      mainEntity: NATIVE_LANDING_FAQS.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer
+        }
+      }))
+    }
+  ]
+};
+
 export default function HomePage() {
   return (
     <>
+      <Script id="landing-seo-schema" type="application/ld+json" strategy="beforeInteractive">
+        {JSON.stringify(landingSeoSchema)}
+      </Script>
       <NativeOriginalLanding />
       <Script id="native-landing-config" strategy="afterInteractive">
         {NATIVE_LANDING_CONFIG_SCRIPT}
@@ -1131,6 +1195,9 @@ export default function HomePage() {
     </>
   );
 }
+
+
+
 
 
 

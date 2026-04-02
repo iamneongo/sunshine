@@ -1,3 +1,5 @@
+import { NATIVE_LANDING_FAQS } from "@/lib/native-original-seo";
+
 export default function NativeOriginalLanding() {
     return (
         <>
@@ -36,6 +38,8 @@ export default function NativeOriginalLanding() {
                                     className="text-left hover:text-primary-container transition-colors py-1">Pháp lý</button>
                                 <a href="#tiendo" data-onclick="toggleSidebar()"
                                     className="hover:text-primary-container transition-colors py-1">Tiến độ</a>
+                                <a href="#faq" data-onclick="toggleSidebar()"
+                                    className="hover:text-primary-container transition-colors py-1">FAQ</a>
                             </div>
                         </div>
                         <div>
@@ -141,6 +145,12 @@ export default function NativeOriginalLanding() {
                                 className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-container transition-all group-hover:w-full"></span>
                         </a>
                         <a className="text-primary/70 hover:text-primary font-headline font-bold text-xs tracking-[0.1em] uppercase transition-all relative group"
+                            href="#faq">
+                            FAQ
+                            <span
+                                className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-container transition-all group-hover:w-full"></span>
+                        </a>
+                        <a className="text-primary/70 hover:text-primary font-headline font-bold text-xs tracking-[0.1em] uppercase transition-all relative group"
                             href="#contact">
                             Nhận thông tin
                             <span
@@ -169,7 +179,7 @@ export default function NativeOriginalLanding() {
                 <section className="hero-banner-section relative min-h-[100svh] flex items-center overflow-hidden bg-primary">
 
                     <div className="absolute inset-0 z-0">
-                        <img alt="Sunshine Bay Hero" className="w-full h-full object-cover hero-img opacity-90 scale-105"
+                        <img alt="Phối cảnh Sunshine Bay Retreat Vũng Tàu" fetchPriority="high" decoding="async" className="w-full h-full object-cover hero-img opacity-90 scale-105"
                             src="./sunshine-bay-retreat-28.jpg" />
                         <div className="absolute inset-0 animated-gradient-overlay mix-blend-multiply"></div>
                         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/30 to-transparent"></div>
@@ -209,6 +219,9 @@ export default function NativeOriginalLanding() {
                                     </div>
                                 </div>
 
+                                <p className="hero-seo-intro mb-6 max-w-2xl text-sm leading-7 text-white/78 sm:text-base">
+                                    Sunshine Bay Retreat Vũng Tàu là tổ hợp nghỉ dưỡng ven biển do Sunshine Group phát triển tại đường Ba Tháng Hai, phường 11. Trên trang này, Anh/chị có thể xem nhanh bảng giá 03/2026, vị trí, mặt bằng, tiến độ và phần đối chiếu theo website chính thức.
+                                </p>
 
                                 <div
                                     className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-4 lg:w-auto lg:max-w-fit lg:gap-3 xl:gap-3.5">
@@ -303,7 +316,7 @@ export default function NativeOriginalLanding() {
                                 Tổng Quan</span>
                             <h2
                                 className="section-title text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                                Xem Tổng Quan <span className="text-primary-container">Dự Án</span> Trước Khi Xem Chi Tiết
+                                Video Tổng Quan <span className="text-primary-container">Sunshine Bay Retreat</span>
                             </h2>
                             <p className="section-description text-base opacity-60 font-body leading-relaxed">
                                 Video này giúp nắm nhanh vị trí, tiện ích và không gian dự án trước khi xem tiếp bảng giá,
@@ -353,10 +366,10 @@ export default function NativeOriginalLanding() {
                                     trí dự án</span>
                                 <h2
                                     className="section-title text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tighter">
-                                    Đường Ba Tháng Hai, <span className="text-primary-container">Phường 11</span>, TP. Vũng Tàu</h2>
+                                    Vị Trí <span className="text-primary-container">Sunshine Bay Retreat</span> Vũng Tàu</h2>
                             </div>
                             <p className="section-description text-on-surface/50 text-base md:text-lg max-w-md lg:ml-auto">
-                                Theo website chính thức, đây là trục đường kết nối thuận tiện về trung tâm thành phố, Bãi Sau và sân bay Long Thành.
+                                Theo website chính thức, dự án nằm trên đường Ba Tháng Hai, phường 11, TP. Vũng Tàu và kết nối thuận tiện về trung tâm thành phố, Bãi Sau cùng sân bay Long Thành.
                             </p>
                         </div>
 
@@ -413,7 +426,7 @@ export default function NativeOriginalLanding() {
                                         quan không gian</span>
                                     <h2
                                         className="section-title mt-5 text-[2rem] sm:text-[2.25rem] md:text-5xl font-black text-white leading-[1.08] md:leading-tight uppercase tracking-tighter">
-                                        Xem <span className="text-primary-container">Không Gian Dự Án</span> <br /> Trực Tiếp Trên Trang
+                                        Tham Quan <span className="text-primary-container">Không Gian Sunshine Bay Retreat</span>
                                     </h2>
                                     <p className="section-description mt-5 max-w-xl text-base leading-8 text-white/66 md:text-lg">
                                         Tham quan nhanh không gian căn hộ và các góc nhìn nổi bật ngay trên website trước khi xem thêm bảng giá hoặc sắp xếp lịch đi thực tế.
@@ -498,7 +511,7 @@ export default function NativeOriginalLanding() {
                                 hình sản phẩm</span>
                             <h2
                                 className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                                Các Dòng <span className="text-primary-container">Sản Phẩm</span> Tại Dự Án
+                                Mặt Bằng Và <span className="text-primary-container">Dòng Sản Phẩm</span>
                             </h2>
                             <p className="text-base opacity-60 font-body leading-relaxed">
                                 Theo phần tổng quan trên website chính thức, dự án phát triển căn hộ du lịch, căn hộ khách sạn,
@@ -513,7 +526,7 @@ export default function NativeOriginalLanding() {
                                 <div className="aspect-[4/3] relative overflow-hidden">
                                     <img src="./can-ho-Sunshine-Bay-Retreat-8.jpg"
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        alt="Sky Villa" />
+                                        alt="Căn hộ du lịch Sunshine Bay Retreat" />
                                     <div
                                         className="absolute top-4 left-4 bg-primary-container text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
                                         Hot</div>
@@ -536,7 +549,7 @@ export default function NativeOriginalLanding() {
                                 <div className="aspect-[4/3] relative overflow-hidden">
                                     <img src="./sunshine-bay-retreat-28.jpg"
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        alt="Biệt Thự" />
+                                        alt="Biệt thự du lịch Sunshine Bay Retreat" />
                                 </div>
                                 <div className="p-8">
                                     <h3 className="text-xl font-black text-primary uppercase mb-2">Biệt Thự Du Lịch</h3>
@@ -556,7 +569,7 @@ export default function NativeOriginalLanding() {
                                 <div className="aspect-[4/3] relative overflow-hidden">
                                     <img src="./sunshine-vung-tau-8.jpg"
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        alt="Shophouse" />
+                                        alt="Không gian dự án Sunshine Bay Retreat Vũng Tàu" />
                                 </div>
                                 <div className="p-8">
                                     <h3 className="text-xl font-black text-primary uppercase mb-2">Shophouse Thương Mại</h3>
@@ -686,7 +699,7 @@ export default function NativeOriginalLanding() {
                                     <div
                                         className="absolute -top-10 -left-10 w-40 h-40 bg-primary-container/10 rounded-full blur-3xl">
                                     </div>
-                                    <img src="./sunshine-bay-retreat-28.jpg" alt="" className="rounded-2xl shadow-2xl relative z-10" />
+                                    <img src="./sunshine-bay-retreat-28.jpg" alt="Phối cảnh Sunshine Bay Retreat do Sunshine Group phát triển" className="rounded-2xl shadow-2xl relative z-10" />
                                     <div
                                         className="absolute -bottom-4 -right-4 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl z-20 border border-surface-container transform hover:scale-105 transition-transform duration-500">
                                         <div className="text-2xl font-black text-primary-container mb-1">Sunshine</div>
@@ -701,7 +714,7 @@ export default function NativeOriginalLanding() {
                                     đầu tư</span>
                                 <h2
                                     className="text-3xl md:text-5xl font-black text-primary leading-tight mb-8 uppercase tracking-tight">
-                                    Sunshine Group <br /> <span className="text-primary-container">Phát Triển</span> Dự Án</h2>
+                                    Tổng Quan <span className="text-primary-container">Sunshine Bay Retreat</span></h2>
                                 <p className="text-on-surface/60 text-base font-body leading-relaxed mb-8">
                                     Theo website chính thức, Sunshine Bay Retreat do Tập đoàn Sunshine đầu tư và phát triển tại
                                     đường Ba Tháng Hai, phường 11, TP. Vũng Tàu. Phần tổng quan trên site cũng cho thấy dự án có
@@ -807,15 +820,14 @@ export default function NativeOriginalLanding() {
 
                 <section id="tienich" className="landing-section bg-primary text-white relative overflow-hidden">
                     <div className="absolute inset-0 z-0">
-                        <img alt="" className="w-full h-full object-cover opacity-10" src="./sunshine-bay-retreat-28.jpg" />
+                        <img alt="Không gian tiện ích Sunshine Bay Retreat Vũng Tàu" className="w-full h-full object-cover opacity-10" src="./sunshine-bay-retreat-28.jpg" />
                     </div>
 
                     <div className="app-container relative z-10">
                         <div className="text-center max-w-2xl mx-auto mb-20 reveal">
                             <span className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Tiện
                                 ích dự án</span>
-                            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight mb-6 italic">Chuỗi
-                                <span className="text-primary-container"> Tiện Ích Nghỉ Dưỡng</span></h2>
+                            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight leading-tight mb-6 italic">Tiện Ích <span className="text-primary-container">Sunshine Bay Retreat</span></h2>
                             <p className="text-white/40 text-base font-body">Site chính thức giới thiệu dự án theo mô hình resort tích hợp, với nhóm tiện ích như nhà hàng, spa, gym, khu thương mại, BBQ, hồ bơi và không gian giải trí.</p>
                         </div>
 
@@ -856,8 +868,7 @@ export default function NativeOriginalLanding() {
                                 <span
                                     className="text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Nhật
                                     ký xây dựng</span>
-                                <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tight">Tiến Độ <span
-                                    className="text-primary-container">Thực Tế</span></h2>
+                                <h2 className="text-3xl md:text-5xl font-black text-primary uppercase tracking-tight">Tiến Độ <span className="text-primary-container">Sunshine Bay Retreat</span></h2>
                             </div>
                             <div className="flex flex-col items-end">
                                 <div className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-2 italic">Theo
@@ -868,7 +879,7 @@ export default function NativeOriginalLanding() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 reveal">
                             <div className="relative rounded-2xl overflow-hidden group shadow-2xl h-[400px]">
-                                <img src="./sunshine-bay-retreat-28.jpg" alt=""
+                                <img src="./sunshine-bay-retreat-28.jpg" alt="Tiến độ và hình ảnh thực tế Sunshine Bay Retreat"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
                                 </div>
@@ -927,9 +938,9 @@ export default function NativeOriginalLanding() {
                                     Đăng ký ưu tiên
                                 </span>
                                 <h2 className="section-title mt-6 text-3xl md:text-5xl font-black uppercase tracking-tight leading-[1.16] md:leading-[1.08]">
-                                    <span className="block">Để Lại Thông Tin</span>
-                                    <span className="block">Nhận Đúng Tài Liệu</span>
-                                    <span className="block text-primary-container">Phù Hợp Nhu Cầu</span>
+                                    <span className="block">Nhận Bảng Giá</span>
+                                    <span className="block">Sunshine Bay Retreat</span>
+                                    <span className="block text-primary-container">Theo Nhu Cầu Quan Tâm</span>
                                 </h2>
                                 <p className="section-description mt-6 max-w-2xl text-base md:text-lg leading-8 text-white/75">
                                     Anh/chị chỉ cần để lại thông tin cơ bản, hệ thống sẽ lọc và gửi đúng phần mình đang cần như bảng giá nội bộ,
@@ -1075,8 +1086,31 @@ export default function NativeOriginalLanding() {
                         </div>
                     </div>
                 </section>
-            </main>
+                <section id="faq" className="landing-section bg-surface-container">
+                    <div className="app-container">
+                        <div className="mx-auto max-w-3xl text-center reveal">
+                            <span className="section-kicker text-primary-container font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">FAQ</span>
+                            <h2 className="section-title text-3xl md:text-5xl font-black text-primary leading-tight uppercase tracking-tight">
+                                Câu Hỏi Thường Gặp <span className="text-primary-container">Về Sunshine Bay Retreat</span>
+                            </h2>
+                            <p className="mt-6 text-base leading-8 text-primary/60">
+                                Đây là các nhóm câu hỏi tìm kiếm nhiều nhất quanh bảng giá, vị trí, pháp lý, mặt bằng và tiến độ Sunshine Bay Retreat Vũng Tàu.
+                            </p>
+                        </div>
 
+                        <div className="mx-auto mt-12 grid max-w-4xl gap-4 reveal">
+                            {NATIVE_LANDING_FAQS.map((item) => (
+                                <details key={item.question} className="rounded-[1.75rem] border border-primary/8 bg-white p-6 shadow-sm open:shadow-lg">
+                                    <summary className="cursor-pointer list-none pr-8 text-left text-base font-black leading-7 text-primary marker:hidden">
+                                        {item.question}
+                                    </summary>
+                                    <p className="mt-4 text-sm leading-7 text-primary/65">{item.answer}</p>
+                                </details>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </main>
 
             <footer className="bg-primary pt-16 pb-28 px-6 border-t border-white/5 md:px-12 md:pt-24 md:pb-12">
                 <div className="app-container">
@@ -1173,7 +1207,7 @@ export default function NativeOriginalLanding() {
                             <div className="relative">
                                 <img src="./ai_avatar_vn.png"
                                     className="w-12 h-12 rounded-2xl object-cover border-2 border-primary-container/30 shadow-lg"
-                                    alt="AI Avatar" />
+                                    alt="Trợ lý Sunshine AI" />
                                 <div
                                     className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-primary chat-status-dot">
                                 </div>
@@ -1941,5 +1975,10 @@ export default function NativeOriginalLanding() {
         </>
     );
 }
+
+
+
+
+
 
 
