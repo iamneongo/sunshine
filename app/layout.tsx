@@ -17,7 +17,7 @@ import {
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://vungtaudongtien.com"),
   title: NATIVE_LANDING_TITLE,
   description: NATIVE_LANDING_DESCRIPTION,
   keywords: [...NATIVE_LANDING_KEYWORDS],
