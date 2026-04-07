@@ -219,9 +219,7 @@ export default function NativeOriginalLanding() {
                                     </div>
                                 </div>
 
-                                <p className="hero-seo-intro mb-6 max-w-2xl text-sm leading-7 text-white/78 sm:text-base">
-                                    Sunshine Bay Retreat Vũng Tàu là tổ hợp nghỉ dưỡng ven biển do Sunshine Group phát triển tại đường Ba Tháng Hai, phường 11. Trên trang này, Anh/chị có thể xem nhanh bảng giá 03/2026, vị trí, mặt bằng, tiến độ và phần đối chiếu theo website chính thức.
-                                </p>
+
 
                                 <div
                                     className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-4 lg:w-auto lg:max-w-fit lg:gap-3 xl:gap-3.5">
