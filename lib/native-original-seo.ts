@@ -1,3 +1,5 @@
+import { CURRENT_MONTH_YEAR } from "./chatbot-config";
+
 export const NATIVE_LANDING_SITE_NAME = "Sunshine Bay Retreat Vũng Tàu" as const;
 export const NATIVE_LANDING_CANONICAL_PATH = "/" as const;
 
@@ -38,7 +40,7 @@ export const NATIVE_LANDING_FAQS = [
   {
     question: "Bảng giá Sunshine Bay Retreat xem ở đâu?",
     answer:
-      "Website chính thức có chuyên mục bảng giá và landing này đang hỗ trợ gửi bảng giá cập nhật 03/2026 theo nhu cầu quan tâm như 1PN, 2PN, 3PN, vị trí và tài liệu liên quan."
+      `Website chính thức có chuyên mục bảng giá và landing này đang hỗ trợ gửi bảng giá cập nhật ${CURRENT_MONTH_YEAR} theo nhu cầu quan tâm như 1PN, 2PN, 3PN, vị trí và tài liệu liên quan.`
   },
   {
     question: "Pháp lý và tiến độ Sunshine Bay Retreat đối chiếu thế nào?",
@@ -50,4 +52,4 @@ export const NATIVE_LANDING_FAQS = [
     answer:
       "Theo thông tin đang hiển thị trên website chính thức, dự án có quy mô gần 20ha, khoảng 195.942 m2, gần 6.000 sản phẩm và gồm 2 phân khu Horizon và Eden."
   }
-] as const;
+];

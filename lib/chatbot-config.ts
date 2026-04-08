@@ -3,14 +3,18 @@ export type QuickAction = {
   prompt: string;
 };
 
+const dt = new Date();
+export const CURRENT_MONTH_YEAR = `${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()}`;
+
+
 export const PROJECT_CONTEXT = {
   projectName: "Sunshine Bay Retreat Vũng Tàu",
   headline: "Sunshine Bay Retreat Vũng Tàu",
   priceAnchor: "Giá từ 6X/m²",
-  priceSecondary: "Theo website chính thức và bảng giá cập nhật 03/2026",
+  priceSecondary: `Theo website chính thức và bảng giá cập nhật ${CURRENT_MONTH_YEAR}`,
   yieldNote: "Vận hành theo tiêu chuẩn 5 sao, khai thác linh hoạt",
   scarcityNote: "Quy mô gần 20ha, gần 6.000 sản phẩm với 2 phân khu Horizon và Eden"
-} as const;
+};
 
 export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
   {
@@ -34,19 +38,19 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
 export const CHATBOT_PLACEHOLDER = "Nhập câu hỏi hoặc để lại SĐT/Zalo...";
 
 export const INITIAL_CHAT_MESSAGE =
-  "Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá 03/2026**, **không gian dự án** hoặc **pháp lý** để mình đối chiếu nhanh.";
+  `Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá ${CURRENT_MONTH_YEAR}**, **không gian dự án** hoặc **pháp lý** để mình đối chiếu nhanh.`;
 
 export const WELCOME_MESSAGE =
-  "Anh/chị đang xem Sunshine Bay Retreat phải không ạ? Em có thể gửi ngay **bảng giá 03/2026**, **không gian dự án** và **pháp lý**. Mình muốn xem phần nào trước ạ?";
+  `Anh/chị đang xem Sunshine Bay Retreat phải không ạ? Em có thể gửi ngay **bảng giá ${CURRENT_MONTH_YEAR}**, **không gian dự án** và **pháp lý**. Mình muốn xem phần nào trước ạ?`;
 
 export const CHATBOT_MOBILE_TEASER_MESSAGE =
-  "Anh/chị muốn xem bảng giá 03/2026 hay pháp lý trước ạ?";
+  `Anh/chị muốn xem bảng giá ${CURRENT_MONTH_YEAR} hay pháp lý trước ạ?`;
 
 export const CHATBOT_FOLLOW_UP_10M_MESSAGE =
-  "Dạ em vẫn giữ sẵn **bảng giá 03/2026**, **không gian dự án** và **pháp lý** cho anh/chị ạ. Khi cần, mình chỉ cần nhắn **NHẬN BẢNG GIÁ** là em gửi ngay.";
+  `Dạ em vẫn giữ sẵn **bảng giá ${CURRENT_MONTH_YEAR}**, **không gian dự án** và **pháp lý** cho anh/chị ạ. Khi cần, mình chỉ cần nhắn **NHẬN BẢNG GIÁ** là em gửi ngay.`;
 
 export const CHATBOT_RETURNING_MESSAGE =
-  "Chào anh/chị, nếu mình vẫn đang cân nhắc, em có thể gửi lại **bảng giá 03/2026**, **không gian dự án** hoặc **pháp lý** trong một lượt ạ.";
+  `Chào anh/chị, nếu mình vẫn đang cân nhắc, em có thể gửi lại **bảng giá ${CURRENT_MONTH_YEAR}**, **không gian dự án** hoặc **pháp lý** trong một lượt ạ.`;
 
 export const CHATBOT_SYSTEM_PROMPT = `
 Bạn là Sunshine AI, trợ lý bán hàng cho dự án ${PROJECT_CONTEXT.projectName}.

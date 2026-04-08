@@ -1,4 +1,5 @@
 import { NATIVE_LANDING_FAQS } from "@/lib/native-original-seo";
+import { CURRENT_MONTH_YEAR } from "@/lib/chatbot-config";
 
 export default function NativeOriginalLanding() {
     return (
@@ -223,7 +224,7 @@ export default function NativeOriginalLanding() {
 
                                 <div
                                     className="hero-actions mx-auto flex w-full max-w-[360px] flex-col items-stretch gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:items-center sm:gap-4 lg:w-auto lg:max-w-fit lg:gap-3 xl:gap-3.5">
-                                    <button type="button" data-onclick="startChatFromLanding('Nhận bảng giá 03/2026')"
+                                    <button type="button" data-onclick={`startChatFromLanding('Nhận bảng giá ${CURRENT_MONTH_YEAR}')`}
                                         className="gold-button flex-1 py-3 px-4 sm:px-8 sm:py-4 lg:flex-none lg:px-5 lg:py-3.5 xl:px-6 rounded-full text-white font-black shadow-2xl flex items-center justify-center gap-3 lg:gap-2 hover:scale-[1.02] transition-transform">
                                         <i className="fa-solid fa-file-lines text-sm sm:text-base lg:text-sm"></i>
                                         <span
@@ -295,7 +296,7 @@ export default function NativeOriginalLanding() {
                                         className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-primary/80 to-transparent">
                                         <div
                                             className="text-[10px] text-primary-container font-black uppercase tracking-widest mb-1">
-                                            Bảng giá 03/2026</div>
+                                            Bảng giá {CURRENT_MONTH_YEAR}</div>
                                         <div className="text-xl text-white font-black italic">THAM KHẢO KHÔNG GIAN DỰ ÁN</div>
                                     </div>
                                 </div>
@@ -533,7 +534,7 @@ export default function NativeOriginalLanding() {
                                     <h3 className="text-xl font-black text-primary uppercase mb-2">Căn Hộ Du Lịch</h3>
                                     <p className="text-[11px] opacity-60 font-body mb-4 line-clamp-2">Dòng căn hộ biển phù hợp cho nhu cầu nghỉ dưỡng và khai thác lưu trú theo định hướng dự án.</p>
                                     <div className="flex justify-between items-center pt-4 border-t border-surface-container">
-                                        <div className="text-primary-container font-black text-sm">Bảng giá 03/2026</div>
+                                        <div className="text-primary-container font-black text-sm">Bảng giá {CURRENT_MONTH_YEAR}</div>
                                         <div
                                             className="text-xs font-bold text-primary uppercase flex items-center gap-1 group-hover:text-primary-container transition-colors">
                                             Chi tiết <i className="fa-solid fa-arrow-right"></i></div>
@@ -1023,7 +1024,7 @@ export default function NativeOriginalLanding() {
                                                     className="mb-2 block text-[10px] font-black uppercase tracking-widest text-primary/60">Mình muốn nhận</label>
                                                 <select id="lead-need"
                                                     className="w-full rounded-2xl border-none bg-surface px-4 py-3.5 text-sm font-bold text-primary transition-all focus:ring-2 focus:ring-primary-container">
-                                                    <option value="Xem giá">Nhận bảng giá 03/2026</option>
+                                                    <option value="Xem giá">Nhận bảng giá {CURRENT_MONTH_YEAR}</option>
                                                     <option value="Ở / nghỉ dưỡng">Xem căn thực tế giá tốt</option>
                                                     <option value="Đầu tư">Xem căn hợp tài chính</option>
                                                     <option value="Xem pháp lý">Xem pháp lý và chính sách</option>
@@ -1227,7 +1228,7 @@ export default function NativeOriginalLanding() {
                     <div id="chat-messages" className="chat-scroll flex-1 p-5 overflow-y-auto bg-surface/30">
                         <div className="chat-message chat-message--bot">
                             <div className="chat-bubble">
-                                Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá 03/2026**,
+                                Anh/chị muốn xem thông tin nào trước ạ? Em có thể gửi **bảng giá {CURRENT_MONTH_YEAR}**,
                                 **không gian dự án** hoặc **pháp lý** để mình đối chiếu nhanh ngay trên trang.
                             </div>
                         </div>
@@ -1235,7 +1236,7 @@ export default function NativeOriginalLanding() {
 
 
                     <div id="chat-suggestions" className="chat-suggestions-strip px-4 sm:px-5 py-3 sm:py-4 flex items-stretch gap-2 overflow-x-auto no-scrollbar">
-                        <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá 03/2026</button>
+                        <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Nhận bảng giá nội bộ')">Nhận bảng giá {CURRENT_MONTH_YEAR}</button>
 
                         <button type="button" className="chat-suggestion" data-onclick="pushSuggestion('Xem video căn đẹp')">Xem căn thực tế</button>
 
@@ -1275,7 +1276,7 @@ export default function NativeOriginalLanding() {
             <button type="button" id="chatbot-mini-teaser" data-onclick="startChatFromLanding('Nhận bảng giá nội bộ')"
                 className="fixed bottom-28 right-4 z-[205] hidden max-w-[260px] rounded-2xl border border-primary/10 bg-white px-4 py-3 text-left shadow-2xl md:bottom-24 md:right-8 md:max-w-[280px]">
                 <div className="text-[10px] font-black uppercase tracking-[0.24em] text-primary/40">Popup mini</div>
-                <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem bảng giá 03/2026 hay pháp lý dự án trước ạ?</p>
+                <p id="chatbot-mini-teaser-text" className="mt-2 text-sm font-semibold leading-6 text-primary">Anh/chị muốn xem bảng giá {CURRENT_MONTH_YEAR} hay pháp lý dự án trước ạ?</p>
                 <span id="chatbot-mini-teaser-cta" className="mt-3 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-primary-container">
                     Nhận bảng giá <i className="fa-solid fa-arrow-right"></i>
                 </span>

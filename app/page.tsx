@@ -8,7 +8,8 @@ import {
   DEFAULT_QUICK_ACTIONS,
   INITIAL_CHAT_MESSAGE,
   PROJECT_CONTEXT,
-  WELCOME_MESSAGE
+  WELCOME_MESSAGE,
+  CURRENT_MONTH_YEAR
 } from "@/lib/chatbot-config";
 import {
   NATIVE_LANDING_CONFIG_SCRIPT,
@@ -26,14 +27,14 @@ import {
 } from "@/lib/native-original-seo";
 
 const defaultSuggestions = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
-const initialMessages = [INITIAL_CHAT_MESSAGE, "Website chính thức đang thể hiện giá từ 6X/m² và bảng giá cập nhật 03/2026."];
-const welcomeMessages = [WELCOME_MESSAGE, "Anh/chị muốn xem bảng giá 03/2026 hay không gian dự án trước ạ?"];
+const initialMessages = [INITIAL_CHAT_MESSAGE, `Website chính thức đang thể hiện giá từ 6X/m² và bảng giá cập nhật ${CURRENT_MONTH_YEAR}.`];
+const welcomeMessages = [WELCOME_MESSAGE, `Anh/chị muốn xem bảng giá ${CURRENT_MONTH_YEAR} hay không gian dự án trước ạ?`];
 const followUpSuggestions = ["Nhận bảng giá nội bộ", "Xem căn thực tế", "Xem pháp lý"];
 const returningSuggestions = ["Nhận bảng giá nội bộ", "Xem căn thực tế", "Xem pháp lý"];
 const suggestionDisplayMap = {
   "Nhận bảng giá nội bộ": "Nhận bảng giá",
   "Nhận bảng giá": "Nhận bảng giá",
-  "Nhận bảng giá 03/2026": "Nhận bảng giá",
+  [`Nhận bảng giá ${CURRENT_MONTH_YEAR}`]: "Nhận bảng giá",
   "Xem video căn đẹp": "Xem căn thực tế",
   "Xem căn thực tế giá tốt": "Xem căn thực tế"
 };
@@ -499,7 +500,7 @@ const chatbotBridgeScript = `
       device: window.innerWidth >= 1024 ? "desktop" : "mobile"
     });
 
-    showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá 03/2026, không gian dự án và pháp lý cho anh/chị ạ.", "Nhận bảng giá");
+    showMiniTeaser("Dạ em vẫn giữ sẵn bảng giá ${CURRENT_MONTH_YEAR}, không gian dự án và pháp lý cho anh/chị ạ.", "Nhận bảng giá");
   }
 
   function scheduleIdleFollowUp() {
@@ -1148,7 +1149,7 @@ const landingSeoSchema = {
       },
       about: [
         "Sunshine Bay Retreat Vũng Tàu",
-        "Bảng giá Sunshine Bay Retreat 03/2026",
+        `Bảng giá Sunshine Bay Retreat ${CURRENT_MONTH_YEAR}`,
         "Vị trí Sunshine Bay Retreat đường Ba Tháng Hai",
         "Mặt bằng Sunshine Bay Retreat",
         "Pháp lý Sunshine Bay Retreat",
@@ -1184,7 +1185,7 @@ export default function HomePage() {
         {chatbotBridgeScript}
       </Script>
       <Script id="native-landing-main" strategy="afterInteractive">
-        {NATIVE_LANDING_MAIN_SCRIPT}
+        {NATIVE_LANDING_MAIN_SCRIPT.replace(/03\/2026/g, CURRENT_MONTH_YEAR)}
       </Script>
       <Script id="native-inline-event-bridge" strategy="afterInteractive">
         {inlineEventBridgeScript}
