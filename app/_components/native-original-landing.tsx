@@ -386,7 +386,7 @@ export default function NativeOriginalLanding() {
                                     className="w-14 h-14 bg-surface-container rounded-2xl flex items-center justify-center mb-6 text-primary-container text-2xl">
                                     <i className="fa-solid fa-umbrella-beach"></i>
                                 </div>
-                                <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">5 Phút Đến Bãi Sau</h3>
+                                <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Mặt Biển Bãi Sau</h3>
                                 <p className="text-xs opacity-60 leading-relaxed font-body">Đồng thời cũng gần Mega Market và Bệnh viện Vũng Tàu theo phần vị trí dự án.</p>
                             </div>
                             <div className="amenity-card p-8 rounded-2xl shadow-sm">

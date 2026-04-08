@@ -1,7 +1,7 @@
 import { CURRENT_MONTH_YEAR } from "./chatbot-config";
 
 export const NATIVE_LANDING_TITLE = `Sunshine Bay Retreat Vũng Tàu | Bảng giá ${CURRENT_MONTH_YEAR}, vị trí, mặt bằng`;
-export const NATIVE_LANDING_DESCRIPTION = `Cập nhật Sunshine Bay Retreat Vũng Tàu theo website chính thức: bảng giá ${CURRENT_MONTH_YEAR}, vị trí đường Ba Tháng Hai, mặt bằng, pháp lý, tiến độ và thông tin chủ đầu tư Sunshine Group.`;
+export const NATIVE_LANDING_DESCRIPTION = `Sunshine Bay Retreat Vũng Tàu - Căn hộ dòng tiền theo website chính thức: bảng giá ${CURRENT_MONTH_YEAR}, vị trí đường Ba Tháng Hai, mặt bằng, pháp lý, tiến độ và thông tin chủ đầu tư Sunshine Group.`;
 export const NATIVE_LANDING_OG_IMAGE = "/sunshine-bay-retreat-28.jpg" as const;
 export const NATIVE_LANDING_HTML_CLASSNAME = "light scroll-smooth" as const;
 export const NATIVE_LANDING_BODY_CLASSNAME = "bg-surface text-on-surface" as const;
