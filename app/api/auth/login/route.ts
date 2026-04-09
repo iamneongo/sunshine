@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   DASHBOARD_SESSION_COOKIE_NAME,
+  buildRequestUrl,
   createDashboardSessionToken,
   getDashboardSessionCookieOptions,
   getSafeDashboardRedirectPath,
@@ -14,13 +15,13 @@ export async function POST(request: Request) {
   const next = getSafeDashboardRedirectPath(String(formData.get("next") ?? ""));
 
   if (!(await validateDashboardCredentials(username, password))) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = buildRequestUrl(request, "/login");
     loginUrl.searchParams.set("next", next);
     loginUrl.searchParams.set("error", "invalid");
     return NextResponse.redirect(loginUrl, 303);
   }
 
-  const response = NextResponse.redirect(new URL(next, request.url), 303);
+  const response = NextResponse.redirect(buildRequestUrl(request, next), 303);
   response.cookies.set(
     DASHBOARD_SESSION_COOKIE_NAME,
     await createDashboardSessionToken(),

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { recordAnalyticsEvent, updatePersistedLeadById } from "@/lib/crm-data";
 import {
   DASHBOARD_SESSION_COOKIE_NAME,
+  buildRequestUrl,
   getSafeDashboardRedirectPath,
   isAuthenticatedDashboardSession
 } from "@/lib/dashboard-auth";
@@ -31,13 +32,13 @@ export async function POST(request: NextRequest, context: { params: Promise<{ le
   const sessionToken = cookieStore.get(DASHBOARD_SESSION_COOKIE_NAME)?.value;
 
   if (!(await isAuthenticatedDashboardSession(sessionToken))) {
-    return NextResponse.redirect(new URL("/login?next=/dashboard/overview", request.url), 303);
+    return NextResponse.redirect(buildRequestUrl(request, "/login?next=/dashboard/overview"), 303);
   }
 
   const { leadId } = await context.params;
   const formData = await request.formData();
   const returnTo = getSafeDashboardRedirectPath(getOptionalFormValue(formData, "returnTo") || `/dashboard/leads/${leadId}`);
-  const redirectUrl = new URL(returnTo, request.url);
+  const redirectUrl = buildRequestUrl(request, returnTo);
 
   const updatedLead = await updatePersistedLeadById(leadId, {
     status: pickAllowedValue(getOptionalFormValue(formData, "status"), leadStatuses) as LeadStatus | undefined,

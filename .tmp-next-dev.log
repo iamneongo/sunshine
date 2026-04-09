@@ -1,0 +1,20 @@
+
+> dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local
+✓ Ready in 1684ms
+○ Compiling proxy ...
+
+○ Compiling /_not-found/page ...
+ POST /api/auth/login 303 in 7.7s (next.js: 7.6s, application-code: 47ms)
+ POST /dang-nhap 404 in 15.2s (next.js: 14.4s, application-code: 811ms)
+ GET /danh-muc/khach-hang 404 in 15.1s (next.js: 14.0s, application-code: 1068ms)
+ POST /api/dashboard/leads/lead_1774598472668_2b372a8b/call-bot 303 in 5.7s (next.js: 3.1s, application-code: 2.6s)
+ GET /api/leads 200 in 500ms (next.js: 31ms, application-code: 469ms)
+ GET /danh-muc/khach-hang 404 in 44ms (next.js: 3ms, application-code: 40ms)
+ GET /dang-nhap 404 in 43ms (next.js: 3ms, application-code: 40ms)
+[?25h

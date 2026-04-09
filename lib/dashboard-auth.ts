@@ -48,16 +48,53 @@ export function getSafeDashboardRedirectPath(next: string | null | undefined): s
   return normalized;
 }
 
+function getHeaderValue(request: Request, key: string): string {
+  return request.headers.get(key)?.split(",")[0]?.trim() ?? "";
+}
+
+export function getRequestOrigin(request: Request): string {
+  const forwardedProto = getHeaderValue(request, "x-forwarded-proto");
+  const forwardedHost = getHeaderValue(request, "x-forwarded-host");
+  const forwardedPort = getHeaderValue(request, "x-forwarded-port");
+  const host = forwardedHost || getHeaderValue(request, "host");
+  let fallbackProtocol = process.env.NODE_ENV === "production" ? "https" : "http";
+
+  try {
+    fallbackProtocol = new URL(request.url).protocol.replace(":", "") || fallbackProtocol;
+  } catch {
+    fallbackProtocol = process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https://") ? "https" : fallbackProtocol;
+  }
+
+  if (host) {
+    const protocol = forwardedProto || fallbackProtocol;
+    const hasExplicitPort = host.includes(":");
+    const normalizedPort =
+      forwardedPort && !["80", "443"].includes(forwardedPort) && !hasExplicitPort ? `:${forwardedPort}` : "";
+
+    return `${protocol}://${host}${normalizedPort}`;
+  }
+
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "http://localhost:3000";
+  }
+}
+
+export function buildRequestUrl(request: Request, path: string): URL {
+  return new URL(path, getRequestOrigin(request));
+}
+
 function shouldUseSecureDashboardCookie(request?: Request): boolean {
   if (request) {
-    const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim().toLowerCase();
+    const forwardedProto = getHeaderValue(request, "x-forwarded-proto").toLowerCase();
 
     if (forwardedProto) {
       return forwardedProto === "https";
     }
 
     try {
-      return new URL(request.url).protocol === "https:";
+      return getRequestOrigin(request).startsWith("https://");
     } catch {
       return process.env.NODE_ENV === "production";
     }

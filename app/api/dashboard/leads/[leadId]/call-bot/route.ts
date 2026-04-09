@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPersistedLeadById, recordAnalyticsEvent, updatePersistedLeadById } from "@/lib/crm-data";
 import {
   DASHBOARD_SESSION_COOKIE_NAME,
+  buildRequestUrl,
   getSafeDashboardRedirectPath,
   isAuthenticatedDashboardSession
 } from "@/lib/dashboard-auth";
@@ -10,7 +11,7 @@ import { getLeadDialablePhone, isUcallCallBotConfigured, triggerUcallCallBotForL
 
 function buildReturnUrl(request: NextRequest, leadId: string, returnTo: string, state: "success" | "error", reason = "") {
   const safePath = getSafeDashboardRedirectPath(returnTo || `/dashboard/leads/${leadId}`);
-  const redirectUrl = new URL(safePath, request.url);
+  const redirectUrl = buildRequestUrl(request, safePath);
 
   if (state === "success") {
     redirectUrl.searchParams.set("callBot", "1");
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ le
   const sessionToken = cookieStore.get(DASHBOARD_SESSION_COOKIE_NAME)?.value;
 
   if (!(await isAuthenticatedDashboardSession(sessionToken))) {
-    return NextResponse.redirect(new URL("/login?next=/dashboard/overview", request.url), 303);
+    return NextResponse.redirect(buildRequestUrl(request, "/login?next=/dashboard/overview"), 303);
   }
 
   const { leadId } = await context.params;

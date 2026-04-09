@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { buildRequestUrl } from "@/lib/dashboard-auth";
 import { CLEAR_TEST_DATA_CONFIRM_PHRASE, clearTestData, getTestDataAudit } from "@/lib/test-data";
 
 function getSafeReturnPath(value: FormDataEntryValue | null): string {
@@ -12,7 +13,7 @@ function getSafeReturnPath(value: FormDataEntryValue | null): string {
 }
 
 function buildRedirect(request: Request, returnPath: string, status: string, extra: Record<string, string> = {}) {
-  const url = new URL(returnPath, request.url);
+  const url = buildRequestUrl(request, returnPath);
   url.searchParams.set("testDataCleanup", status);
 
   for (const [key, value] of Object.entries(extra)) {

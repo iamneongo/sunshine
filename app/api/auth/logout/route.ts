@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { DASHBOARD_SESSION_COOKIE_NAME, getDashboardSessionCookieOptions } from "@/lib/dashboard-auth";
+import { buildRequestUrl, DASHBOARD_SESSION_COOKIE_NAME, getDashboardSessionCookieOptions } from "@/lib/dashboard-auth";
 
 function buildLogoutResponse(request: Request) {
-  const response = NextResponse.redirect(new URL("/login", request.url), 303);
+  const response = NextResponse.redirect(buildRequestUrl(request, "/login"), 303);
   response.cookies.set(DASHBOARD_SESSION_COOKIE_NAME, "", {
     ...getDashboardSessionCookieOptions(request),
     maxAge: 0

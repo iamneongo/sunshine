@@ -109,9 +109,12 @@ async function parseUcallResponse(response: Response): Promise<unknown> {
 }
 
 function buildOtherAttributes(lead: LeadRecord): Record<string, string> {
+  const leadName = (lead.fullName || "").trim();
+
   return {
+    name: leadName,
     lead_id: lead.id,
-    lead_name: lead.fullName || "Lead chưa rõ tên",
+    lead_name: leadName || "Lead chưa rõ tên",
     need: lead.need,
     budget: lead.budget,
     source: lead.source,
