@@ -24,7 +24,7 @@ export type TriggerLeadCallBotWorkflowResult = {
   phoneNumber?: string;
 };
 
-const AUTO_CALL_COOLDOWN_MS = 45 * 1000;
+const AUTO_CALL_COOLDOWN_MS = 15 * 60 * 1000;
 
 function getLastAutoTriggerTimestamp(lead: LeadRecord): number {
   const raw = lead.metadata.ucall_last_auto_trigger_at || "";
