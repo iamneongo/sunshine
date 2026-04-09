@@ -1,13 +1,14 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { getPersistedLeadById, recordAnalyticsEvent, updatePersistedLeadById } from "@/lib/crm-data";
+import { getPersistedLeadById } from "@/lib/crm-data";
 import {
   DASHBOARD_SESSION_COOKIE_NAME,
   buildRequestUrl,
   getSafeDashboardRedirectPath,
   isAuthenticatedDashboardSession
 } from "@/lib/dashboard-auth";
-import { getLeadDialablePhone, isUcallCallBotConfigured, triggerUcallCallBotForLead } from "@/lib/ucall";
+import { triggerLeadCallBotWorkflow } from "@/lib/lead-call-bot";
+import { getLeadDialablePhone, isUcallCallBotConfigured } from "@/lib/ucall";
 
 function buildReturnUrl(request: NextRequest, leadId: string, returnTo: string, state: "success" | "error", reason = "") {
   const safePath = getSafeDashboardRedirectPath(returnTo || `/dashboard/leads/${leadId}`);
@@ -51,33 +52,17 @@ export async function POST(request: NextRequest, context: { params: Promise<{ le
   }
 
   try {
-    const result = await triggerUcallCallBotForLead(lead);
-    const nowLabel = new Intl.DateTimeFormat("vi-VN", {
-      dateStyle: "short",
-      timeStyle: "short"
-    }).format(new Date());
-
-    await updatePersistedLeadById(lead.id, {
-      notes: `[UCall] Đã đẩy lead vào call bot lúc ${nowLabel}. Campaign: ${result.campaignId}${result.customerId ? ` | Customer: ${result.customerId}` : ""}`,
-      metadata: {
-        ucall_last_campaign_id: result.campaignId,
-        ucall_last_customer_id: result.customerId || "",
-        ucall_last_phone: result.phoneNumber,
-        ucall_last_trigger_at: new Date().toISOString()
-      }
-    });
-
-    await recordAnalyticsEvent({
-      name: "dashboard_call_bot_triggered",
+    const result = await triggerLeadCallBotWorkflow(lead, {
       source: "dashboard",
-      leadId: lead.id,
       path: getSafeDashboardRedirectPath(returnTo),
-      metadata: {
-        campaign_id: result.campaignId,
-        customer_id: result.customerId || "",
-        phone_number: result.phoneNumber
-      }
+      eventName: "dashboard_call_bot_triggered",
+      mode: "manual",
+      force: true
     });
+
+    if (!result.triggered) {
+      return NextResponse.redirect(buildReturnUrl(request, leadId, returnTo, "error", result.skippedReason || "failed"), 303);
+    }
 
     return NextResponse.redirect(buildReturnUrl(request, leadId, returnTo, "success"), 303);
   } catch (error) {

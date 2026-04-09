@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getLeadDataset, persistLead } from "@/lib/crm-data";
+import { triggerLeadCallBotWorkflow } from "@/lib/lead-call-bot";
 import {
   type LeadContactPreference,
   type LeadHotness,
@@ -206,15 +207,17 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LeadRequestBody;
+    const normalizedSource = normalizeSource(body.source);
     const contactPreference = normalizeContactPreference(body.contactPreference);
     const { phone, zalo, email } = resolveContact(body, contactPreference);
+    const normalizedMetadata = normalizeMetadata(body.metadata);
 
     if (!phone && !zalo && !email) {
       return NextResponse.json({ error: "At least one contact field is required" }, { status: 400 });
     }
 
-    const lead = await persistLead({
-      source: normalizeSource(body.source),
+    let lead = await persistLead({
+      source: normalizedSource,
       fullName: normalizeText(body.fullName),
       phone,
       zalo,
@@ -230,13 +233,37 @@ export async function POST(request: Request) {
       preferredVisitTime: normalizeText(body.preferredVisitTime),
       travelParty: normalizeText(body.travelParty),
       lastMessage: normalizeText(body.lastMessage),
-      metadata: normalizeMetadata(body.metadata)
+      metadata: normalizedMetadata
     });
+    let autoCallTriggered = false;
+    let autoCallSkippedReason = "";
+
+    if (normalizedSource === "form") {
+      try {
+        const autoCallResult = await triggerLeadCallBotWorkflow(lead, {
+          source: "landing",
+          path: "/",
+          eventName: "landing_call_bot_auto_triggered",
+          mode: "auto",
+          metadata: {
+            entry_point: normalizedMetadata.entryPoint ?? "landing_form"
+          }
+        });
+
+        autoCallTriggered = autoCallResult.triggered;
+        autoCallSkippedReason = autoCallResult.skippedReason;
+        lead = autoCallResult.lead;
+      } catch (autoCallError) {
+        console.error("/api/leads auto call-bot error", autoCallError);
+      }
+    }
 
     return NextResponse.json(
       {
         ok: true,
-        lead
+        lead,
+        autoCallTriggered,
+        autoCallSkippedReason
       },
       {
         headers: {

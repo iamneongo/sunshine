@@ -5,10 +5,12 @@ import {
   PROJECT_CONTEXT
 } from "@/lib/chatbot-config";
 import { persistLead, updatePersistedLeadById } from "@/lib/crm-data";
+import { triggerLeadCallBotWorkflow } from "@/lib/lead-call-bot";
 import {
   type LeadContactPreference,
   type LeadHotness,
   type LeadNeed,
+  type LeadRecord,
   type LeadUpsertInput
 } from "@/lib/lead-store";
 
@@ -32,6 +34,8 @@ type ChatbotPayload = {
   source: "gemini" | "fallback" | "scripted";
   leadCaptured: boolean;
   leadId?: string;
+  autoCallTriggered?: boolean;
+  autoCallSkippedReason?: string;
 };
 
 const DEFAULT_SUGGESTIONS = DEFAULT_QUICK_ACTIONS.map((item) => item.prompt);
@@ -791,6 +795,14 @@ function hasCurrentTurnLeadSignal(message: string, history: ClientHistoryItem[])
   );
 }
 
+function hasCurrentTurnContactSignal(message: string, history: ClientHistoryItem[]): boolean {
+  const canonicalMessage = canonicalizeUserReply(message, history);
+  const currentContactPreference = detectContactPreference(canonicalMessage);
+  const { phone, zalo, email } = resolveContactFields(canonicalMessage, currentContactPreference);
+
+  return Boolean(phone || zalo || email);
+}
+
 function buildResponse(reply: string, suggestions: string[], leadSignals: LeadSignals) {
   return {
     reply,
@@ -1390,11 +1402,12 @@ async function persistLeadIfPossible(
   history: ClientHistoryItem[],
   leadSignals: LeadSignals,
   existingLeadId?: string
-) {
+): Promise<{ lead: LeadRecord; shouldAutoTriggerCall: boolean } | null> {
   const leadInput = buildLeadInput(message, history, leadSignals);
   const leadPatchInput = buildLeadPatchInput(message, history, leadSignals);
   const hasConversationContact = Boolean(leadInput.phone || leadInput.zalo || leadInput.email);
   const hasCurrentTurnSignal = hasCurrentTurnLeadSignal(message, history);
+  const hasCurrentTurnContact = hasCurrentTurnContactSignal(message, history);
 
   if (existingLeadId) {
     if (!hasCurrentTurnSignal) {
@@ -1403,21 +1416,30 @@ async function persistLeadIfPossible(
 
     const updatedLead = await updatePersistedLeadById(existingLeadId, leadPatchInput);
     if (updatedLead) {
-      return updatedLead;
+      return {
+        lead: updatedLead,
+        shouldAutoTriggerCall: hasCurrentTurnContact
+      };
     }
 
     if (!hasConversationContact) {
       return null;
     }
 
-    return persistLead(leadInput);
+    return {
+      lead: await persistLead(leadInput),
+      shouldAutoTriggerCall: hasCurrentTurnContact
+    };
   }
 
   if (!hasConversationContact || !hasCurrentTurnSignal) {
     return null;
   }
 
-  return persistLead(leadInput);
+  return {
+    lead: await persistLead(leadInput),
+    shouldAutoTriggerCall: hasCurrentTurnContact
+  };
 }
 
 export async function POST(request: Request) {
@@ -1450,12 +1472,34 @@ export async function POST(request: Request) {
 
     let leadCaptured = false;
     let leadId: string | undefined;
+    let autoCallTriggered = false;
+    let autoCallSkippedReason = "";
 
     try {
-      const lead = await persistLeadIfPossible(message, history, payload.leadSignals, existingLeadId);
-      if (lead) {
+      const persistedLead = await persistLeadIfPossible(message, history, payload.leadSignals, existingLeadId);
+      if (persistedLead) {
         leadCaptured = true;
-        leadId = lead.id;
+        leadId = persistedLead.lead.id;
+
+        if (persistedLead.shouldAutoTriggerCall) {
+          try {
+            const autoCallResult = await triggerLeadCallBotWorkflow(persistedLead.lead, {
+              source: "chatbot",
+              path: "/",
+              eventName: "chatbot_call_bot_auto_triggered",
+              mode: "auto",
+              metadata: {
+                entry_point: "chatbot"
+              }
+            });
+
+            autoCallTriggered = autoCallResult.triggered;
+            autoCallSkippedReason = autoCallResult.skippedReason;
+            leadId = autoCallResult.lead.id;
+          } catch (autoCallError) {
+            console.error("/api/chatbot auto call-bot error", autoCallError);
+          }
+        }
       }
     } catch (leadError) {
       console.error("/api/chatbot lead persistence error", leadError);
@@ -1466,7 +1510,9 @@ export async function POST(request: Request) {
         ...payload,
         source,
         leadCaptured,
-        leadId
+        leadId,
+        autoCallTriggered,
+        autoCallSkippedReason
       },
       {
         headers: {
