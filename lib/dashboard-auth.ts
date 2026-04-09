@@ -52,6 +52,41 @@ function getHeaderValue(request: Request, key: string): string {
   return request.headers.get(key)?.split(",")[0]?.trim() ?? "";
 }
 
+function getConfiguredPublicOrigin(): string {
+  return (
+    process.env.APP_BASE_URL?.trim() ||
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    process.env.SITE_URL?.trim() ||
+    ""
+  ).replace(/\/$/, "");
+}
+
+function parseHostParts(host: string): { hostname: string; port: string } {
+  const normalized = host.trim();
+
+  if (!normalized) {
+    return { hostname: "", port: "" };
+  }
+
+  try {
+    const parsed = new URL(`http://${normalized}`);
+    return {
+      hostname: parsed.hostname,
+      port: parsed.port
+    };
+  } catch {
+    return {
+      hostname: normalized.replace(/:\d+$/, ""),
+      port: normalized.match(/:(\d+)$/)?.[1] ?? ""
+    };
+  }
+}
+
+function isLocalHostname(hostname: string): boolean {
+  const normalized = hostname.trim().toLowerCase();
+  return normalized === "localhost" || normalized === "127.0.0.1" || normalized === "::1";
+}
+
 export function getRequestOrigin(request: Request): string {
   const forwardedProto = getHeaderValue(request, "x-forwarded-proto");
   const forwardedHost = getHeaderValue(request, "x-forwarded-host");
@@ -67,17 +102,37 @@ export function getRequestOrigin(request: Request): string {
 
   if (host) {
     const protocol = forwardedProto || fallbackProtocol;
-    const hasExplicitPort = host.includes(":");
-    const normalizedPort =
-      forwardedPort && !["80", "443"].includes(forwardedPort) && !hasExplicitPort ? `:${forwardedPort}` : "";
+    const { hostname, port: explicitPort } = parseHostParts(host);
+    const configuredOrigin = getConfiguredPublicOrigin();
 
-    return `${protocol}://${host}${normalizedPort}`;
+    if (configuredOrigin) {
+      try {
+        const configuredUrl = new URL(configuredOrigin);
+        if (configuredUrl.hostname && configuredUrl.hostname === hostname) {
+          return configuredUrl.origin;
+        }
+      } catch {
+        // Ignore malformed configured origin and continue with forwarded headers.
+      }
+    }
+
+    let effectivePort = explicitPort || forwardedPort;
+
+    if (
+      !isLocalHostname(hostname) &&
+      (effectivePort === "3000" || (protocol === "https" && effectivePort === "443") || (protocol === "http" && effectivePort === "80"))
+    ) {
+      effectivePort = "";
+    }
+
+    const normalizedHost = effectivePort ? `${hostname}:${effectivePort}` : hostname;
+    return `${protocol}://${normalizedHost}`;
   }
 
   try {
     return new URL(request.url).origin;
   } catch {
-    return process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "http://localhost:3000";
+    return getConfiguredPublicOrigin() || "http://localhost:3000";
   }
 }
 
