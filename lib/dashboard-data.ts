@@ -13,6 +13,13 @@ type TrendItem = {
   value: number;
 };
 
+type ActivityTrendItem = {
+  label: string;
+  total: number;
+  leadCount: number;
+  eventCount: number;
+};
+
 type DashboardSnapshotOptions = {
   leadLimit?: number;
   eventLimit?: number;
@@ -20,18 +27,56 @@ type DashboardSnapshotOptions = {
   recentEventLimit?: number;
 };
 
+const DASHBOARD_TIME_ZONE = process.env.DASHBOARD_TIME_ZONE?.trim() || "Asia/Ho_Chi_Minh";
+const dateKeyFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: DASHBOARD_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+});
+const trendLabelFormatter = new Intl.DateTimeFormat("vi-VN", {
+  timeZone: DASHBOARD_TIME_ZONE,
+  day: "2-digit",
+  month: "2-digit"
+});
+
 function isValidDate(value: string): boolean {
   return !Number.isNaN(new Date(value).getTime());
 }
 
+function getDateKeyInTimeZone(value: Date | string): string | null {
+  const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  const parts = dateKeyFormatter.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return `${year}-${month}-${day}`;
+}
+
+function formatTrendLabelFromKey(key: string): string {
+  return trendLabelFormatter.format(new Date(`${key}T00:00:00.000Z`));
+}
+
 function countToday<T>(items: T[], getDate: (item: T) => string): number {
-  const now = new Date();
-  const todayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  const todayKey = getDateKeyInTimeZone(new Date());
+
+  if (!todayKey) {
+    return 0;
+  }
 
   return items.filter((item) => {
-    const date = new Date(getDate(item));
-    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    return key === todayKey;
+    const key = getDateKeyInTimeZone(getDate(item));
+    return Boolean(key && key === todayKey);
   }).length;
 }
 
@@ -52,18 +97,64 @@ function buildBreakdown(items: string[]): BreakdownItem[] {
     .sort((a, b) => b.count - a.count);
 }
 
-function buildLeadTrend(leads: LeadRecord[], days = 7): TrendItem[] {
-  const formatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit" });
+function buildTrendByDate<T>(items: T[], getDate: (item: T) => string, days = 7): TrendItem[] {
   const buckets = new Map<string, number>();
   const labels: string[] = [];
 
   for (let offset = days - 1; offset >= 0; offset -= 1) {
     const date = new Date();
-    date.setHours(0, 0, 0, 0);
     date.setDate(date.getDate() - offset);
-    const key = date.toISOString().slice(0, 10);
+    const key = getDateKeyInTimeZone(date);
+
+    if (!key) {
+      continue;
+    }
+
     buckets.set(key, 0);
     labels.push(key);
+  }
+
+  for (const item of items) {
+    const rawDate = getDate(item);
+
+    if (!isValidDate(rawDate)) {
+      continue;
+    }
+
+    const key = getDateKeyInTimeZone(rawDate);
+
+    if (key && buckets.has(key)) {
+      buckets.set(key, (buckets.get(key) ?? 0) + 1);
+    }
+  }
+
+  return labels.map((key) => ({
+    label: formatTrendLabelFromKey(key),
+    value: buckets.get(key) ?? 0
+  }));
+}
+
+function buildActivityTrend(leads: LeadRecord[], events: AnalyticsEventRecord[], days = 7): ActivityTrendItem[] {
+  const keys: string[] = [];
+  const buckets = new Map<
+    string,
+    {
+      leadCount: number;
+      eventCount: number;
+    }
+  >();
+
+  for (let offset = days - 1; offset >= 0; offset -= 1) {
+    const date = new Date();
+    date.setDate(date.getDate() - offset);
+    const key = getDateKeyInTimeZone(date);
+
+    if (!key) {
+      continue;
+    }
+
+    keys.push(key);
+    buckets.set(key, { leadCount: 0, eventCount: 0 });
   }
 
   for (const lead of leads) {
@@ -71,16 +162,37 @@ function buildLeadTrend(leads: LeadRecord[], days = 7): TrendItem[] {
       continue;
     }
 
-    const key = new Date(lead.createdAt).toISOString().slice(0, 10);
-    if (buckets.has(key)) {
-      buckets.set(key, (buckets.get(key) ?? 0) + 1);
+    const key = getDateKeyInTimeZone(lead.createdAt);
+    const bucket = key ? buckets.get(key) : null;
+
+    if (bucket) {
+      bucket.leadCount += 1;
     }
   }
 
-  return labels.map((key) => ({
-    label: formatter.format(new Date(`${key}T00:00:00`)),
-    value: buckets.get(key) ?? 0
-  }));
+  for (const event of events) {
+    if (!isValidDate(event.createdAt)) {
+      continue;
+    }
+
+    const key = getDateKeyInTimeZone(event.createdAt);
+    const bucket = key ? buckets.get(key) : null;
+
+    if (bucket) {
+      bucket.eventCount += 1;
+    }
+  }
+
+  return keys.map((key) => {
+    const bucket = buckets.get(key) ?? { leadCount: 0, eventCount: 0 };
+
+    return {
+      label: formatTrendLabelFromKey(key),
+      total: bucket.leadCount + bucket.eventCount,
+      leadCount: bucket.leadCount,
+      eventCount: bucket.eventCount
+    };
+  });
 }
 
 function summarizeEvent(event: AnalyticsEventRecord): string {
@@ -138,7 +250,9 @@ async function buildDashboardSnapshot(options: DashboardSnapshotOptions = {}) {
     budgetBreakdown: buildBreakdown(leads.map((lead) => lead.budget || "Chưa rõ")),
     needBreakdown: buildBreakdown(leads.map((lead) => lead.need)),
     eventBreakdown: buildBreakdown(events.map((event) => event.name)),
-    leadTrend: buildLeadTrend(leads),
+    leadTrend: buildTrendByDate(leads, (lead) => lead.createdAt),
+    eventTrend: buildTrendByDate(events, (event) => event.createdAt),
+    activityTrend: buildActivityTrend(leads, events),
     allLeads: leads,
     allEvents: summarizedEvents,
     recentLeads: leads.slice(0, recentLeadLimit),

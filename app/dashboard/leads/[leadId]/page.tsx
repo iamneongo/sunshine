@@ -61,6 +61,221 @@ function getCallBotErrorMessage(reason: string): string | null {
 
 type LeadDetailRecord = NonNullable<Awaited<ReturnType<typeof getDashboardLeadDetail>>>["lead"];
 
+type LeadNoteRow = {
+  label: string;
+  value: string;
+  fullValue?: string;
+  isTechnical?: boolean;
+};
+
+type LeadNoteSection = {
+  id: string;
+  title: string;
+  rows: LeadNoteRow[];
+};
+
+const noteKeyLabels: Record<string, string> = {
+  "chatbot intent": "Ý định",
+  budget: "Ngân sách",
+  "last ask": "Tin nhắn gần nhất",
+  campaign: "Campaign",
+  customer: "Customer",
+  need: "Nhu cầu",
+  source: "Nguồn",
+  status: "Trạng thái",
+  zalo: "Zalo",
+  email: "Email",
+  visit: "Lịch xem",
+  callback: "Khung giờ gọi",
+  "contact preference": "Kênh ưu tiên"
+};
+
+const chatbotIntentLabels: Record<string, string> = {
+  investment: "Đầu tư",
+  pricing: "Xem bảng giá",
+  legal: "Xem pháp lý",
+  tour: "Đặt lịch xem dự án",
+  video: "Xem video căn đẹp",
+  resort: "Nghỉ dưỡng",
+  living: "Ở / nghỉ dưỡng",
+  unknown: "Chưa rõ"
+};
+
+function prettifyNoteKey(key: string): string {
+  const normalizedKey = key.trim().toLowerCase();
+  return noteKeyLabels[normalizedKey] ?? key.trim();
+}
+
+function shortenIdentifier(value: string): string {
+  const trimmedValue = value.trim();
+
+  if (trimmedValue.length <= 28) {
+    return trimmedValue;
+  }
+
+  return `${trimmedValue.slice(0, 10)}...${trimmedValue.slice(-8)}`;
+}
+
+function prettifyNoteValue(key: string, value: string): LeadNoteRow {
+  const normalizedKey = key.trim().toLowerCase();
+  const trimmedValue = value.trim();
+
+  if (normalizedKey === "chatbot intent") {
+    return {
+      label: prettifyNoteKey(key),
+      value: chatbotIntentLabels[trimmedValue.toLowerCase()] ?? trimmedValue
+    };
+  }
+
+  if (normalizedKey === "campaign" || normalizedKey === "customer") {
+    return {
+      label: prettifyNoteKey(key),
+      value: shortenIdentifier(trimmedValue),
+      fullValue: trimmedValue,
+      isTechnical: true
+    };
+  }
+
+  return {
+    label: prettifyNoteKey(key),
+    value: trimmedValue
+  };
+}
+
+function sanitizeStructuredValue(value: string): string {
+  return value
+    .replace(/\[(?:UCall(?: Auto)?)\]\s*.*?(?=(?:\s*\[(?:UCall(?: Auto)?)\])|$)/gi, " ")
+    .replace(/\s*Campaign:\s*[a-f0-9-]{8,}/gi, "")
+    .replace(/\s*Customer:\s*[a-f0-9-]{8,}/gi, "")
+    .replace(/\s*Chatbot intent:.*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\|$/, "")
+    .trim();
+}
+
+function buildStructuredRows(line: string): LeadNoteRow[] {
+  const cleanedLine = sanitizeStructuredValue(line);
+  const rows: LeadNoteRow[] = [];
+  const seen = new Set<string>();
+
+  for (const segment of cleanedLine.split(/\s*\|\s*/)) {
+    const match = segment.match(/^([^:]{2,40}):\s*(.+)$/);
+
+    if (!match) {
+      continue;
+    }
+
+    const rawKey = match[1].trim();
+    const normalizedKey = rawKey.toLowerCase();
+    const sanitizedValue = sanitizeStructuredValue(match[2]);
+
+    if (!sanitizedValue) {
+      continue;
+    }
+
+    const row = prettifyNoteValue(rawKey, sanitizedValue);
+    const dedupeKey = `${normalizedKey}:${row.value}`;
+
+    if (seen.has(dedupeKey)) {
+      continue;
+    }
+
+    seen.add(dedupeKey);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function extractUcallFragments(line: string): string[] {
+  return Array.from(line.matchAll(/\[(?:UCall(?: Auto)?)\]\s*.*?(?=(?:\s*\[(?:UCall(?: Auto)?)\])|$)/gi)).map((match) =>
+    match[0].trim()
+  );
+}
+
+function parseUcallNoteLine(line: string, index: number): LeadNoteSection | null {
+  const titleMatch = line.match(/\[(UCall(?: Auto)?)\]\s*(.+)$/i);
+
+  if (!titleMatch) {
+    return null;
+  }
+
+  const title = titleMatch[1].toLowerCase().includes("auto") ? "Call bot tự động" : "Call bot";
+  const body = titleMatch[2].trim();
+  const campaignMatch = body.match(/\bCampaign:\s*([a-f0-9-]{8,})/i);
+  const customerMatch = body.match(/\bCustomer:\s*([a-f0-9-]{8,})/i);
+  const message = body
+    .replace(/\|?\s*Campaign:\s*[a-f0-9-]{8,}/i, "")
+    .replace(/\|?\s*Customer:\s*[a-f0-9-]{8,}/i, "")
+    .replace(/\s*Chatbot intent:.*$/i, "")
+    .trim()
+    .replace(/\|\s*$/, "")
+    .replace(/\.$/, "");
+  const rows: LeadNoteRow[] = [];
+
+  if (message) {
+    rows.push({ label: "Nội dung", value: message });
+  }
+
+  if (campaignMatch) {
+    rows.push(prettifyNoteValue("Campaign", campaignMatch[1]));
+  }
+
+  if (customerMatch) {
+    rows.push(prettifyNoteValue("Customer", customerMatch[1]));
+  }
+
+  return {
+    id: `ucall-${index}`,
+    title,
+    rows
+  };
+}
+
+function parseLeadNotes(notes: string): LeadNoteSection[] {
+  return notes
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .flatMap((line, index) => {
+      const sections: LeadNoteSection[] = [];
+      const structuredRows = buildStructuredRows(line);
+
+      if (structuredRows.length > 0) {
+        sections.push({
+          id: `structured-${index}`,
+          title: line.toLowerCase().includes("chatbot intent") ? "Thông tin chatbot" : "Ghi chú",
+          rows: structuredRows
+        });
+      }
+
+      const ucallSections = extractUcallFragments(line)
+        .map((fragment, fragmentIndex) => parseUcallNoteLine(fragment, index * 10 + fragmentIndex))
+        .filter((section): section is LeadNoteSection => Boolean(section));
+
+      if (ucallSections.length > 0) {
+        sections.push(...ucallSections);
+      }
+
+      if (sections.length === 0) {
+        const rawValue = sanitizeStructuredValue(line);
+
+        if (rawValue) {
+          sections.push({
+            id: `raw-${index}`,
+            title: "Ghi chú",
+            rows: [{ label: "Nội dung", value: rawValue }]
+          });
+        }
+      }
+
+      return sections;
+    })
+    .slice(-6)
+    .reverse();
+}
+
 function buildNextSteps(lead: LeadDetailRecord): string[] {
   const steps = [getRecommendedFollowUp(lead)];
 
@@ -88,6 +303,45 @@ function InfoField({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
       <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</div>
       <div className="mt-2 text-sm font-semibold leading-6 text-slate-700">{value || "Chưa có"}</div>
+    </div>
+  );
+}
+
+function LeadNotesTable({ notes }: { notes: string }) {
+  const sections = parseLeadNotes(notes);
+
+  if (sections.length === 0) {
+    return (
+      <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-white px-4 py-4 text-sm font-semibold text-slate-500">
+        Chưa có ghi chú follow-up.
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      {sections.map((section) => (
+        <div key={section.id} className="border-b border-slate-200 last:border-b-0">
+          <div className="bg-slate-100/80 px-4 py-3 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+            {section.title}
+          </div>
+          <dl className="divide-y divide-slate-100">
+            {section.rows.map((row) => (
+              <div key={`${section.id}-${row.label}`} className="grid gap-1 px-4 py-3 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-4">
+                <dt className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">{row.label}</dt>
+                <dd
+                  className={`min-w-0 break-words text-sm font-semibold leading-6 text-slate-700 ${
+                    row.isTechnical ? "font-mono text-[12px] tracking-normal text-slate-600" : ""
+                  }`}
+                  title={row.fullValue}
+                >
+                  {row.value || "Chưa có"}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
     </div>
   );
 }
@@ -242,7 +496,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
 
             <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
               <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Ghi chú tích lũy</div>
-              <p className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-600">{lead.notes || "Chưa có ghi chú follow-up."}</p>
+              <LeadNotesTable notes={lead.notes} />
             </div>
 
             {lead.tags.length > 0 ? (
@@ -456,7 +710,7 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
                 metadataEntries.map(([key, value]) => (
                   <div key={key} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
                     <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">{key}</div>
-                    <div className="mt-2 text-sm leading-6 text-slate-600">{value}</div>
+                    <div className="mt-2 break-words text-sm leading-6 text-slate-600">{value}</div>
                   </div>
                 ))
               ) : (

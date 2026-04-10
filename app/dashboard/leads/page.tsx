@@ -9,7 +9,6 @@ import {
   buildLeadQuickActions,
   dashboardButtonClasses,
   dashboardScrollAreaClasses,
-  formatDateTime,
   getHotnessTone,
   getLeadDisplayName,
   getLeadPrimaryContact,
@@ -38,7 +37,49 @@ function getSingleValue(value: string | string[] | undefined): string {
 }
 
 function getLeadContextNote(lead: Awaited<ReturnType<typeof getDashboardSnapshot>>["allLeads"][number]): string {
-  return lead.preferredVisitTime || lead.preferredCallbackTime || lead.lastMessage || lead.notes || "Chưa có ghi chú follow-up.";
+  const visibleNote = extractVisibleLeadNote(lead.notes);
+
+  return lead.preferredVisitTime || lead.preferredCallbackTime || lead.lastMessage || visibleNote || "Chưa có ghi chú follow-up.";
+}
+
+function extractVisibleLeadNote(notes: string): string {
+  const lines = notes
+    .split(/\r?\n/)
+    .map((line) => line.replace(/\[UCall.*$/i, "").trim())
+    .filter(Boolean)
+    .filter((line) => !/^\[ucall/i.test(line));
+
+  if (lines.length === 0) {
+    return "";
+  }
+
+  const chatbotLine = lines.find((line) => /chatbot intent:/i.test(line));
+
+  if (chatbotLine) {
+    const intent = chatbotLine.match(/chatbot intent:\s*([^|]+)/i)?.[1]?.trim();
+    const budget = chatbotLine.match(/budget:\s*([^|]+)/i)?.[1]?.trim();
+    const lastAsk = chatbotLine
+      .match(/last ask:\s*([^|]+)/i)?.[1]
+      ?.replace(/chatbot intent:.*$/i, "")
+      .trim();
+    const intentLabel =
+      intent?.toLowerCase() === "investment"
+        ? "Đầu tư"
+        : intent?.toLowerCase() === "pricing"
+          ? "Xem giá"
+          : intent?.toLowerCase() === "legal"
+            ? "Xem pháp lý"
+            : intent?.toLowerCase() === "living"
+              ? "Ở / nghỉ dưỡng"
+              : intent;
+    const parts = [intentLabel ? `Ý định ${intentLabel}` : "", budget ? `ngân sách ${budget}` : "", lastAsk ? lastAsk : ""].filter(Boolean);
+
+    if (parts.length > 0) {
+      return parts.join(" • ");
+    }
+  }
+
+  return lines[0] ?? "";
 }
 
 function normalizeForSearch(value: string): string {
@@ -325,10 +366,6 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                           </Link>
                           <div className="mt-1 text-sm text-slate-500">{getLeadPrimaryContact(lead)}</div>
                         </div>
-                        <div className="shrink-0 text-right">
-                          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Cập nhật</div>
-                          <div className="mt-1 text-xs font-semibold text-slate-600">{formatDateTime(lead.updatedAt)}</div>
-                        </div>
                       </div>
 
                       <div className="mt-4 grid grid-cols-2 gap-2 min-[480px]:flex min-[480px]:flex-wrap">
@@ -391,13 +428,12 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                 <table className="min-w-[1180px] w-full border-separate border-spacing-0 text-left text-sm xl:min-w-[1260px]">
                   <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500 xl:text-[11px] xl:tracking-[0.18em]">
                     <tr>
-                      <th className="sticky left-0 top-0 z-20 min-w-[220px] whitespace-nowrap bg-slate-50 px-4 py-4 shadow-[1px_0_0_0_rgb(226_232_240)] xl:px-6">Khách</th>
+                      <th className="sticky left-0 top-0 z-20 min-w-[260px] whitespace-nowrap bg-slate-50 px-4 py-4 shadow-[1px_0_0_0_rgb(226_232_240)] xl:px-6">Khách</th>
                       <th className="sticky top-0 min-w-[132px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Nguồn</th>
                       <th className="sticky top-0 min-w-[120px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Nhu cầu</th>
                       <th className="sticky top-0 min-w-[120px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Ngân sách</th>
                       <th className="sticky top-0 min-w-[116px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Độ nóng</th>
                       <th className="sticky top-0 min-w-[150px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Trạng thái</th>
-                      <th className="sticky top-0 min-w-[228px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Cập nhật</th>
                       <th className="sticky top-0 min-w-[108px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Chi tiết</th>
                       <th className="sticky top-0 min-w-[132px] whitespace-nowrap bg-slate-50 px-4 py-4 xl:px-6">Liên hệ nhanh</th>
                     </tr>
@@ -416,6 +452,7 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                             <div className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
                               {lead.contactPreference}
                             </div>
+                            <div className="mt-3 max-w-[280px] text-xs leading-5 text-slate-500">{getLeadContextNote(lead)}</div>
                           </td>
                           <td className="px-4 py-4 xl:px-6">
                             <DashboardBadge className={getLeadSourceTone(lead.source)}>{getLeadSourceLabel(lead.source)}</DashboardBadge>
@@ -431,10 +468,6 @@ export default async function DashboardLeadsPage({ searchParams }: DashboardLead
                             <span className={`inline-flex min-h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-black leading-none ${getStatusTone(lead.status)}`}>
                               {lead.status}
                             </span>
-                          </td>
-                          <td className="px-4 py-4 xl:px-6">
-                            <div className="text-slate-500">{formatDateTime(lead.updatedAt)}</div>
-                            <div className="mt-2 max-w-[220px] text-xs leading-5 text-slate-400">{getLeadContextNote(lead)}</div>
                           </td>
                           <td className="px-4 py-4 xl:px-6">
                             <Link href={`/dashboard/leads/${lead.id}`} className={dashboardButtonClasses("outline")}>

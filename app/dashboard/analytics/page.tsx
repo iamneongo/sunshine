@@ -50,7 +50,7 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
     recentLeadLimit: 20,
     recentEventLimit: 20
   });
-  const maxTrend = Math.max(...snapshot.leadTrend.map((item) => item.value), 1);
+  const maxTrend = Math.max(...snapshot.activityTrend.map((item) => item.total), 1);
   const filteredEvents = snapshot.allEvents.filter((event) => {
     if (filters.event && event.name !== filters.event) {
       return false;
@@ -175,19 +175,24 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
             <div>
               <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">7 ngày gần đây</h2>
             </div>
+            <div className="flex flex-wrap gap-2">
+              <DashboardBadge>{snapshot.overview.todayEvents} activity hôm nay</DashboardBadge>
+              <DashboardBadge variant="warning">{snapshot.overview.todayLeads} lead mới hôm nay</DashboardBadge>
+            </div>
           </div>
 
           <div className="mt-6 space-y-3 sm:hidden">
-            {snapshot.leadTrend.map((item) => (
+            {snapshot.activityTrend.map((item) => (
               <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="font-semibold text-slate-600">{item.label}</span>
-                  <span className="font-black text-slate-950">{item.value}</span>
+                  <span className="font-black text-slate-950">{item.total}</span>
                 </div>
+                <div className="mt-1 text-xs text-slate-500">{item.eventCount} event • {item.leadCount} lead mới</div>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
                   <div
                     className="h-full rounded-full bg-[linear-gradient(90deg,#f59e0b_0%,#f97316_100%)]"
-                    style={{ width: `${Math.max((item.value / maxTrend) * 100, item.value > 0 ? 12 : 4)}%` }}
+                    style={{ width: `${Math.max((item.total / maxTrend) * 100, item.total > 0 ? 12 : 4)}%` }}
                   />
                 </div>
               </div>
@@ -196,16 +201,17 @@ export default async function DashboardAnalyticsPage({ searchParams }: Dashboard
 
           <div className="mt-6 hidden overflow-x-auto pb-1 sm:block">
             <div className="grid min-w-[520px] grid-cols-7 gap-3">
-              {snapshot.leadTrend.map((item) => (
+              {snapshot.activityTrend.map((item) => (
                 <div key={item.label} className="flex flex-col items-center gap-3">
                   <div className="flex h-48 w-full items-end justify-center rounded-xl bg-slate-50 px-3 py-4">
                     <div
                       className="w-full rounded-full bg-[linear-gradient(180deg,#f59e0b_0%,#f97316_100%)] transition-all"
-                      style={{ height: `${Math.max((item.value / maxTrend) * 100, item.value > 0 ? 12 : 4)}%` }}
+                      style={{ height: `${Math.max((item.total / maxTrend) * 100, item.total > 0 ? 12 : 4)}%` }}
                     />
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-black text-slate-950">{item.value}</div>
+                    <div className="text-lg font-black text-slate-950">{item.total}</div>
+                    <div className="mt-1 text-[11px] font-semibold text-slate-500">{item.eventCount} event • {item.leadCount} lead</div>
                     <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{item.label}</div>
                   </div>
                 </div>
