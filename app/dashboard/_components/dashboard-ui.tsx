@@ -1,6 +1,8 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { getDashboardSnapshot } from "@/lib/dashboard-data";
+import { Badge, type BadgeProps } from "@/components/reui/badge";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export type DashboardSnapshot = Awaited<ReturnType<typeof getDashboardSnapshot>>;
 export type DashboardLead = DashboardSnapshot["recentLeads"][number];
@@ -11,17 +13,17 @@ export const dashboardNavItems = [
   {
     href: "/dashboard/overview",
     label: "Tổng quan",
-    shortLabel: "Overview"
+    shortLabel: "Tổng quan"
   },
   {
     href: "/dashboard/leads",
-    label: "Leads",
-    shortLabel: "Leads"
+    label: "Lead",
+    shortLabel: "Lead"
   },
   {
     href: "/dashboard/analytics",
-    label: "Analytics",
-    shortLabel: "Analytics"
+    label: "Phân tích",
+    shortLabel: "Phân tích"
   },
   {
     href: "/dashboard/follow-up",
@@ -30,10 +32,85 @@ export const dashboardNavItems = [
   },
   {
     href: "/dashboard/maintenance",
-    label: "Maintenance",
-    shortLabel: "Maintenance"
+    label: "Bảo trì",
+    shortLabel: "Bảo trì"
   }
 ] as const;
+
+const dashboardPageMeta = {
+  overview: {
+    title: "Tổng quan",
+    description: "Xem nhanh nhịp lead, trạng thái và activity mới nhất."
+  },
+  leads: {
+    title: "Lead",
+    description: "Lọc, xem chi tiết và xử lý lead theo đúng nhóm khách."
+  },
+  analytics: {
+    title: "Phân tích",
+    description: "Theo dõi chat, form và hành vi phát sinh trong ngày."
+  },
+  followUp: {
+    title: "Follow-up",
+    description: "Ưu tiên nhóm lead cần gọi lại, gửi Zalo hoặc chốt lịch."
+  },
+  maintenance: {
+    title: "Bảo trì",
+    description: "Kiểm tra dữ liệu và thao tác dọn dẹp có xác nhận."
+  },
+  leadDetail: {
+    title: "Chi tiết lead",
+    description: "Xem hồ sơ lead, lịch sử và thao tác xử lý tiếp theo."
+  },
+  eventDetail: {
+    title: "Chi tiết event",
+    description: "Đọc lại event, nguồn phát sinh và dữ liệu liên quan."
+  }
+} as const;
+
+export function isDashboardNavItemActive(pathname: string, href: (typeof dashboardNavItems)[number]["href"]) {
+  if (pathname === href) {
+    return true;
+  }
+
+  if (href === "/dashboard/leads" && pathname.startsWith("/dashboard/leads/")) {
+    return true;
+  }
+
+  if (href === "/dashboard/analytics" && pathname.startsWith("/dashboard/events/")) {
+    return true;
+  }
+
+  return href !== "/dashboard/overview" && pathname.startsWith(`${href}/`);
+}
+
+export function getDashboardPageMeta(pathname: string) {
+  if (pathname.startsWith("/dashboard/leads/")) {
+    return dashboardPageMeta.leadDetail;
+  }
+
+  if (pathname.startsWith("/dashboard/events/")) {
+    return dashboardPageMeta.eventDetail;
+  }
+
+  if (pathname.startsWith("/dashboard/leads")) {
+    return dashboardPageMeta.leads;
+  }
+
+  if (pathname.startsWith("/dashboard/analytics")) {
+    return dashboardPageMeta.analytics;
+  }
+
+  if (pathname.startsWith("/dashboard/follow-up")) {
+    return dashboardPageMeta.followUp;
+  }
+
+  if (pathname.startsWith("/dashboard/maintenance")) {
+    return dashboardPageMeta.maintenance;
+  }
+
+  return dashboardPageMeta.overview;
+}
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -43,9 +120,9 @@ type ScrollAreaVariant = "card" | "table";
 
 export function dashboardScrollAreaClasses(variant: ScrollAreaVariant = "card") {
   return cn(
-    "overscroll-contain pr-1 [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.75)_transparent] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300/80 [&::-webkit-scrollbar-track]:bg-transparent",
-    variant === "card" && "max-h-[320px] overflow-y-auto sm:max-h-[360px] lg:max-h-[420px] xl:max-h-[520px]",
-    variant === "table" && "max-h-[58svh] overflow-auto sm:max-h-[62vh] xl:max-h-[68vh]"
+    "overscroll-contain pr-1 [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.8)_transparent] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300/85 [&::-webkit-scrollbar-track]:bg-transparent",
+    variant === "card" && "max-h-[340px] overflow-y-auto sm:max-h-[380px] lg:max-h-[440px] xl:max-h-[540px]",
+    variant === "table" && "max-h-[56svh] overflow-auto sm:max-h-[60vh] xl:max-h-[66vh]"
   );
 }
 
@@ -66,8 +143,144 @@ const leadSourceLabels = {
   unknown: "Khác"
 } satisfies Record<DashboardLead["source"], string>;
 
+const dashboardEventCopy = {
+  chatbot_welcome_shown: {
+    label: "Hiển thị lời chào chatbot",
+    description: "Khách vừa nhìn thấy lời chào mở đầu của chatbot."
+  },
+  chatbot_opened: {
+    label: "Mở khung chat",
+    description: "Khách mở chatbot để bắt đầu xem thông tin."
+  },
+  chatbot_closed: {
+    label: "Đóng khung chat",
+    description: "Khách vừa đóng chatbot sau khi tương tác."
+  },
+  chatbot_activity: {
+    label: "Tương tác trong chatbot",
+    description: "Có thao tác mới phát sinh bên trong chatbot."
+  },
+  chatbot_reply_rendered: {
+    label: "Hiển thị phản hồi chatbot",
+    description: "Hệ thống vừa hiển thị một câu trả lời mới cho khách."
+  },
+  chatbot_intent_selected: {
+    label: "Chọn nhóm thông tin quan tâm",
+    description: "Khách vừa chọn nội dung muốn xem trước trong chatbot."
+  },
+  chatbot_budget_selected: {
+    label: "Chọn khung tài chính",
+    description: "Khách đã chọn khoảng ngân sách đang quan tâm."
+  },
+  chatbot_need_selected: {
+    label: "Chọn nhu cầu quan tâm",
+    description: "Khách đã cho biết nhu cầu chính như đầu tư, ở hoặc nghỉ dưỡng."
+  },
+  chatbot_contact_submitted: {
+    label: "Gửi thông tin liên hệ trong chat",
+    description: "Khách đã để lại thông tin liên hệ qua chatbot."
+  },
+  landing_lead_form_submitted: {
+    label: "Gửi form để lại thông tin",
+    description: "Khách gửi form để nhận bảng giá, video hoặc tài liệu liên quan."
+  },
+  landing_cta_clicked: {
+    label: "Bấm nút kêu gọi hành động",
+    description: "Khách vừa bấm một nút CTA trên landing page."
+  },
+  dashboard_lead_updated: {
+    label: "Cập nhật hồ sơ lead",
+    description: "Admin vừa chỉnh sửa thông tin lead trong dashboard."
+  },
+  dashboard_call_bot_triggered: {
+    label: "Đẩy lead sang call bot",
+    description: "Lead đã được gửi sang hệ thống gọi tự động."
+  }
+} satisfies Record<string, { label: string; description: string }>;
+
+const dashboardEventTokenLabels: Record<string, string> = {
+  chatbot: "chatbot",
+  landing: "landing page",
+  dashboard: "dashboard",
+  system: "hệ thống",
+  lead: "lead",
+  form: "form",
+  submitted: "đã gửi",
+  updated: "đã cập nhật",
+  call: "cuộc gọi",
+  bot: "bot",
+  triggered: "được kích hoạt",
+  opened: "đã mở",
+  closed: "đã đóng",
+  welcome: "lời chào",
+  shown: "hiển thị",
+  reply: "phản hồi",
+  rendered: "được hiển thị",
+  activity: "tương tác",
+  clicked: "được bấm",
+  selected: "đã chọn",
+  viewed: "đã xem",
+  started: "bắt đầu",
+  completed: "hoàn tất",
+  price: "bảng giá",
+  video: "video",
+  legal: "pháp lý",
+  phone: "số điện thoại",
+  zalo: "zalo",
+  name: "tên",
+  need: "nhu cầu",
+  budget: "ngân sách",
+  visit: "lịch xem",
+  callback: "gọi lại"
+};
+
 export function getLeadSourceLabel(source: DashboardLead["source"]): string {
   return leadSourceLabels[source] ?? source;
+}
+
+function titleCaseVietnamese(value: string): string {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+export function getDashboardEventLabel(name: string): string {
+  const normalizedName = name.trim();
+
+  if (!normalizedName) {
+    return "Hoạt động hệ thống";
+  }
+
+  const predefined = dashboardEventCopy[normalizedName as keyof typeof dashboardEventCopy];
+
+  if (predefined) {
+    return predefined.label;
+  }
+
+  const translated = normalizedName
+    .split(/[_-]+/)
+    .map((token) => dashboardEventTokenLabels[token] ?? token)
+    .join(" ")
+    .trim();
+
+  return titleCaseVietnamese(translated || normalizedName.replace(/[_-]+/g, " "));
+}
+
+export function getDashboardEventDescription(name: string): string {
+  const normalizedName = name.trim();
+  const predefined = dashboardEventCopy[normalizedName as keyof typeof dashboardEventCopy];
+
+  if (predefined) {
+    return predefined.description;
+  }
+
+  return "Hoạt động phát sinh từ landing page, chatbot hoặc thao tác trong dashboard.";
+}
+
+export function getDashboardEventSummary(name: string, summary: string): string {
+  return summary === "Không có metadata bổ sung" ? getDashboardEventDescription(name) : summary;
 }
 
 export function getLeadSourceTone(source: DashboardLead["source"]): string {
@@ -196,11 +409,11 @@ type ButtonVariant = "default" | "outline" | "secondary" | "dark";
 
 export function dashboardButtonClasses(variant: ButtonVariant = "default") {
   return cn(
-    "inline-flex min-h-10 items-center justify-center rounded-xl px-3.5 py-2.5 text-[10px] font-black uppercase tracking-[0.14em] transition focus:outline-none focus:ring-2 focus:ring-slate-300/70 sm:px-4 sm:text-[11px] sm:tracking-[0.18em]",
-    variant === "default" && "bg-slate-950 text-white shadow-sm hover:bg-slate-800",
-    variant === "outline" && "border border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-100",
-    variant === "secondary" && "border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200",
-    variant === "dark" && "border border-white/10 bg-white/10 text-white hover:bg-white/15"
+    "inline-flex min-h-10 items-center justify-center rounded-xl border px-3.5 py-2.5 text-sm font-semibold tracking-tight transition focus:outline-none focus:ring-2 focus:ring-slate-300/70 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4",
+    variant === "default" && "border-slate-950 bg-slate-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.14)] hover:border-slate-800 hover:bg-slate-800",
+    variant === "outline" && "border-slate-200 bg-white text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 hover:text-slate-950",
+    variant === "secondary" && "border-slate-200 bg-slate-100 text-slate-700 hover:border-slate-300 hover:bg-slate-200",
+    variant === "dark" && "border-slate-800 bg-slate-900 text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)] hover:bg-slate-800"
   );
 }
 
@@ -218,12 +431,12 @@ export function DashboardBadge({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[10px] font-black uppercase leading-none tracking-[0.14em] sm:px-3 sm:text-[11px] sm:tracking-[0.16em]",
+        "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-lg border px-2.5 py-1 text-[11px] font-semibold leading-none tracking-tight sm:px-3",
         variant === "default" && "border-slate-300 bg-white text-slate-700",
         variant === "muted" && "border-slate-200 bg-slate-50 text-slate-600",
         variant === "positive" && "border-emerald-200 bg-emerald-50 text-emerald-700",
         variant === "warning" && "border-amber-200 bg-amber-50 text-amber-700",
-        variant === "dark" && "border-white/10 bg-white/10 text-white/80",
+        variant === "dark" && "border-slate-800 bg-slate-900 text-white/90",
         className
       )}
     >
@@ -239,14 +452,58 @@ type PageHeaderProps = {
   actions?: ReactNode;
 };
 
-export function DashboardPageHeader({ title, actions }: PageHeaderProps) {
+type DashboardPageIntroBadge = {
+  label: ReactNode;
+  variant?: BadgeProps["variant"];
+};
+
+type DashboardPageIntroProps = PageHeaderProps & {
+  badges?: DashboardPageIntroBadge[];
+  className?: string;
+};
+
+export function DashboardPageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-      <div className="max-w-3xl">
-        <h1 className="text-[2rem] font-black tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">{title}</h1>
+    <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+      <div className="max-w-4xl">
+        <h1 className="text-[1.95rem] font-black leading-tight tracking-[-0.03em] text-slate-950 sm:text-[2.35rem] lg:text-[2.8rem]">
+          {title}
+        </h1>
+        {description ? <p className="mt-2 text-slate-500">{description}</p> : null}
       </div>
-      {actions ? <div className="flex flex-wrap gap-2.5 sm:gap-3 lg:justify-end">{actions}</div> : null}
+      {actions ? <div className="flex flex-wrap gap-2.5 xl:justify-end">{actions}</div> : null}
     </div>
+  );
+}
+
+export function DashboardPageIntro({ eyebrow, title, description, badges, actions, className }: DashboardPageIntroProps) {
+  return (
+    <Card className={cn("border-border/80 shadow-sm", className)}>
+      <CardHeader className="gap-4">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+          <div className="space-y-3">
+            {eyebrow ? (
+              <div className="text-muted-foreground text-[11px] font-semibold uppercase tracking-[0.22em]">{eyebrow}</div>
+            ) : null}
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</CardTitle>
+              {description ? <CardDescription className="max-w-3xl text-sm leading-6 sm:text-base">{description}</CardDescription> : null}
+            </div>
+            {badges && badges.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {badges.map((badge, index) => (
+                  <Badge key={`${String(badge.label)}-${index}`} variant={badge.variant ?? "primary-light"} radius="full" size="xl">
+                    {badge.label}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          {actions ? <div className="flex flex-wrap gap-2 xl:justify-end">{actions}</div> : null}
+        </div>
+      </CardHeader>
+    </Card>
   );
 }
 
@@ -258,7 +515,7 @@ type SurfaceCardProps = {
 export function DashboardSurfaceCard({ className = "", children }: SurfaceCardProps) {
   return (
     <article
-      className={`rounded-[1.35rem] border border-slate-200/80 bg-white/95 shadow-[0_10px_30px_rgba(15,23,42,0.06)] sm:rounded-2xl ${className}`.trim()}
+      className={`rounded-[1.35rem] border border-slate-200/80 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_18px_48px_rgba(15,23,42,0.06)] backdrop-blur ${className}`.trim()}
     >
       {children}
     </article>
@@ -280,18 +537,18 @@ export function DashboardMetricCard({ label, value, icon, tone, href }: MetricCa
     <DashboardSurfaceCard
       className={cn(
         "p-4 sm:p-5",
-        href ? "group h-full border-slate-200 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_14px_36px_rgba(15,23,42,0.09)]" : ""
+        href ? "group h-full border-slate-200 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_50px_rgba(15,23,42,0.1)]" : ""
       )}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="max-w-[12ch] text-[10px] font-black uppercase leading-4 tracking-[0.18em] text-slate-500 sm:text-[11px] sm:leading-5 sm:tracking-[0.22em]">
+          <div className="max-w-[14ch] text-[11px] font-semibold uppercase leading-5 tracking-[0.18em] text-slate-500">
             {label}
           </div>
           <div className="mt-2.5 text-3xl font-black tracking-tight text-slate-950 sm:mt-3 sm:text-4xl">{value}</div>
         </div>
         <div
-          className={`inline-flex h-11 w-11 items-center justify-center rounded-2xl text-base text-white shadow-sm sm:h-12 sm:w-12 sm:text-lg ${tone}`}
+          className={`inline-flex h-11 w-11 items-center justify-center rounded-xl text-base text-white shadow-sm sm:h-12 sm:w-12 sm:text-lg ${tone}`}
         >
           <i className={`fa-solid ${icon}`}></i>
         </div>
@@ -339,12 +596,12 @@ export function DashboardBreakdownCard({ title, items, barClassName, getHref }: 
             <Link
               key={item.label}
               href={href}
-              className="group block rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 transition hover:border-slate-300 hover:bg-white"
+              className="group block rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-3 transition hover:border-slate-300 hover:bg-white"
             >
               {content}
             </Link>
           ) : (
-            <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
+            <div key={item.label} className="rounded-xl border border-slate-200 bg-slate-50/80 px-3 py-3">
               {content}
             </div>
           );
@@ -355,10 +612,34 @@ export function DashboardBreakdownCard({ title, items, barClassName, getHref }: 
   );
 }
 
-export function DashboardEmptyState({ message }: { message: string }) {
+export function DashboardEmptyState({
+  title = "Chưa có dữ liệu",
+  message,
+  icon,
+  action,
+  compact = false
+}: {
+  title?: string;
+  message: string;
+  icon?: ReactNode;
+  action?: ReactNode;
+  compact?: boolean;
+}) {
   return (
-    <div className="rounded-xl border border-dashed border-slate-200 px-4 py-4 text-sm leading-6 text-slate-500">
-      {message}
+    <div
+      className={cn(
+        "rounded-xl border border-dashed border-border bg-muted/40 text-sm text-muted-foreground",
+        compact ? "px-4 py-4" : "px-5 py-5"
+      )}
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        {icon ? <div className="text-primary">{icon}</div> : null}
+        <div className="space-y-1">
+          <div className="font-medium text-foreground">{title}</div>
+          <p className="leading-6">{message}</p>
+          {action ? <div className="pt-1">{action}</div> : null}
+        </div>
+      </div>
     </div>
   );
 }

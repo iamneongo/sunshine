@@ -1,14 +1,17 @@
 import Link from "next/link";
+import { ArrowRight, CalendarCheck2, PhoneCall, Send, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardSnapshot } from "@/lib/dashboard-data";
+import { DashboardStatCard } from "../_components/dashboard-stat-card";
 import {
   DashboardEmptyState,
-  DashboardMetricCard,
-  DashboardPageHeader,
-  DashboardSurfaceCard,
+  DashboardPageIntro,
   buildLeadQuickActions,
-  dashboardButtonClasses,
-  dashboardScrollAreaClasses,
   formatDateTime,
+  getDashboardEventLabel,
+  getDashboardEventSummary,
   getHotnessTone,
   getLeadDisplayName,
   getRecommendedFollowUp,
@@ -17,6 +20,13 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const summaryCardIcons = [
+  { icon: Sparkles, tone: "bg-primary/10 text-primary" },
+  { icon: CalendarCheck2, tone: "bg-emerald-500/10 text-emerald-500" },
+  { icon: Send, tone: "bg-sky-500/10 text-sky-500" },
+  { icon: PhoneCall, tone: "bg-orange-500/10 text-orange-500" }
+] as const;
+
 export default async function DashboardFollowUpPage() {
   const snapshot = await getDashboardSnapshot({
     leadLimit: 500,
@@ -24,182 +34,194 @@ export default async function DashboardFollowUpPage() {
     recentLeadLimit: 20,
     recentEventLimit: 16
   });
+
   const priorityLeads = snapshot.allLeads
     .filter((lead) => lead.hotness === "Nóng" || lead.status === "Đặt lịch" || lead.tags.includes("can_goi_ngay"))
     .slice(0, 10);
 
   const actionBuckets = [
     {
-      label: "Cần gọi ngay",
-      count: snapshot.allLeads.filter((lead) => lead.tags.includes("can_goi_ngay")).length,
+      title: "Cần gọi ngay",
+      value: snapshot.allLeads.filter((lead) => lead.tags.includes("can_goi_ngay")).length,
+      description: "Lead có tag cần chạm sale trong phiên hiện tại.",
       href: "/dashboard/leads?hotness=N%C3%B3ng"
     },
     {
-      label: "Đang chờ lịch xem",
-      count: snapshot.allLeads.filter((lead) => lead.status === "Đặt lịch").length,
+      title: "Đang chờ lịch xem",
+      value: snapshot.allLeads.filter((lead) => lead.status === "Đặt lịch").length,
+      description: "Nhóm nên xác nhận lại thời gian và vị trí xem dự án.",
       href: "/dashboard/leads?status=%C4%90%E1%BA%B7t+l%E1%BB%8Bch"
     },
     {
-      label: "Đã gửi thông tin",
-      count: snapshot.allLeads.filter((lead) => lead.status === "Đã gửi thông tin").length,
+      title: "Đã gửi thông tin",
+      value: snapshot.allLeads.filter((lead) => lead.status === "Đã gửi thông tin").length,
+      description: "Nhóm cần follow-up sau khi đã nhận bảng giá hoặc video.",
       href: "/dashboard/leads?status=%C4%90%C3%A3+g%E1%BB%ADi+th%C3%B4ng+tin"
     },
     {
-      label: "Touchpoint mới",
-      count: snapshot.overview.todayEvents,
+      title: "Touchpoint hôm nay",
+      value: snapshot.overview.todayEvents,
+      description: "Event mới tạo ra trong ngày để theo dõi nhịp xử lý.",
       href: "/dashboard/analytics"
     }
   ];
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      <DashboardPageHeader
-
-        title="Follow-up"
-
+    <div className="@container/main flex flex-col gap-4 md:gap-6">
+      <DashboardPageIntro
+        eyebrow="Follow-up"
+        title="Ưu tiên lead cần xử lý"
+        description="Tập trung vào nhóm lead nóng, lead đã nhận tài liệu và lead đang ở giai đoạn chốt lịch để đội sale thao tác nhanh hơn."
+        badges={[
+          { label: `${snapshot.allLeads.filter((lead) => lead.tags.includes("can_goi_ngay")).length} cần gọi ngay`, variant: "warning-light" },
+          { label: `${snapshot.allLeads.filter((lead) => lead.status === "Đặt lịch").length} đang chờ lịch`, variant: "success-light" },
+          { label: `${snapshot.overview.todayEvents} touchpoint hôm nay`, variant: "info-light" }
+        ]}
         actions={
           <>
-            <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
-              Xem lead table
-            </Link>
-            <Link href="/dashboard/analytics" className={dashboardButtonClasses()}>
-              Xem analytics
-            </Link>
+            <Button asChild>
+              <Link href="/dashboard/leads?hotness=N%C3%B3ng">Lead nóng</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/dashboard/leads">Danh sách lead</Link>
+            </Button>
           </>
         }
       />
 
-      <section className="grid gap-4 min-[460px]:grid-cols-2 2xl:grid-cols-4">
-        <DashboardMetricCard
-          label="Lead ưu tiên"
-          value={priorityLeads.length}
-          note="Nhóm nóng, có lịch hoặc nên gọi trước"
-          icon="fa-bolt"
-          tone="bg-[linear-gradient(135deg,#0f172a_0%,#334155_100%)]"
-          href="/dashboard/leads?hotness=N%C3%B3ng"
-        />
-        <DashboardMetricCard
-          label="Đặt lịch"
-          value={snapshot.allLeads.filter((lead) => lead.status === "Đặt lịch").length}
-          note="Lead cần xác nhận lịch và hành trình đi xem"
-          icon="fa-calendar-check"
-          tone="bg-[linear-gradient(135deg,#059669_0%,#10b981_100%)]"
-          href="/dashboard/leads?status=%C4%90%E1%BA%B7t+l%E1%BB%8Bch"
-        />
-        <DashboardMetricCard
-          label="Đã gửi thông tin"
-          value={snapshot.allLeads.filter((lead) => lead.status === "Đã gửi thông tin").length}
-          note="Nhóm cần follow-up sau khi đã gửi tài liệu"
-          icon="fa-paper-plane"
-          tone="bg-[linear-gradient(135deg,#2563eb_0%,#06b6d4_100%)]"
-          href="/dashboard/leads?status=%C4%90%C3%A3+g%E1%BB%ADi+th%C3%B4ng+tin"
-        />
-        <DashboardMetricCard
-          label="Event mới hôm nay"
-          value={snapshot.overview.todayEvents}
-          note="Touchpoint phát sinh trong ngày hiện tại"
-          icon="fa-wave-square"
-          tone="bg-[linear-gradient(135deg,#f97316_0%,#f59e0b_100%)]"
-          href="/dashboard/analytics"
-        />
-      </section>
+      <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:shadow-xs sm:grid-cols-2 xl:grid-cols-4">
+        {actionBuckets.map((card, index) => {
+          const Icon = summaryCardIcons[index]?.icon ?? Sparkles;
+          const tone = summaryCardIcons[index]?.tone ?? "bg-primary/10 text-primary";
 
-      <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.04fr)_minmax(320px,0.96fr)]">
-        <DashboardSurfaceCard className="p-5 sm:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lead nên xử lý trước</h2>
-            </div>
-            <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-bold text-slate-600">
-              {priorityLeads.length} lead ưu tiên
-            </div>
-          </div>
+          return (
+            <DashboardStatCard
+              key={card.title}
+              title={card.title}
+              value={card.value}
+              icon={Icon}
+              iconToneClass={tone}
+              note={card.description}
+              href={card.href}
+            />
+          );
+        })}
+      </div>
 
-          <div className={`mt-6 space-y-4 ${dashboardScrollAreaClasses("card")}`}>
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Hàng đợi ưu tiên</CardTitle>
+            <CardDescription>Nhóm lead nên xử lý trước theo độ nóng, lịch hẹn và tag ưu tiên.</CardDescription>
+            <CardAction>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/dashboard/leads">Danh sách lead</Link>
+              </Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
             {priorityLeads.length > 0 ? (
               priorityLeads.map((lead) => {
                 const quickActions = buildLeadQuickActions(lead);
 
                 return (
-                  <div key={lead.id} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <Link href={`/dashboard/leads/${lead.id}`} className="text-sm font-black text-slate-950 hover:text-slate-700">
+                  <div key={lead.id} className="rounded-lg border p-4">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-2">
+                        <Link href={`/dashboard/leads/${lead.id}`} className="font-medium hover:underline">
                           {getLeadDisplayName(lead)}
                         </Link>
-                        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">
-                          {lead.need} • {lead.budget} • {lead.source}
+                        <div className="text-muted-foreground text-sm">
+                          {lead.need} • {lead.budget}
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getHotnessTone(lead.hotness)}`}>
+                        <Badge className={getHotnessTone(lead.hotness)} variant="outline">
                           {lead.hotness}
-                        </span>
-                        <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getStatusTone(lead.status)}`}>
+                        </Badge>
+                        <Badge className={getStatusTone(lead.status)} variant="outline">
                           {lead.status}
-                        </span>
+                        </Badge>
                       </div>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{getRecommendedFollowUp(lead)}</p>
-                    <div className="mt-4 grid grid-cols-2 gap-2 min-[480px]:flex min-[480px]:flex-wrap">
-                      <Link href={`/dashboard/leads/${lead.id}`} className={dashboardButtonClasses()}>
-                        Xem detail
-                      </Link>
-                      {quickActions.map((action) => (
-                        <a
-                          key={`${lead.id}-${action.label}`}
-                          href={action.href}
-                          target={action.external ? "_blank" : undefined}
-                          rel={action.external ? "noreferrer" : undefined}
-                          className={dashboardButtonClasses("outline")}
-                        >
-                          {action.label}
-                        </a>
+                    <p className="mt-3 text-muted-foreground text-sm leading-6">{getRecommendedFollowUp(lead)}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <Button asChild size="sm">
+                        <Link href={`/dashboard/leads/${lead.id}`}>Mở lead</Link>
+                      </Button>
+                      {quickActions.slice(0, 2).map((action) => (
+                        <Button key={`${lead.id}-${action.label}`} asChild size="sm" variant="outline">
+                          <a href={action.href} target={action.external ? "_blank" : undefined} rel={action.external ? "noreferrer" : undefined}>
+                            {action.label}
+                          </a>
+                        </Button>
                       ))}
                     </div>
                   </div>
                 );
               })
             ) : (
-              <DashboardEmptyState message="Chưa có lead đủ nóng để đưa vào queue ưu tiên." />
+              <DashboardEmptyState
+                title="Queue đang trống"
+                message="Khi lead nóng, đã xin giá hoặc có lịch hẹn, hệ thống sẽ đẩy vào danh sách này."
+                compact
+              />
             )}
-          </div>
-        </DashboardSurfaceCard>
+          </CardContent>
+        </Card>
 
-        <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-1">
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Đi tới đúng nhóm việc</h2>
-            <div className="mt-6 space-y-3">
-              {actionBuckets.map((item) => (
-                <Link key={item.label} href={item.href} className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-sm font-semibold text-slate-600">{item.label}</span>
-                    <span className="font-black text-slate-950">{item.count}</span>
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Checklist nhanh</CardTitle>
+              <CardDescription>Ba việc nên làm trước để giữ nhịp sale trong ca hiện tại.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                "Gọi nhóm lead nóng hoặc lead đã xin giá nhưng chưa phản hồi.",
+                "Xác nhận lại lịch hẹn đã tạo để tránh sót vị trí và thời gian.",
+                "So sánh touchpoint hôm nay với nhịp lead mới để phát hiện bất thường."
+              ].map((item, index) => (
+                <div key={item} className="flex gap-3 rounded-lg border p-4 text-sm leading-6">
+                  <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 font-semibold text-primary">
+                    {index + 1}
                   </div>
-                </Link>
+                  <div>{item}</div>
+                </div>
               ))}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
 
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Hoạt động gần đây</h2>
-            <div className={`mt-6 space-y-4 ${dashboardScrollAreaClasses("card")}`}>
-              {snapshot.recentEvents.slice(0, 10).map((event) => (
-                <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <div className="text-sm font-black text-slate-950">{event.name}</div>
-                      <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{event.source}</div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Activity gần đây</CardTitle>
+              <CardDescription>Dòng event gần nhất để đội sale không bỏ lỡ nhịp tương tác.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {snapshot.recentEvents.length > 0 ? (
+                snapshot.recentEvents.slice(0, 8).map((event) => (
+                  <Link key={event.id} href={`/dashboard/events/${event.id}`} className="rounded-lg border p-4 transition hover:bg-muted/50">
+                    <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-1">
+                        <div className="font-medium">{getDashboardEventLabel(event.name)}</div>
+                        <div className="text-muted-foreground text-sm uppercase">{event.source}</div>
+                      </div>
+                      <div className="text-muted-foreground text-sm">{formatDateTime(event.createdAt)}</div>
                     </div>
-                    <div className="text-xs text-slate-500">{formatDateTime(event.createdAt)}</div>
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{event.summary}</p>
-                </Link>
-              ))}
-            </div>
-          </DashboardSurfaceCard>
+                    <p className="mt-3 text-muted-foreground text-sm leading-6">{getDashboardEventSummary(event.name, event.summary)}</p>
+                  </Link>
+                ))
+              ) : (
+                <DashboardEmptyState
+                  title="Chưa có activity mới"
+                  message="Event mới từ chatbot, form hoặc click sẽ hiện ở đây để đội sale bám theo."
+                  compact
+                />
+              )}
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

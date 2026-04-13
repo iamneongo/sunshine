@@ -10,4 +10,5 @@ pnpm-debug.log*
 data/leads.json
 output/
 data/events.json
+references/
 

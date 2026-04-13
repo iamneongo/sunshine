@@ -1,7 +1,26 @@
+import "./dashboard-globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { DashboardNav } from "./_components/dashboard-nav";
-import { dashboardButtonClasses } from "./_components/dashboard-ui";
+import { cookies } from "next/headers";
+import { Geist_Mono, Manrope } from "next/font/google";
+import { LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { DashboardThemeBridge } from "./_components/dashboard-theme-bridge";
+import { DashboardAppSidebar } from "./_components/dashboard-app-sidebar";
+import { DashboardTopbar } from "./_components/dashboard-topbar";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope"
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono"
+});
 
 export const dynamic = "force-dynamic";
 
@@ -10,54 +29,52 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
+  const dashboardBodyClassName = `${manrope.variable} ${geistMono.variable}`;
+
   return (
-    <main className="min-h-screen bg-slate-100 text-slate-950">
-      <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-[272px_minmax(0,1fr)] xl:grid-cols-[288px_minmax(0,1fr)]">
-        <aside className="hidden border-r border-slate-200 bg-white lg:block">
-          <div className="sticky top-0 flex h-screen flex-col px-5 py-5 xl:px-6 xl:py-6">
-            <div className="pb-7">
-              <div className="text-lg font-black tracking-tight text-slate-950">Sunshine Bay Retreat</div>
-            </div>
+    <TooltipProvider>
+      <DashboardThemeBridge bodyClassName={dashboardBodyClassName} />
+      <div className={`${manrope.variable} ${geistMono.variable} dashboard-theme`}>
+        <SidebarProvider
+          defaultOpen={defaultOpen}
+          style={
+            {
+              "--sidebar-width": "calc(var(--spacing) * 68)"
+            } as React.CSSProperties
+          }
+        >
+          <DashboardAppSidebar />
+          <SidebarInset
+            className={cn(
+              "peer-data-[variant=inset]:border",
+              "[html[data-content-layout=centered]_&>*]:mx-auto",
+              "[html[data-content-layout=centered]_&>*]:w-full",
+              "[html[data-content-layout=centered]_&>*]:max-w-screen-2xl"
+            )}
+          >
+            <header
+              className={cn(
+                "flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear",
+                "sticky top-0 z-40 overflow-hidden rounded-t-[inherit] bg-background backdrop-blur-md"
+              )}
+            >
+              <div className="flex w-full items-center justify-between px-4 lg:px-6">
+                <DashboardTopbar />
 
-            <div className="space-y-2">
-              <DashboardNav />
-            </div>
-          </div>
-        </aside>
-
-        <div className="min-w-0 bg-slate-50">
-          <div className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/95 backdrop-blur lg:hidden">
-            <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-base font-black tracking-tight text-slate-950 sm:text-lg">Sunshine Bay Retreat</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <form action="/api/auth/logout" method="post" className="lg:hidden">
-                  <button
-                    type="submit"
-                    className={`${dashboardButtonClasses("outline")} px-3 py-2 text-[10px] tracking-[0.14em]`}
-                  >
+                <form action="/api/auth/logout" method="post">
+                  <Button variant="outline" size="sm">
+                    <LogOut data-icon="inline-start" />
                     Đăng xuất
-                  </button>
+                  </Button>
                 </form>
-                <DashboardNav mobile />
               </div>
-            </div>
-          </div>
-
-          <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-            <div className="mb-5 hidden justify-end lg:flex">
-              <form action="/api/auth/logout" method="post">
-                <button type="submit" className={dashboardButtonClasses("outline")}>
-                  Đăng xuất
-                </button>
-              </form>
-            </div>
-
-            {children}
-          </div>
-        </div>
+            </header>
+            <div className="h-full p-4 md:p-6">{children}</div>
+          </SidebarInset>
+        </SidebarProvider>
       </div>
-    </main>
+    </TooltipProvider>
   );
 }

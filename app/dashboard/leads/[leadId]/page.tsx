@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowRight, Phone, Settings2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardLeadDetail } from "@/lib/dashboard-data";
 import { getUcallCallBotStateForLead } from "@/lib/ucall";
+import { DashboardFormSelect } from "../../_components/dashboard-form-select";
 import {
-  DashboardBadge,
-  DashboardEmptyState,
-  DashboardPageHeader,
-  DashboardSurfaceCard,
   buildLeadQuickActions,
-  dashboardButtonClasses,
-  dashboardScrollAreaClasses,
+  cn,
   formatDateTime,
+  getDashboardEventLabel,
+  getDashboardEventSummary,
   getHotnessTone,
   getLeadDisplayName,
   getLeadPrimaryContact,
@@ -300,9 +302,9 @@ function buildNextSteps(lead: LeadDetailRecord): string[] {
 
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-      <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</div>
-      <div className="mt-2 text-sm font-semibold leading-6 text-slate-700">{value || "Chưa có"}</div>
+    <div className="rounded-lg border p-4">
+      <div className="text-muted-foreground text-xs uppercase tracking-wide">{label}</div>
+      <div className="mt-2 text-sm font-medium leading-6">{value || "Chưa có"}</div>
     </div>
   );
 }
@@ -312,26 +314,26 @@ function LeadNotesTable({ notes }: { notes: string }) {
 
   if (sections.length === 0) {
     return (
-      <div className="mt-3 rounded-xl border border-dashed border-slate-200 bg-white px-4 py-4 text-sm font-semibold text-slate-500">
+      <div className="mt-3 rounded-lg border border-dashed p-4 text-muted-foreground text-sm">
         Chưa có ghi chú follow-up.
       </div>
     );
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="mt-3 overflow-hidden rounded-lg border">
       {sections.map((section) => (
-        <div key={section.id} className="border-b border-slate-200 last:border-b-0">
-          <div className="bg-slate-100/80 px-4 py-3 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+        <div key={section.id} className="border-b last:border-b-0">
+          <div className="bg-muted px-4 py-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {section.title}
           </div>
-          <dl className="divide-y divide-slate-100">
+          <dl className="divide-y">
             {section.rows.map((row) => (
               <div key={`${section.id}-${row.label}`} className="grid gap-1 px-4 py-3 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-4">
-                <dt className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">{row.label}</dt>
+                <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{row.label}</dt>
                 <dd
-                  className={`min-w-0 break-words text-sm font-semibold leading-6 text-slate-700 ${
-                    row.isTechnical ? "font-mono text-[12px] tracking-normal text-slate-600" : ""
+                  className={`min-w-0 break-words text-sm leading-6 ${
+                    row.isTechnical ? "font-mono text-xs text-muted-foreground" : "font-medium"
                   }`}
                   title={row.fullValue}
                 >
@@ -367,359 +369,372 @@ export default async function DashboardLeadDetailPage({ params, searchParams }: 
   const metadataEntries = Object.entries(lead.metadata ?? {});
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      <DashboardPageHeader
-
-        title={getLeadDisplayName(lead)}
-
-        actions={
-          <>
-            <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
-              Về danh sách lead
-            </Link>
-            <Link href="/dashboard/follow-up" className={dashboardButtonClasses()}>
-              Queue follow-up
-            </Link>
-          </>
-        }
-      />
+    <div className="@container/main flex flex-col gap-4 md:gap-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-2">
+            <Badge className={getLeadSourceTone(lead.source)} variant="outline">
+              {getLeadSourceLabel(lead.source)}
+            </Badge>
+            <Badge className={getHotnessTone(lead.hotness)} variant="outline">
+              {lead.hotness}
+            </Badge>
+            <Badge className={getStatusTone(lead.status)} variant="outline">
+              {lead.status}
+            </Badge>
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{getLeadDisplayName(lead)}</h1>
+          <p className="text-muted-foreground text-sm leading-6">{getLeadPrimaryContact(lead)} • {lead.need} • {lead.budget}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/dashboard/leads">Về danh sách lead</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/dashboard/follow-up">Queue follow-up</Link>
+          </Button>
+        </div>
+      </div>
 
       {saved ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm font-semibold text-emerald-700 sm:px-5">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-emerald-700 text-sm">
           Lead đã được cập nhật trong dashboard.
         </div>
       ) : null}
 
       {updateError ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm font-semibold text-rose-700 sm:px-5">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700 text-sm">
           Không tìm thấy lead cần cập nhật. Vui lòng tải lại danh sách lead.
         </div>
       ) : null}
 
       {callBotSuccess ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm font-semibold text-emerald-700 sm:px-5">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-emerald-700 text-sm">
           Lead đã được đẩy sang call bot tự động của UCall.
         </div>
       ) : null}
 
       {callBotErrorMessage ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm font-semibold text-rose-700 sm:px-5">
+        <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-rose-700 text-sm">
           {callBotErrorMessage}
         </div>
       ) : null}
 
-      <DashboardSurfaceCard className="p-5 sm:p-6">
-        <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-between">
-          <div className="min-w-0 flex-1">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Lead profile</CardTitle>
+            <CardDescription>Thông tin chính, nhu cầu và kênh liên hệ của lead hiện tại.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <InfoField label="Liên hệ chính" value={getLeadPrimaryContact(lead)} />
+            <InfoField label="Nhu cầu" value={lead.need} />
+            <InfoField label="Ngân sách" value={lead.budget} />
+            <InfoField label="Kênh ưu tiên" value={lead.contactPreference} />
+          </CardContent>
+          <CardContent className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <div className="rounded-lg border p-4">
+              <div className="text-muted-foreground text-xs uppercase tracking-wide">Tin nhắn / ngữ cảnh gần nhất</div>
+              <p className="mt-2 text-sm leading-7">{lead.lastMessage || "Chưa có tin nhắn gần nhất."}</p>
+            </div>
+            <div className="space-y-3">
+              <div className="rounded-lg border p-4 text-sm">
+                <div className="text-muted-foreground">Tạo lúc</div>
+                <div className="mt-1 font-medium">{formatDateTime(lead.createdAt)}</div>
+              </div>
+              <div className="rounded-lg border p-4 text-sm">
+                <div className="text-muted-foreground">Cập nhật</div>
+                <div className="mt-1 font-medium">{formatDateTime(lead.updatedAt)}</div>
+              </div>
+            </div>
+          </CardContent>
+          <CardContent className="pt-0">
             <div className="flex flex-wrap gap-2">
-              <DashboardBadge className={getLeadSourceTone(lead.source)}>{getLeadSourceLabel(lead.source)}</DashboardBadge>
-              <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getHotnessTone(lead.hotness)}`}>
-                {lead.hotness}
-              </span>
-              <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getStatusTone(lead.status)}`}>
-                {lead.status}
-              </span>
-            </div>
-
-            <div className="mt-4 text-3xl font-black tracking-tight text-slate-950">{getLeadDisplayName(lead)}</div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <InfoField label="Liên hệ chính" value={getLeadPrimaryContact(lead)} />
-              <InfoField label="Nhu cầu" value={lead.need} />
-              <InfoField label="Ngân sách" value={lead.budget} />
-              <InfoField label="Kênh ưu tiên" value={lead.contactPreference} />
-            </div>
-          </div>
-
-          <div className="2xl:w-[320px]">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="mt-4 flex flex-wrap gap-2">
-                {quickActions.length > 0 ? (
-                  quickActions.map((action) => (
-                    <a
-                      key={`${lead.id}-${action.label}`}
-                      href={action.href}
-                      target={action.external ? "_blank" : undefined}
-                      rel={action.external ? "noreferrer" : undefined}
-                      className={dashboardButtonClasses(action.label === "Gọi" ? "default" : "outline")}
-                    >
-                      <i className={`fa-solid ${action.icon} mr-2`}></i>
+              {quickActions.length > 0 ? (
+                quickActions.map((action) => (
+                  <Button key={`${lead.id}-${action.label}`} asChild variant={action.label === "Gọi" ? "default" : "outline"}>
+                    <a href={action.href} target={action.external ? "_blank" : undefined} rel={action.external ? "noreferrer" : undefined}>
+                      {action.label === "Gọi" ? <Phone data-icon="inline-start" /> : <ArrowRight data-icon="inline-start" />}
                       {action.label}
                     </a>
-                  ))
-                ) : (
-                  <span className="text-sm text-slate-500">Lead này chưa có kênh liên hệ nhanh.</span>
+                  </Button>
+                ))
+              ) : (
+                <span className="text-muted-foreground text-sm">Lead này chưa có kênh liên hệ nhanh.</span>
+              )}
+              <DashboardCallBotButton
+                leadId={lead.id}
+                returnTo={`/dashboard/leads/${lead.id}`}
+                disabled={!callBotState.enabled}
+                disabledReason={callBotState.reason}
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  !callBotState.enabled ? "cursor-not-allowed opacity-50" : ""
                 )}
-                <DashboardCallBotButton
-                  leadId={lead.id}
-                  returnTo={`/dashboard/leads/${lead.id}`}
-                  disabled={!callBotState.enabled}
-                  disabledReason={callBotState.reason}
-                  className={`${dashboardButtonClasses("outline")} ${!callBotState.enabled ? "cursor-not-allowed opacity-50" : ""}`}
-                />
-              </div>
-              {!callBotState.enabled ? (
-                <div className="mt-3 text-xs font-semibold text-slate-500">{callBotState.reason}</div>
-              ) : null}
-              <div className="mt-4 grid gap-3 text-sm text-slate-600">
-                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3">
-                  <span>Tạo lúc</span>
-                  <span className="font-semibold text-slate-950">{formatDateTime(lead.createdAt)}</span>
-                </div>
-                <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3">
-                  <span>Cập nhật</span>
-                  <span className="font-semibold text-slate-950">{formatDateTime(lead.updatedAt)}</span>
-                </div>
-              </div>
+                idleLabel="Call bot"
+              />
             </div>
-          </div>
-        </div>
-      </DashboardSurfaceCard>
+            {!callBotState.enabled ? <p className="mt-3 text-muted-foreground text-sm">{callBotState.reason}</p> : null}
+          </CardContent>
+        </Card>
 
-      <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
-        <div className="space-y-6">
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Hồ sơ và ngữ cảnh</h2>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Checklist follow-up</CardTitle>
+            <CardDescription>Những bước nên làm tiếp theo để giữ nhịp xử lý lead.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {nextSteps.map((step) => (
+              <div key={step} className="rounded-lg border p-4 text-sm leading-6">
+                {step}
+              </div>
+            ))}
+          </CardContent>
+          {lead.tags.length > 0 ? (
+            <CardContent className="pt-0">
+              <div className="flex flex-wrap gap-2">
+                {lead.tags.map((tag) => (
+                  <Badge key={tag} variant="outline">
+                    {tagLabels[tag] ?? tag}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          ) : null}
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Hồ sơ và ngữ cảnh</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <InfoField label="Điện thoại" value={lead.phone} />
               <InfoField label="Zalo" value={lead.zalo} />
               <InfoField label="Email" value={lead.email} />
               <InfoField label="Khung giờ gọi" value={lead.preferredCallbackTime} />
               <InfoField label="Lịch xem dự án" value={lead.preferredVisitTime} />
               <InfoField label="Đi cùng" value={lead.travelParty} />
-            </div>
-
-            <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Tin nhắn / ngữ cảnh gần nhất</div>
-              <p className="mt-2 text-sm leading-7 text-slate-600">{lead.lastMessage || "Chưa có tin nhắn gần nhất."}</p>
-            </div>
-
-            <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Ghi chú tích lũy</div>
+            </CardContent>
+            <CardContent className="pt-0">
+              <div className="text-muted-foreground text-xs uppercase tracking-wide">Ghi chú tích lũy</div>
               <LeadNotesTable notes={lead.notes} />
-            </div>
+            </CardContent>
+          </Card>
 
-            {lead.tags.length > 0 ? (
-              <div className="mt-5 flex flex-wrap gap-2">
-                {lead.tags.map((tag) => (
-                  <DashboardBadge key={tag}>{tagLabels[tag] ?? tag}</DashboardBadge>
-                ))}
-              </div>
-            ) : null}
-          </DashboardSurfaceCard>
-
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Lịch sử tương tác</h2>
-              </div>
-              <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
-                Mở analytics
-              </Link>
-            </div>
-            <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Lịch sử tương tác</CardTitle>
+              <CardAction>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/dashboard/analytics">Mở analytics</Link>
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardContent className="max-h-[540px] space-y-3 overflow-y-auto">
               {relatedEvents.length > 0 ? (
                 relatedEvents.map((event) => (
-                  <Link
-                    key={event.id}
-                    href={`/dashboard/events/${event.id}`}
-                    className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white"
-                  >
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <div className="text-sm font-black text-slate-950">{event.name}</div>
-                        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{event.source}</div>
+                  <Link key={event.id} href={`/dashboard/events/${event.id}`} className="block rounded-lg border p-4 transition hover:bg-muted/50">
+                    <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-1">
+                        <div className="font-medium">{getDashboardEventLabel(event.name)}</div>
+                        <div className="text-muted-foreground text-sm uppercase">{event.source}</div>
                       </div>
-                      <div className="text-xs font-semibold text-slate-500">{formatDateTime(event.createdAt)}</div>
+                      <div className="text-muted-foreground text-sm">{formatDateTime(event.createdAt)}</div>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{event.summary}</p>
+                    <p className="mt-3 text-muted-foreground text-sm leading-6">{getDashboardEventSummary(event.name, event.summary)}</p>
                   </Link>
                 ))
               ) : (
-                <DashboardEmptyState message="Chưa có event gắn trực tiếp với lead này." />
+                <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                  Chưa có event gắn trực tiếp với lead này.
+                </div>
               )}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="space-y-6">
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Điều chỉnh trạng thái xử lý</h2>
-            <form action={`/api/dashboard/leads/${lead.id}`} method="post" className="mt-6 space-y-4">
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Điều chỉnh trạng thái xử lý</CardTitle>
+              <CardDescription>Cập nhật nhanh trạng thái, độ nóng và ngữ cảnh mới nhất của lead.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form action={`/api/dashboard/leads/${lead.id}`} method="post" className="space-y-4">
               <input type="hidden" name="returnTo" value={`/dashboard/leads/${lead.id}`} />
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Trạng thái</div>
-                  <select
+                  <div className="mb-2 text-sm font-medium">Trạng thái</div>
+                  <DashboardFormSelect
                     name="status"
                     defaultValue={lead.status}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400"
-                  >
-                    <option value="Chưa gọi">Chưa gọi</option>
-                    <option value="Đã gọi">Đã gọi</option>
-                    <option value="Đã gửi thông tin">Đã gửi thông tin</option>
-                    <option value="Đặt lịch">Đặt lịch</option>
-                    <option value="Đã xem dự án">Đã xem dự án</option>
-                    <option value="Đang chốt">Đang chốt</option>
-                  </select>
+                    triggerClassName="h-10 rounded-md"
+                    options={[
+                      { value: "Chưa gọi", label: "Chưa gọi" },
+                      { value: "Đã gọi", label: "Đã gọi" },
+                      { value: "Đã gửi thông tin", label: "Đã gửi thông tin" },
+                      { value: "Đặt lịch", label: "Đặt lịch" },
+                      { value: "Đã xem dự án", label: "Đã xem dự án" },
+                      { value: "Đang chốt", label: "Đang chốt" }
+                    ]}
+                  />
                 </label>
 
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Độ nóng</div>
-                  <select
+                  <div className="mb-2 text-sm font-medium">Độ nóng</div>
+                  <DashboardFormSelect
                     name="hotness"
                     defaultValue={lead.hotness}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400"
-                  >
-                    <option value="Nóng">Nóng</option>
-                    <option value="Ấm">Ấm</option>
-                    <option value="Lạnh">Lạnh</option>
-                  </select>
+                    triggerClassName="h-10 rounded-md"
+                    options={[
+                      { value: "Nóng", label: "Nóng" },
+                      { value: "Ấm", label: "Ấm" },
+                      { value: "Lạnh", label: "Lạnh" }
+                    ]}
+                  />
                 </label>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Kênh ưu tiên</div>
-                  <select
+                  <div className="mb-2 text-sm font-medium">Kênh ưu tiên</div>
+                  <DashboardFormSelect
                     name="contactPreference"
                     defaultValue={lead.contactPreference}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition focus:border-slate-400"
-                  >
-                    <option value="Zalo">Zalo</option>
-                    <option value="Điện thoại">Điện thoại</option>
-                    <option value="Email">Email</option>
-                    <option value="Chưa rõ">Chưa rõ</option>
-                  </select>
+                    triggerClassName="h-10 rounded-md"
+                    options={[
+                      { value: "Zalo", label: "Zalo" },
+                      { value: "Điện thoại", label: "Điện thoại" },
+                      { value: "Email", label: "Email" },
+                      { value: "Chưa rõ", label: "Chưa rõ" }
+                    ]}
+                  />
                 </label>
 
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Khung giờ gọi</div>
+                  <div className="mb-2 text-sm font-medium">Khung giờ gọi</div>
                   <input
                     type="text"
                     name="preferredCallbackTime"
                     placeholder={lead.preferredCallbackTime || "Ví dụ: 14:00 - 16:00"}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-slate-400"
+                    className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                   />
                 </label>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Lịch xem dự án</div>
+                  <div className="mb-2 text-sm font-medium">Lịch xem dự án</div>
                   <input
                     type="text"
                     name="preferredVisitTime"
                     placeholder={lead.preferredVisitTime || "Ví dụ: Thứ 7 sáng"}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-slate-400"
+                    className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                   />
                 </label>
 
                 <label className="block">
-                  <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Đi cùng</div>
+                  <div className="mb-2 text-sm font-medium">Đi cùng</div>
                   <input
                     type="text"
                     name="travelParty"
                     placeholder={lead.travelParty || "Ví dụ: Đi cùng gia đình"}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-slate-400"
+                    className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                   />
                 </label>
               </div>
 
               <label className="block">
-                <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Ngữ cảnh mới nhất</div>
+                <div className="mb-2 text-sm font-medium">Ngữ cảnh mới nhất</div>
                 <input
                   type="text"
                   name="lastMessage"
                   placeholder={lead.lastMessage || "Ví dụ: muốn xem pháp lý trước"}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-slate-400"
+                  className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 />
               </label>
 
               <label className="block">
-                <div className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Thêm ghi chú nội bộ</div>
+                <div className="mb-2 text-sm font-medium">Thêm ghi chú nội bộ</div>
                 <textarea
                   name="notes"
                   rows={5}
                   placeholder="Ghi thêm diễn biến mới, phản hồi của khách, lý do cần follow-up..."
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-slate-400"
+                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm leading-7 shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                 />
               </label>
 
               <div className="flex flex-wrap gap-3">
-                <button type="submit" className={dashboardButtonClasses()}>
+                <Button type="submit">
+                  <Settings2 data-icon="inline-start" />
                   Lưu cập nhật
-                </button>
-                <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
-                  Về bảng lead
-                </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/dashboard/leads">Về bảng lead</Link>
+                </Button>
               </div>
             </form>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
 
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Checklist follow-up</h2>
-            <div className="mt-6 space-y-3">
-              {nextSteps.map((step) => (
-                <div key={step} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-7 text-slate-600">
-                  {step}
-                </div>
-              ))}
-            </div>
-          </DashboardSurfaceCard>
-
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Mở nhanh lead liên quan</h2>
-              </div>
-              <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
-                Mở danh sách
-              </Link>
-            </div>
-            <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Mở nhanh lead liên quan</CardTitle>
+              <CardAction>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/dashboard/leads">Mở danh sách</Link>
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardContent className="max-h-[320px] space-y-3 overflow-y-auto">
               {similarLeads.length > 0 ? (
                 similarLeads.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/dashboard/leads/${item.id}`}
-                    className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white"
-                  >
+                  <Link key={item.id} href={`/dashboard/leads/${item.id}`} className="block rounded-lg border p-4 transition hover:bg-muted/50">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <div className="text-sm font-black text-slate-950">{getLeadDisplayName(item)}</div>
-                        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{item.need} • {item.budget}</div>
+                        <div className="font-medium">{getLeadDisplayName(item)}</div>
+                        <div className="mt-1 text-muted-foreground text-sm">{item.need} • {item.budget}</div>
                       </div>
-                      <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getHotnessTone(item.hotness)}`}>
+                      <Badge className={getHotnessTone(item.hotness)} variant="outline">
                         {item.hotness}
-                      </span>
+                      </Badge>
                     </div>
                   </Link>
                 ))
               ) : (
-                <DashboardEmptyState message="Chưa có lead tương tự trong dataset hiện tại." />
+                <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                  Chưa có lead tương tự trong dataset hiện tại.
+                </div>
               )}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
 
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Thông tin kỹ thuật đi kèm</h2>
-            <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Thông tin kỹ thuật đi kèm</CardTitle>
+              <CardDescription>Metadata gắn với lead để kiểm tra automation, chatbot và call bot.</CardDescription>
+            </CardHeader>
+            <CardContent className="max-h-[360px] space-y-3 overflow-y-auto">
               {metadataEntries.length > 0 ? (
                 metadataEntries.map(([key, value]) => (
-                  <div key={key} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                    <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">{key}</div>
-                    <div className="mt-2 break-words text-sm leading-6 text-slate-600">{value}</div>
+                  <div key={key} className="rounded-lg border p-4">
+                    <div className="text-muted-foreground text-xs uppercase tracking-wide">{key}</div>
+                    <div className="mt-2 break-words text-sm leading-6">{value}</div>
                   </div>
                 ))
               ) : (
-                <DashboardEmptyState message="Lead này chưa có metadata bổ sung." />
+                <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                  Lead này chưa có metadata bổ sung.
+                </div>
               )}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

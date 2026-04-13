@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getDashboardEventDetail } from "@/lib/dashboard-data";
 import {
-  DashboardBadge,
-  DashboardEmptyState,
-  DashboardPageHeader,
-  DashboardSurfaceCard,
-  dashboardButtonClasses,
-  dashboardScrollAreaClasses,
   formatDateTime,
+  getDashboardEventLabel,
+  getDashboardEventSummary,
   getLeadDisplayName,
   getLeadPrimaryContact,
   getLeadSourceLabel,
@@ -25,9 +24,9 @@ type DashboardEventDetailPageProps = {
 
 function InfoField({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-      <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{label}</div>
-      <div className="mt-2 text-sm font-semibold leading-6 text-slate-700">{value || "Chưa có"}</div>
+    <div className="rounded-lg border p-4">
+      <div className="text-muted-foreground text-xs uppercase tracking-wide">{label}</div>
+      <div className="mt-2 text-sm font-medium leading-6">{value || "Chưa có"}</div>
     </div>
   );
 }
@@ -44,128 +43,131 @@ export default async function DashboardEventDetailPage({ params }: DashboardEven
   const metadataEntries = Object.entries(event.metadata ?? {});
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      <DashboardPageHeader
-
-        title={event.name}
-
-        actions={
-          <>
-            <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
-              Về analytics
-            </Link>
-            <Link href="/dashboard/follow-up" className={dashboardButtonClasses()}>
-              Mở follow-up
-            </Link>
-          </>
-        }
-      />
-
-      <DashboardSurfaceCard className="p-5 sm:p-6">
-        <div className="flex flex-col gap-5 2xl:flex-row 2xl:items-start 2xl:justify-between">
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap gap-2">
-              <DashboardBadge className="border-slate-200 bg-slate-100 text-slate-700">{event.source}</DashboardBadge>
-              {event.path ? <DashboardBadge>{event.path}</DashboardBadge> : null}
-              {event.leadId ? <DashboardBadge variant="positive">Có lead liên kết</DashboardBadge> : <DashboardBadge>Chưa gắn lead</DashboardBadge>}
-            </div>
-            <div className="mt-4 text-3xl font-black tracking-tight text-slate-950">{event.name}</div>
-            <p className="mt-3 text-sm leading-7 text-slate-600">{event.summary}</p>
+    <div className="@container/main flex flex-col gap-4 md:gap-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline">{event.source}</Badge>
+            {event.path ? <Badge variant="outline">{event.path}</Badge> : null}
+            <Badge variant="outline">{event.leadId ? "Có lead liên kết" : "Chưa gắn lead"}</Badge>
           </div>
-
-          <div className="grid gap-3 sm:grid-cols-3 2xl:w-[420px] 2xl:grid-cols-1">
-            <InfoField label="Thời gian" value={formatDateTime(event.createdAt)} />
-            <InfoField label="Session" value={event.sessionId || "Chưa có"} />
-            <InfoField label="Lead ID" value={event.leadId || "Chưa gắn"} />
-          </div>
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{getDashboardEventLabel(event.name)}</h1>
+          <p className="text-muted-foreground text-sm leading-6">{getDashboardEventSummary(event.name, event.summary)}</p>
         </div>
-      </DashboardSurfaceCard>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline">
+            <Link href="/dashboard/analytics">Về analytics</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/dashboard/follow-up">Mở follow-up</Link>
+          </Button>
+        </div>
+      </div>
 
-      <section className="grid gap-6 2xl:grid-cols-[minmax(0,0.94fr)_minmax(340px,1.06fr)]">
-        <div className="space-y-6">
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Thông tin đi kèm event</h2>
-            <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <InfoField label="Thời gian" value={formatDateTime(event.createdAt)} />
+        <InfoField label="Loại event" value={getDashboardEventLabel(event.name)} />
+        <InfoField label="Session" value={event.sessionId || "Chưa có"} />
+        <InfoField label="Lead ID" value={event.leadId || "Chưa gắn"} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[0.94fr_1.06fr]">
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Thông tin đi kèm event</CardTitle>
+              <CardDescription>Metadata được lưu lại từ website, chatbot hoặc dashboard.</CardDescription>
+            </CardHeader>
+            <CardContent className="max-h-[420px] space-y-3 overflow-y-auto">
               {metadataEntries.length > 0 ? (
                 metadataEntries.map(([key, value]) => (
-                  <div key={key} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                    <div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">{key}</div>
-                    <div className="mt-2 text-sm leading-6 text-slate-600">{value}</div>
+                  <div key={key} className="rounded-lg border p-4">
+                    <div className="text-muted-foreground text-xs uppercase tracking-wide">{key}</div>
+                    <div className="mt-2 text-sm leading-6">{value}</div>
                   </div>
                 ))
               ) : (
-                <DashboardEmptyState message="Event này chưa có metadata bổ sung." />
+                <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                  Event này chưa có metadata bổ sung.
+                </div>
               )}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
 
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Mở nhanh event tương tự</h2>
-              </div>
-              <Link href="/dashboard/analytics" className={dashboardButtonClasses("outline")}>
-                Xem hết analytics
-              </Link>
-            </div>
-            <div className={`mt-6 space-y-3 ${dashboardScrollAreaClasses("card")}`}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Mở nhanh event tương tự</CardTitle>
+              <CardAction>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/dashboard/analytics">Xem hết analytics</Link>
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardContent className="max-h-[420px] space-y-3 overflow-y-auto">
               {similarEvents.length > 0 ? (
                 similarEvents.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/dashboard/events/${item.id}`}
-                    className="block rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:border-slate-300 hover:bg-white"
-                  >
+                  <Link key={item.id} href={`/dashboard/events/${item.id}`} className="block rounded-lg border p-4 transition hover:bg-muted/50">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <div className="text-sm font-black text-slate-950">{item.name}</div>
-                        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-500">{item.source}</div>
+                        <div className="font-medium">{getDashboardEventLabel(item.name)}</div>
+                        <div className="mt-1 text-muted-foreground text-sm uppercase">{item.source}</div>
                       </div>
-                      <div className="text-xs font-semibold text-slate-500">{formatDateTime(item.createdAt)}</div>
+                      <div className="text-muted-foreground text-sm">{formatDateTime(item.createdAt)}</div>
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{item.summary}</p>
+                    <p className="mt-3 text-muted-foreground text-sm leading-6">{getDashboardEventSummary(item.name, item.summary)}</p>
                   </Link>
                 ))
               ) : (
-                <DashboardEmptyState message="Chưa có event tương tự để so sánh." />
+                <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                  Chưa có event tương tự để so sánh.
+                </div>
               )}
-            </div>
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="space-y-6">
-          <DashboardSurfaceCard className="p-5 sm:p-6">
-            <h2 className="text-xl font-black tracking-tight text-slate-950 sm:text-2xl">Kết nối với hồ sơ khách</h2>
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Kết nối với hồ sơ khách</CardTitle>
+              <CardDescription>Đi sang lead tương ứng để xem lịch sử xử lý và hành động tiếp theo.</CardDescription>
+            </CardHeader>
+            <CardContent>
             {relatedLead ? (
-              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="rounded-lg border p-4">
                 <div className="flex flex-wrap gap-2">
-                  <DashboardBadge className={getLeadSourceTone(relatedLead.source)}>{getLeadSourceLabel(relatedLead.source)}</DashboardBadge>
-                  <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getHotnessTone(relatedLead.hotness)}`}>
+                  <Badge className={getLeadSourceTone(relatedLead.source)} variant="outline">
+                    {getLeadSourceLabel(relatedLead.source)}
+                  </Badge>
+                  <Badge className={getHotnessTone(relatedLead.hotness)} variant="outline">
                     {relatedLead.hotness}
-                  </span>
-                  <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-black ${getStatusTone(relatedLead.status)}`}>
+                  </Badge>
+                  <Badge className={getStatusTone(relatedLead.status)} variant="outline">
                     {relatedLead.status}
-                  </span>
+                  </Badge>
                 </div>
-                <div className="mt-4 text-xl font-black tracking-tight text-slate-950">{getLeadDisplayName(relatedLead)}</div>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{getLeadPrimaryContact(relatedLead)} • {relatedLead.need} • {relatedLead.budget}</p>
+                <div className="mt-4 text-xl font-semibold tracking-tight">{getLeadDisplayName(relatedLead)}</div>
+                <p className="mt-2 text-muted-foreground text-sm leading-7">
+                  {getLeadPrimaryContact(relatedLead)} • {relatedLead.need} • {relatedLead.budget}
+                </p>
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <Link href={`/dashboard/leads/${relatedLead.id}`} className={dashboardButtonClasses()}>
-                    Xem lead detail
-                  </Link>
-                  <Link href="/dashboard/leads" className={dashboardButtonClasses("outline")}>
-                    Mở bảng lead
-                  </Link>
+                  <Button asChild>
+                    <Link href={`/dashboard/leads/${relatedLead.id}`}>Xem lead detail</Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link href="/dashboard/leads">Mở bảng lead</Link>
+                  </Button>
                 </div>
               </div>
             ) : (
-              <div className="mt-6">
-                <DashboardEmptyState message="Event này chưa gắn với lead cụ thể. Vẫn có thể dùng metadata và session để rà lại flow tương tác." />
+              <div className="rounded-lg border border-dashed p-5 text-muted-foreground text-sm">
+                Event này chưa gắn với lead cụ thể. Vẫn có thể dùng metadata và session để rà lại flow tương tác.
               </div>
             )}
-          </DashboardSurfaceCard>
+            </CardContent>
+          </Card>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
