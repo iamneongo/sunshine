@@ -522,13 +522,13 @@ export function LeadsWorkspace({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative max-w-xl">
-            <Search className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
+          <div className="flex h-12 w-full max-w-2xl items-center rounded-[1.4rem] border border-border/70 bg-card px-4 shadow-sm transition-[border-color,box-shadow] focus-within:border-primary/30 focus-within:ring-3 focus-within:ring-primary/15">
+            <Search className="mr-3 size-4 shrink-0 text-muted-foreground" />
             <Input
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
               placeholder="Tìm theo tên, số điện thoại, email, nhu cầu..."
-              className="h-11 rounded-2xl border-border/70 bg-background pl-9"
+              className="h-full rounded-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
             />
           </div>
           <Filters filters={chipFilters} fields={fields} onChange={setChipFilters} />
