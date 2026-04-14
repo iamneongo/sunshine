@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import * as React from "react";
-import { startTransition, useDeferredValue, useMemo } from "react";
+import { startTransition, useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowRight, Flame, PhoneCall, Search, Users } from "lucide-react";
 import type { LeadRecord } from "@/lib/lead-store";
 import { Badge } from "@/components/ui/badge";
@@ -235,13 +235,12 @@ export function LeadsWorkspace({
 }: LeadsWorkspaceProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const [searchText, setSearchText] = React.useState(initialFilters.q);
+  const [debouncedSearchText, setDebouncedSearchText] = React.useState(initialFilters.q);
   const [chipFilters, setChipFilters] = React.useState<Filter[]>(buildFiltersFromState(initialFilters));
-  const deferredSearch = useDeferredValue(searchText);
   const initialFiltersKey = useMemo(() => JSON.stringify(initialFilters), [initialFilters]);
-  const currentSearchQuery = searchParams.toString();
+  const lastSyncedQueryRef = React.useRef(buildSearchParams(initialFilters));
 
   const fields = useMemo<FilterFieldConfig[]>(
     () => [
@@ -274,7 +273,7 @@ export function LeadsWorkspace({
   const syncedFilters = useMemo(() => {
     return applyChipFilters(
       {
-        q: deferredSearch,
+        q: debouncedSearchText,
         source: "",
         hotness: "",
         status: "",
@@ -283,7 +282,7 @@ export function LeadsWorkspace({
       },
       chipFilters
     );
-  }, [chipFilters, deferredSearch]);
+  }, [chipFilters, debouncedSearchText]);
 
   const filteredLeads = useMemo(
     () => leads.filter((lead) => matchesLeadFilter(lead, effectiveFilters)),
@@ -299,23 +298,34 @@ export function LeadsWorkspace({
     const nextSearch = initialFilters.q;
     const nextChipFilters = buildFiltersFromState(initialFilters);
 
+    lastSyncedQueryRef.current = buildSearchParams(initialFilters);
     setSearchText((current) => (current === nextSearch ? current : nextSearch));
+    setDebouncedSearchText((current) => (current === nextSearch ? current : nextSearch));
     setChipFilters((current) => (areFilterListsEqual(current, nextChipFilters) ? current : nextChipFilters));
   }, [initialFiltersKey]);
 
   React.useEffect(() => {
-    const query = buildSearchParams(syncedFilters);
-    const href = query ? `${pathname}?${query}` : pathname;
-    const currentHref = currentSearchQuery ? `${pathname}?${currentSearchQuery}` : pathname;
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedSearchText((current) => (current === searchText ? current : searchText));
+    }, 250);
 
-    if (href === currentHref) {
+    return () => window.clearTimeout(timeoutId);
+  }, [searchText]);
+
+  React.useEffect(() => {
+    const query = buildSearchParams(syncedFilters);
+
+    if (query === lastSyncedQueryRef.current) {
       return;
     }
 
+    lastSyncedQueryRef.current = query;
+
     startTransition(() => {
+      const href = query ? `${pathname}?${query}` : pathname;
       router.replace(href, { scroll: false });
     });
-  }, [currentSearchQuery, pathname, router, syncedFilters]);
+  }, [pathname, router, syncedFilters]);
 
   const metricCards = [
     {
